@@ -13,9 +13,13 @@ class CreateStudentsBasicDetails extends Migration
      */
     public function up()
     {
+
         Schema::create('students', function (Blueprint $table) {
-            $table->increments('id');
+
+            $table->increments('id')->unsigned();
+
             $table->integer('enroll_no')->unsigned()->unique()->nullable();
+
             $table->string('student_name')->nullable();
 
             $table->integer('category_id')->unsigned()->nullable();
@@ -30,24 +34,19 @@ class CreateStudentsBasicDetails extends Migration
             $table->string('category')->nullable();         //general, minor
             $table->date('enrollment_date')->nullable();
 
-            $table->float('cpi')->nullable();
-
             $table->text('resume_link')->nullable();
 
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;       //User table, as Student is also a user
 
             $table->timestamps();
+
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('students');
     }
+
 }

@@ -82,4 +82,5 @@ class CategoryController extends Controller
 
         return response("",204);
     }
+
 }

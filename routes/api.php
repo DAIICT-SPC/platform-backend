@@ -1,6 +1,22 @@
 <?php
 
 
+    Route::post('/authenticate', ['uses' => 'AuthController@authenticate']);
+
+    Route::get('/', function (Request $request){
+
+        $token = \JWTAuth::getToken();
+
+        $user = \JWTAuth::toUser($token);
+
+        return $user;
+
+        //instead use
+
+        //request()->user()
+
+    })->middleware('jwt');
+
 //
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
@@ -19,9 +35,22 @@
 
     });
 
-    Route::group(["prefix"=>'users'], function() {
+    Route::group(["prefix"=>'education'], function() {
 
-        Route::get('/', ['uses' => 'UsersController@index']);
+        Route::get('/' , ['uses' => 'EducationController@index']);
+
+        Route::post('/', ['uses' => 'EducationController@createNew']);
+
+        Route::patch('/{id}', ['uses' => 'EducationController@updateEducation']);
+
+        Route::delete('/{id}' , ['uses' => 'EducationController@destroy']);
+
+    });
+
+
+Route::group(["prefix"=>'users'], function() {
+
+        Route::get('/', ['uses' => 'UsersController@index','middleware'=>'jwt']);
 
         Route::post('/registerUser', ['uses' => 'UsersController@registerUser']);
 
@@ -52,6 +81,16 @@
 
         Route::get('/internship', ['uses' => 'StudentsController@fetchInternships']);
 
+        Route::post('/placementRegistration', ['uses' => 'PlacementsController@studentRegistration']);
+
+        Route::get('/dashboard', ['uses' => 'StudentsController@dashboard']);
+
+        Route::post('/education', ['uses' => 'StudentsController@storeStudentEducation']);
+
+        Route::get('/education', ['uses' => 'StudentsController@fetchEducation']);
+
+        Route::patch('/education/{education_id}', ['uses' => 'StudentsController@updateEducation']);
+
     });
 
 
@@ -62,6 +101,17 @@
         Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);          //It will update details like email,username,password which are present in "USERS" table
 
         Route::patch('/update', ['uses' => 'CompanysController@update']);
+
+        Route::post('/startPlacement', ['uses' => 'PlacementsController@startPlacementDrive']);
+
+        Route::post('/{placement_id}/setSelectionRound', ['uses' => 'PlacementsController@selectionRound']);
+
+        Route::post('/{placement_id}/setPlacementCriteria', ['uses' => 'PlacementsController@setPlacementCriteria']);
+
+        Route::get('/placement/{placement_id}', ['uses' => 'PlacementsController@showAllApplications']);
+
+        Route::post('/{placement_id}/setOpenForDetails', ['uses' => 'PlacementsController@placementDriveOpenFor']);
+
 
     });
 
@@ -79,6 +129,21 @@
 });
 
 
+
+    Route::group(['prefix'=>'/placement/{placement_id}'],function() {
+
+        Route::get('/', ['uses' => 'PlacementsController@getPlacementPrimary']);            //to find placement basic detial so that id can be known
+
+        Route::get('/selectionRound', ['uses' => 'PlacementsController@showAllSelectionRound']);
+
+        Route::get('/placementDriveDetail', ['uses' => 'PlacementsController@showPlacement']);          //Contains all
+
+        Route::get('/categoryWisePlacementMail', ['uses' => 'PlacementsController@categoryWisePlacementMail']);          //Contains all
+
+
+    });
+
+
     Route::group(['prefix'=>'/categories'],function(){
 
         Route::get('/', ['uses' => 'CategoryController@index']);
@@ -93,4 +158,17 @@
 
     });
 
+    Route::group(['prefix'=>'/job_type'],function() {
 
+        Route::get('/', ['uses' => 'JobTypeController@index']);
+
+        Route::post('/create', ['uses' => 'JobTypeController@create']);
+
+        Route::get('/{id}',[ 'uses' => 'JobTypeController@show' ] );
+
+        Route::patch('/{id}',[ 'uses' => 'JobTypeController@update' ] );
+
+        Route::delete('/{id}',[ 'uses' => 'JobTypeController@destroy' ]);
+
+
+    });

@@ -1,0 +1,22 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class StudentEducation extends Model
+{
+
+    protected $table = 'students_education';
+
+    protected $fillable = [
+        'enroll_no',
+        'education_id',
+        'clg_school',
+        'start_year',
+        'end_year',
+        'drive_link',
+        'cpi',
+    ];
+
+}

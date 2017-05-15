@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreatePreviousEducation extends Request
+class CreateStudentEducation extends FormRequest
 {
 
     public function authorize()
@@ -12,16 +12,16 @@ class CreatePreviousEducation extends Request
         return true;
     }
 
+
     public function rules()
     {
         return [
             'clg_school' => 'required',
-            'education' => 'required',
-            'grade_percent' => 'required',
             'start_year' => 'required',
             'end_year' => 'required',
-            'drive_link' => 'required'
+            'drive_link' => 'required',
+            'education_id' => 'required',
+            'cpi' => 'required',
         ];
     }
-
 }

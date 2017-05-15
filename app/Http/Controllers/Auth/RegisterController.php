@@ -42,23 +42,5 @@ use RegistersUsers;
         ]);
     }
 
-    protected function createStudent(array $data)
-    {
-        return Student::create([
-           'user_id' => $data['id'],
-        ]);
-    }
-
-    protected function createCompany(array $data){
-        return Company::create([
-            'user_id' => $data['id'],
-        ]);
-    }
-
-    protected function createAdmin(array $data){
-        return Admin::create([
-            'user_id' => $data['id'],
-        ]);
-    }
 
 }
