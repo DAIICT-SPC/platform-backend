@@ -18,6 +18,9 @@ class CreatePlacementCriteria extends Migration
             $table->integer('education_id')->unsigned();
             $table->foreign('education_id')->references('id')->on('education')->onDelete('cascade');
 
+            $table->integer('category_id')->unsigned();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+
             $table->double('cpi_required')->nullable();
 
             $table->timestamps();

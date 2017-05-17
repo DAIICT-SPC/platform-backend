@@ -9,7 +9,7 @@ class Student extends Model
 
     protected $table = "students";
 
-    protected $fillable = ['enroll_no', 'user_id', 'student_name', 'category_id', 'temp_address', 'perm_address', 'contact_no', 'dob', 'gender', 'category', 'enrollment_date', 'cpi', 'resume_link'];
+    protected $fillable = ['enroll_no', 'user_id', 'student_name', 'category_id', 'temp_address', 'perm_address', 'contact_no', 'dob', 'gender', 'category', 'enrollment_date', 'resume_link'];
 
     public function projects()
     {

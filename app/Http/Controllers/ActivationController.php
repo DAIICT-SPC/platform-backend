@@ -8,6 +8,8 @@ use App\Activation;
 use App\Helper;
 use Illuminate\Support\Facades\File;
 use Mail;
+use Maatwebsite\Excel\Facades\Excel;
+use App\User;
 
 class ActivationController extends Controller
 {
@@ -45,14 +47,14 @@ class ActivationController extends Controller
 
         }
 
-//        $this->activationEmail($activation);
+    //        $this->activationEmail($activation);
 
         return $activation;
 
     }
 
 
-    /*    public function createViaFile(Request $request)
+    public function createViaFile(Request $request)
     {
 
         $inputfile = $request->file('csv');      //getting file - name of tag is csv
@@ -61,34 +63,127 @@ class ActivationController extends Controller
             return Helper::apiError('File not uploaded', null, 404);
         }
 
-        try
+        $emails = [];
+
+        $activation_emails = Activation::pluck('email')->toArray();         //all the present emails in activation table
+
+        $user_emails = User::pluck('email')->toArray();                            ////all the present emails in users table
+
+        if($inputfile->getClientOriginalExtension() == 'txt')           //remember - txt file should have content ' , ' (comma) seperated
         {
-            $filecontents = File::get($inputfile->getRealPath());
-        }
-        catch (Illuminate\Filesystem\FileNotFoundException $exception)
-        {
-            Helper::apiError('File not found',null,404);
-        }
 
-        foreach ($filecontents as $filecontent){
+            try {
 
-            $input['email'] = $filecontent;
+                $filecontents = File::get($inputfile->getRealPath());
 
-            $input['role'] = $request->only('role');
+                $emails = explode(",", $filecontents);
 
-            $input['code'] = str_random(15);
+                $email_diff_users = array_diff($emails, $user_emails);               //first checking for a entry already in users table
 
-            $activation = Activation::create($input);
+                $email_diff = array_diff($email_diff_users, $activation_emails);     //secondly checking for a entry in activation table
 
-            if(!$activation){
+                $emails = array_values($email_diff);
 
-                return Helper::apiError("Activation cannot be Created!");
+                $emails = array_filter($emails, function($value){
+
+                    return $value != null;
+
+                });
+
+            } catch (Illuminate\Filesystem\FileNotFoundException $exception) {
+
+                Helper::apiError('File not found', null, 404);
 
             }
 
         }
 
-    }   */
+        else if($inputfile->getClientOriginalExtension() == 'xlsx' or $inputfile->getClientOriginalExtension() == 'xls')
+        {
+
+            try {
+
+                $data = Excel::load($inputfile, function($reader) {})->get();
+
+                $datas = $data->toArray();
+
+                $email = [];
+
+                $i=0;
+
+                    foreach ( $datas as $data) {                        // sheet1 then sheet2 then sheet 3
+
+                        if (!empty($data) && !is_null($data)) {         // if either sheet is not empty
+
+                            foreach ($data as $emails) {                // in single sheet fetching each emails
+
+                                $email_fetch = array_values($emails);
+
+                                foreach ($email_fetch as $em)           //as each email is in a single array too thus converting in proper format
+
+                                {
+
+                                    $email[$i] = $em;
+
+                                    $i++;
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                $email_diff_users = array_diff($email, $user_emails);               //first checking for a entry already in users table
+
+                $emails = array_diff($email_diff_users, $activation_emails);
+
+                $emails = array_filter($emails, function($value){
+
+                    return $value != null;
+
+                });
+
+            }
+
+            catch (Illuminate\Filesystem\FileNotFoundException $exception) {
+
+                Helper::apiError('File not found', null, 404);
+
+            }
+
+        }
+
+            foreach ($emails as $email){
+
+                $activation = [];
+
+                $i = 0;
+
+                $input = $request->only('role');
+
+                $input['email'] = $email;
+
+                $input['code'] = str_random(15);
+
+                $activation[$i] = Activation::create($input);
+
+                $i++;
+
+                if(!$activation){
+
+                    return Helper::apiError("Activation cannot be Created!");
+
+                }
+
+            }
+
+        return $activation;
+
+        //send mail to each activation email
+
+    }
 
 
     public function findCode($code)                         //If someone goes at link   abc.com/activation/activate/{code}

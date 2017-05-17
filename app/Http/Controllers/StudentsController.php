@@ -16,9 +16,15 @@ use App\Http\Requests\CreateStudentEducation;
 class StudentsController extends Controller
 {
 
-    public function index()
+    public function index()             //to show it to admin as the list of students
     {
-        //
+        $students = Student::all();
+
+        if(!$students){
+            return Helper::apiError('No Student Found!',null,404);
+        }
+
+        return $students;
     }
 
 
@@ -42,6 +48,10 @@ class StudentsController extends Controller
         }
 
         $input = $request->only('enroll_no','student_name','category_id','temp_address','perm_address','contact_no','dob','gender','category','enrollment_date', 'cpi','resume_link');
+
+        $input = array_filter($input, function($value){
+            return $value != null;
+        });
 
         $student->update($input);
 
@@ -178,6 +188,10 @@ class StudentsController extends Controller
         $education = StudentEducation::where('enroll_no',$enroll_no)->where('education_id',$education_id)->first();
 
         $input = $request->only('clg_school','cpi','start_year','end_year','drive_link');
+
+        $input = array_filter($input, function($value){
+            return $value != null;
+        });
 
         $education->update($input);
 

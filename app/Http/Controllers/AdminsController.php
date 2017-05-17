@@ -49,4 +49,9 @@ class AdminsController extends Controller
         return $user;
     }
 
+    public function externalAllow($enroll_no)
+    {
+        //directly allow his insertion in application table
+    }
+
 }

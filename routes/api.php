@@ -23,6 +23,9 @@
 //});
 
 
+
+
+
     Route::group(["prefix"=>'activation'], function() {
 
         Route::post('/single', ['uses' => 'ActivationController@createSingleEntry']);
@@ -102,7 +105,7 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::patch('/update', ['uses' => 'CompanysController@update']);
 
-        Route::post('/startPlacement', ['uses' => 'PlacementsController@startPlacementDrive']);
+        Route::post('/createPlacement', ['uses' => 'PlacementsController@createPlacementDrive']);
 
         Route::post('/{placement_id}/setSelectionRound', ['uses' => 'PlacementsController@selectionRound']);
 
@@ -112,6 +115,7 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::post('/{placement_id}/setOpenForDetails', ['uses' => 'PlacementsController@placementDriveOpenFor']);
 
+        Route::patch('/{placement_id}/update/{round_no}', ['uses' => 'PlacementsController@updateDateOfSelectionRound']);
 
     });
 

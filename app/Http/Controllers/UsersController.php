@@ -23,32 +23,25 @@ class UsersController extends Controller
 
     public function index()
     {
+
         $users = User::all();
+
         return $users;
+
     }
-
-    public function destroyActivation($code)
-    {
-        $activation = Activation::where('code',$code)->first();
-
-        if(!$activation){
-            Helper::apiError('No such activation code exist. Please try again.',null,404);
-        }
-
-
-
-        $activation->delete();
-
-        return response("",204);
-    }
-
 
 
     public function registerUser(CreateUser $request)                             //Creates user in USER Table as well as if role is student creates an entry in student table
     {
         $code = $request->only('code');                                     //while registering user - CODE and ROLE will be hidden but will come with request
 
-        $this->destroyActivation($code);
+        $activation = Activation::where('code',$code)->first();
+
+        if(is_null($activation)){
+            return Helper::apiError('No such activation code exist. Please try again.',null,404);
+        }
+
+        $activation->delete();
 
         $input = $request->only('email','role','password');                 //creates array
 

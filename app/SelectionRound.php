@@ -13,7 +13,6 @@ class SelectionRound extends Model
         'round_no',
         'round_name',
         'round_description',
-        'round_status',
         'date_of_round',
     ];
 

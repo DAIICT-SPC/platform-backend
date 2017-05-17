@@ -11,9 +11,11 @@ use App\User;
 class CompanysController extends Controller
 {
 
-    public function index()
+    public function index()             //for the admin to see all the list of companies
     {
-        //
+        $companies = Company::all();
+
+        return $companies;
     }
 
     public function show($user_id = null)

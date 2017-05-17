@@ -19,6 +19,18 @@ class EducationController extends Controller
 
     }
 
+    public function show($id)
+    {
+        $education = Education::find($id);
+
+        if(!$education){
+            Helper::apiError('No Education found!',null,404);
+        }
+
+        return $education;
+
+    }
+
     public function createNew(CreateEducation $request)
     {
 

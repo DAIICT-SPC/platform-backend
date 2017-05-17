@@ -34,7 +34,7 @@ class CreateStudentsBasicDetails extends Migration
             $table->string('category')->nullable();         //general, minor
             $table->date('enrollment_date')->nullable();
 
-            $table->text('resume_link')->nullable();
+         //   $table->text('resume_link')->nullable();
 
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;       //User table, as Student is also a user

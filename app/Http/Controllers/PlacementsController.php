@@ -11,6 +11,7 @@ use App\Http\Requests\CreatePlacementsOpenForDetails;
 use App\Http\Requests\CreateSelectionRoundsDetails;
 use App\Http\Requests\CreateStudentRegistration;
 use App\PlacementCriteria;
+use App\SelectStudentRoundwise;
 use App\StudentEducation;
 use Illuminate\Http\Request;
 use App\PlacementPrimary;
@@ -36,7 +37,7 @@ class PlacementsController extends Controller
         return $placement;
     }
 
-    public function startPlacementDrive(CreatePlacementsPrimaryDetails $request, $user_id)
+    public function createPlacementDrive(CreatePlacementsPrimaryDetails $request, $user_id)
     {
 
         $input = $request->only('job_title','job_description','last_date_for_registration','location','no_of_students','package','job_type_id');
@@ -69,9 +70,7 @@ class PlacementsController extends Controller
     public function placementDriveOpenFor(Request $request, $placement_id)
     {
 
-        $checkboxes = $request->input('my_checkbox');           //When i fetch " my_checkbox value " it should already be in array format
-
-        //now the checkboxes would contain - MscIT, BTech, MTech.. thus need to convert them into desired ID format
+        $checkboxes = $request->input('openFor_checkbox');           //When i fetch " OPENFOR_CHECKBOX value " it should already be in array format and it contains id
 
         $openfor = null;
 
@@ -80,28 +79,22 @@ class PlacementsController extends Controller
         foreach ($checkboxes as $checkbox)
         {
 
-            $category = Category::where('name',$checkbox)->first();
+            $checkbox['placement_id'] = $placement_id;
 
-            $category_id = $category['id'];
-
-            $input['category_id'] = $category_id;
-
-            $input['placement_id'] = $placement_id;
-
-            $openfor[$i] = PlacementOpenFor::create($input);
+            $openfor[$i] = PlacementOpenFor::create($checkbox);
 
             $i++;
 
-        }
+         }
 
         return $openfor;
 
     }
 
-    public function selectionRound(CreateSelectionRoundsDetails $request, $placement_id)
+    public function selectionRound(Request $request, $user_id,$placement_id)
     {
 
-        $input = $request->only('round_no','round_name','round_description', 'round_status','date_of_round');
+        $input = $request->only('round_no','round_name','round_description','date_of_round');
 
         $input['placement_id'] = $placement_id;
 
@@ -116,7 +109,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function setPlacementCriteria(CreatePlacementCriteria $request, $placement_id)       //have a - set button and new button - on the first try show daiict (masters)
+    public function setPlacementCriteria(CreatePlacementCriteria $request, $user_id, $placement_id)       //have a - set button and new button - on the first try show daiict (masters)
     {
         $input = $request->only('education_id', 'cpi_required');
 
@@ -306,13 +299,13 @@ class PlacementsController extends Controller
 
         }else{
 
-            return "Sorry, Your Application can't be accepted as You are not eligible!";
+            return Helper::apiError('Sorry Your Application cant be accepted. You are not eligible!',null,402);
 
         }
 
     }
 
-    public function showAllApplications($placement_id)           //Searched by Company as who all have registered
+    public function showAllApplications($user_id,$placement_id)           //Searched by Company as who all have registered.. Also Filter according to their CPI
     {
 
         $applications = Application::where('placement_id',$placement_id)->get();
@@ -324,7 +317,17 @@ class PlacementsController extends Controller
         foreach ($applications as $application)
         {
 
-            $student_detail[$i] = Student::find($application['student_id']);
+            $student_primary = Student::find($application['student_id']);
+
+            $enroll_no = $student_primary['enroll_no'];
+
+            $student_education = StudentEducation::where('enroll_no',$enroll_no)->get();
+
+            $student['student_primary'] = $student_primary;
+
+            $student['student_education'] = $student_education;
+
+            $student_detail[$i] = $student;
 
             $i++;
 
@@ -334,16 +337,22 @@ class PlacementsController extends Controller
 
     }
 
+    public function selectStudentsFromApplication(Request $request, $user_id, $placement_id)         //starting from application layer - select checkboxes and thus data will come in array format
+    {
+
+        //mail everytime student reaches to next round
+
+    }
+
+    public function selectStudentsRoundwise()            //select_students_roundwise
+    {
+
+    }
+
     public function offerLetter()
     {
 
     }
-
-    public function selectStudentsRoundwise()         //starting from application layer to process ending layer - send mail accordingly
-    {
-
-    }
-
 
     public function update()                                    //Update anything PlacementsPrimary, PlacementsOpenFor, Placements
     {
@@ -351,8 +360,23 @@ class PlacementsController extends Controller
     }
 
 
-    public function updateSelectionRound()              //here to update the status and date of rounds.. as while creating not necessary they will insert that
+    public function updateDateOfSelectionRound(Request $request, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
     {
+
+        $input = $request->only('round_no','round_name','round_description','date_of_round');
+
+        $input = array_filter($input, function($value){
+            return $value != null;
+        });
+
+        $round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
+
+        //send mass mail to all the students who have registered
+        // MAIL TO
+
+        $round->update($input);
+
+        return $round;
 
     }
 

@@ -16,9 +16,9 @@ class CreateSelectionRoundsDetails extends Migration
             $table->foreign('placement_id')->references('placement_id')->on('placements_primary')->onDelete('cascade');
 
             $table->integer('round_no')->unsigned();
+
             $table->string('round_name');
             $table->text('round_description');
-            $table->boolean('round_status')->default('0')->nullable();    // 0 means incomplete and 1 means complete
             $table->date('date_of_round')->nullable();
             $table->timestamps();
         });
