@@ -37,7 +37,7 @@ class ActivationController extends Controller
 
         $input = $request->only('email','role');      //creates array
 
-        $input['code'] = str_random(15);            //need to check if the string does'nt repeat in database
+        $input['code'] = time().str_random(5);            //need to check if the string does'nt repeat in database
 
         $activation = Activation::create($input);
 
@@ -165,7 +165,7 @@ class ActivationController extends Controller
 
                 $input['email'] = $email;
 
-                $input['code'] = str_random(15);
+                $input['code'] = time().str_random(5);
 
                 $activation[$i] = Activation::create($input);
 
