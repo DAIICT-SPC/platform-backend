@@ -27,13 +27,24 @@ class CategoryController extends Controller
 
         $input = $request->only('name');
 
-        $category = Category::create($input);
+        $check_if_category_exist = Category::where('name',$input['name'])->first();
 
-        if(!$category){
-            return Helper::apiError('Category not created');
+        if( is_null($check_if_category_exist) )
+        {
+
+            $category = Category::create($input);
+
+            if(!$category){
+                return Helper::apiError('Category not created');
+            }
+
+            return $category;
+
+        }else{
+
+            return $check_if_category_exist;
+
         }
-
-        return $category;
 
     }
 

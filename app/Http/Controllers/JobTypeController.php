@@ -26,13 +26,22 @@ class JobTypeController extends Controller
 
         $input = $request->only('job_type','duration');
 
-        $job_type = Job_Type::create($input);
+        $job_type_exist = Job_Type::where('job_type',$input['job_type'])->where('duration',$input['duration'])->first();
 
-        if(!$job_type){
-            return Helper::apiError('Job Type cannot created');
+        if(is_null($job_type_exist))
+        {
+
+            $job_type = Job_Type::create($input);
+
+            if(!$job_type){
+                return Helper::apiError('Job Type cannot created');
+            }
+
+            return $job_type;
+
         }
 
-        return $job_type;
+        return $job_type_exist;
 
     }
 

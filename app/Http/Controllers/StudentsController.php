@@ -58,8 +58,9 @@ class StudentsController extends Controller
         return $student;
     }
 
-    public function storeProjects(CreateProjects $request, $user_id)
+    public function storeProjects(CreateProjects $request, $user_id)        // ** change - check if already entry exist in array - just like done in education
     {
+
         $student = Student::find($user_id);
 
         if(!$student){
@@ -148,7 +149,21 @@ class StudentsController extends Controller
 
         $input['enroll_no'] = $enroll_no;
 
-        $education = StudentEducation::create($input);
+        $checking_education = StudentEducation::where('enroll_no',$enroll_no)->where('education_id',$input['education_id'])->first();
+
+        if(is_null($checking_education))
+        {
+
+            $education = StudentEducation::create($input);
+
+        }
+
+        else
+        {
+
+            $education = $checking_education;
+
+        }
 
         return $education;
 

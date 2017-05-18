@@ -36,14 +36,25 @@ class EducationController extends Controller
 
         $education_input = $request->only('name');
 
-        if(!$education_input)
+        $education_exist = Education::where('name',$education_input['name'])->first();
+
+        if(is_null($education_exist))
         {
-            Helper::apiError('Please Enter a valid Education Detail',null,404);
+
+            $education = Education::create($education_input);
+
+            if(!$education)
+            {
+                Helper::apiError("Cant create Education",null,404);
+            }
+
+            return $education;
+
+        }else{
+
+            return $education_exist;
+
         }
-
-        $education = Education::create($education_input);
-
-        return $education;
 
     }
 
