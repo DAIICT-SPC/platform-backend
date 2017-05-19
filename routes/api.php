@@ -94,6 +94,11 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::patch('/education/{education_id}', ['uses' => 'StudentsController@updateEducation']);
 
+        Route::post('/uploadResume', ['uses' => 'StudentsController@uploadResume']);
+
+        Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
+
+
     });
 
 
@@ -120,6 +125,8 @@ Route::group(["prefix"=>'users'], function() {
         Route::post('/{placement_id}/closeRegistrationForPlacement', ['uses' => 'PlacementsController@closeRegistrationForPlacement']);
 
         Route::patch('/{placement_id}/update/{round_no}', ['uses' => 'PlacementsController@updateDateOfSelectionRound']);
+
+        Route::get('/{student_id}/getResume', ['uses' => 'StudentsController@getResume']);
 
     });
 

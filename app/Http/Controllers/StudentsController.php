@@ -14,6 +14,8 @@ use App\Internship;
 use App\StudentEducation;
 use App\Http\Requests\CreateStudentEducation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
 
 class StudentsController extends Controller
 {
@@ -262,6 +264,88 @@ class StudentsController extends Controller
         $dashboard_proper = array_reverse($dashboard);          //reversing because the NEWS FEED inserted recently should be shown first
 
         return $dashboard_proper;
+
+    }
+
+    public function uploadResume(Request $request, $user_id)
+    {
+
+        $student = Student::where('user_id',$user_id)->first();
+
+        if(!$student)
+        {
+
+            return Helper::apiError("No student found!",null,404);
+
+        }
+
+        $enroll_no = $student['enroll_no'];
+
+        $inputfile = $request->file('resume');
+
+        if($inputfile==null) {
+
+            return Helper::apiError('File not uploaded', null, 404);
+
+        }
+
+        if ( $inputfile->getClientOriginalExtension() == 'pdf' )
+        {
+
+            Storage::put("resume/$enroll_no", $inputfile);
+
+            return response("",204);
+
+        }
+
+        return Helper::apiError("Resume should always be in pdf format",null,404);
+
+    }
+
+    public function getResume($user_id, $student_id = null)
+    {
+
+        if( is_null($student_id))
+        {
+
+            $student = Student::where('user_id',$user_id)->first();
+
+            if(!$student)
+            {
+
+                return Helper::apiError("No student found!",null,404);
+
+            }
+
+            $enroll_no = $student['enroll_no'];
+
+            return Storage::url("resume/$enroll_no");
+
+        }else{
+
+            if(sizeof($student_id)<8)
+            {
+
+                $student = Student::where('id',$student_id)->first();
+
+                if(!$student)
+                {
+
+                    return Helper::apiError("No student found!",null,404);
+
+                }
+
+                $enroll_no = $student['enroll_no'];
+
+                return base_path().Storage::url("resume/$enroll_no");
+
+            }
+
+            $enroll_no = $student_id;
+
+            return Storage::url("resume/$enroll_no");
+
+        }
 
     }
 
