@@ -25,7 +25,8 @@ class PlacementPrimary extends Model
         return $this->belongsTo(Company::class,'company_id');
     }
 
-    public function openFor(){
-        return $this->belongsToMany(PlacementOpenFor::class);
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'placements_open_for', 'placement_id', 'category_id');
     }
 }

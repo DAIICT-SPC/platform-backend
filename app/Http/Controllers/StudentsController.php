@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateInternships;
 use App\Http\Requests\CreateProjects;
 use App\PlacementOpenFor;
+use App\PlacementPrimary;
 use Illuminate\Http\Request;
 use App\Student;
 use App\Helper;
@@ -12,6 +13,7 @@ use App\Project;
 use App\Internship;
 use App\StudentEducation;
 use App\Http\Requests\CreateStudentEducation;
+use Illuminate\Support\Facades\DB;
 
 class StudentsController extends Controller
 {
@@ -230,7 +232,7 @@ class StudentsController extends Controller
 
         $student = Student::where('user_id',$user_id)->first();
 
-        $placements = PlacementOpenFor::all();
+        $placements = PlacementPrimary::where('status','application')->get();
 
         $dashboard[] = null;
 
@@ -239,12 +241,19 @@ class StudentsController extends Controller
         foreach ($placements as $placement)
         {
 
-            if( $student['category_id'] == $placement['category_id'])
+            $openFor = PlacementOpenFor::where('placement_id',$placement['placement_id'])->get();
+
+            foreach ($openFor as $open)
             {
 
-                $dashboard[$i] = $placement;
+                if( $student['category_id'] == $open['category_id'])
+                {
 
-                $i++;
+                    $dashboard[$i] = $placement;
+
+                    $i++;
+
+                }
 
             }
 

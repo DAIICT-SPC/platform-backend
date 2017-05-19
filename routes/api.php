@@ -74,7 +74,7 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::get('/previousEducation', ['uses' => 'StudentsController@fetchPreviousEducation']);
 
-        Route::patch('/update/previousEducation/{id}', ['uses' => 'StudentsController@updatePreviousEducation']);
+        Route::patch('/update/previousEducation/{id}', ['uses' => 'StudentsController@updateEducation']);
 
         Route::post('/project', ['uses' => 'StudentsController@storeProjects']);
 
@@ -114,6 +114,10 @@ Route::group(["prefix"=>'users'], function() {
         Route::get('/placement/{placement_id}', ['uses' => 'PlacementsController@showAllApplications']);
 
         Route::post('/{placement_id}/setOpenForDetails', ['uses' => 'PlacementsController@placementDriveOpenFor']);
+
+        Route::post('/{placement_id}/openRegistrationForPlacement', ['uses' => 'PlacementsController@openRegistrationForPlacement']);
+
+        Route::post('/{placement_id}/closeRegistrationForPlacement', ['uses' => 'PlacementsController@closeRegistrationForPlacement']);
 
         Route::patch('/{placement_id}/update/{round_no}', ['uses' => 'PlacementsController@updateDateOfSelectionRound']);
 

@@ -29,6 +29,8 @@ class CreatePlacementsPrimaryDetails extends Migration
             $table->integer('job_type_id')->unsigned();
             $table->foreign('job_type_id')->references('id')->on('job_types');
 
+            $table->string('status')->default('draft');
+
             $table->timestamps();
         });
     }

@@ -14,8 +14,4 @@ class PlacementOpenFor extends Model
         'category_id',
     ];
 
-    public function placement(){
-        return $this->belongsToMany(\App\PlacementPrimary::class);
-    }
-
 }

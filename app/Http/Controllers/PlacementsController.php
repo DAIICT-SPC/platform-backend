@@ -79,9 +79,13 @@ class PlacementsController extends Controller
         foreach ($checkboxes as $checkbox)
         {
 
-            $checkbox['placement_id'] = $placement_id;
+            $input = [];
 
-            $openfor[$i] = PlacementOpenFor::create($checkbox);
+            $input['category_id'] = $checkbox;
+
+            $input['placement_id'] = $placement_id;
+
+            $openfor[$i] = PlacementOpenFor::create($input);
 
             $i++;
 
@@ -120,6 +124,44 @@ class PlacementsController extends Controller
         return $placement_criteria;
 
     }
+
+    public function openRegistrationForPlacement($user_id, $placement_id)
+    {
+
+        $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
+
+        if(!$placement_primary)
+        {
+            Helper::apiError('No Details for such Placement ID', null, 404);
+        }
+
+        PlacementPrimary::where('placement_id', $placement_id)->update(array('status' => 'application'));
+
+        $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
+
+        return $placement_primary;
+
+    }
+
+    public function closeRegistrationForPlacement($user_id, $placement_id)
+    {
+
+        $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
+
+        if(!$placement_primary)
+        {
+            Helper::apiError('No Details for such Placement ID', null, 404);
+        }
+
+        PlacementPrimary::where('placement_id', $placement_id)->update(array('status' => 'closed'));
+
+        $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
+
+        return $placement_primary;
+
+    }
+
+
 
     public function showAllSelectionRound($placement_id)
     {
@@ -190,7 +232,7 @@ class PlacementsController extends Controller
     public function showPlacementsPrimary($placement_id)
     {
 
-        $placement_primary = PlacementPrimary::find($placement_id);
+        $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
 
         if(!$placement_primary)
         {
