@@ -84,7 +84,9 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::get('/internship', ['uses' => 'StudentsController@fetchInternships']);
 
-        Route::post('/placementRegistration', ['uses' => 'PlacementsController@studentRegistration']);
+        Route::post('/placementRegistration', ['uses' => 'PlacementApplicationController@studentRegistration']);
+
+        Route::post('/cancelRegistration', ['uses' => 'PlacementApplicationController@cancelRegistration']);
 
         Route::get('/dashboard', ['uses' => 'StudentsController@dashboard']);
 
@@ -114,6 +116,8 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::post('/{placement_id}/setSelectionRound', ['uses' => 'PlacementsController@selectionRound']);
 
+        Route::get('/{placement_id}/showOpenFor', ['uses' => 'PlacementsController@showOpenForCategories']);    //for entries combo box in placement criteria page
+
         Route::post('/{placement_id}/setPlacementCriteria', ['uses' => 'PlacementsController@setPlacementCriteria']);
 
         Route::get('/placement/{placement_id}', ['uses' => 'PlacementsController@showAllApplications']);
@@ -128,6 +132,11 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::get('/{student_id}/getResume', ['uses' => 'StudentsController@getResume']);
 
+        Route::post('/{placement_id}/giveOffer', [ 'uses' => 'PlacementOffersController@giveOfferLetter' ]);
+
+        Route::post('/{placement_id}/cancelOffer', [ 'uses' => 'PlacementOffersController@cancelOfferLetter' ]);
+
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin'],function(){
@@ -138,8 +147,10 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::patch('/update', ['uses' => 'AdminsController@update']);
 
-    });
+        Route::get('/getAllOfferLetter', ['uses' => 'PlacementOffersController@getAllOfferLetter']);
 
+
+    });
 
 });
 
@@ -154,7 +165,6 @@ Route::group(["prefix"=>'users'], function() {
         Route::get('/placementDriveDetail', ['uses' => 'PlacementsController@showPlacement']);          //Contains all
 
         Route::get('/categoryWisePlacementMail', ['uses' => 'PlacementsController@categoryWisePlacementMail']);          //Contains all
-
 
     });
 
@@ -187,3 +197,6 @@ Route::group(["prefix"=>'users'], function() {
 
 
     });
+
+Route::get('/{enroll_no_or_placement_id}/getOfferLetter', ['uses' => 'PlacementOffersController@getOfferLetter']);
+

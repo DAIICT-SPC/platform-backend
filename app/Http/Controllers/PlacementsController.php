@@ -10,6 +10,7 @@ use App\Http\Requests\CreatePlacementsPrimaryDetails;
 use App\Http\Requests\CreatePlacementsOpenForDetails;
 use App\Http\Requests\CreateSelectionRoundsDetails;
 use App\Http\Requests\CreateStudentRegistration;
+use App\Offer;
 use App\PlacementCriteria;
 use App\SelectStudentRoundwise;
 use App\StudentEducation;
@@ -273,7 +274,7 @@ class PlacementsController extends Controller
 
                 foreach ($studentsBelongingToCategory as $student)
                 {
-                    // Mail to Students                                                                             -------------
+                    // Mail to Students
                 }
 
             }
@@ -281,69 +282,6 @@ class PlacementsController extends Controller
         }
 
         return "Successfully sent mail to all students";
-
-    }
-
-    public function studentRegistration(CreateStudentRegistration $request,$user_id)          //student registering - Application giving layer - have to validate each student if its eligible or not
-    {
-
-        $student = Student::where('user_id',$user_id)->first();
-
-        if(!$student)
-        {
-            Helper::apiError('No such Student Exist!',null,404);
-        }
-
-        $enroll_no = $student['enroll_no'];
-
-        $placement_id = $request->only('placement_id');
-
-        $input = $request->only('placement_id');
-
-        $input['student_id'] = $student['id'];
-
-        $criterias = PlacementCriteria::where('placement_id',$placement_id)->get();
-
-        $student_education_list = StudentEducation::where('enroll_no',$enroll_no)->get();
-
-        $i = 0; $j = 0;
-
-        foreach ($criterias as $criteria)
-        {
-
-            $i++;
-
-            foreach ($student_education_list as $student_education)
-            {
-
-                if($student_education['education_id'] == $criteria['education_id'])
-                {
-
-                    if($student_education['cpi'] >= $criteria['cpi_required'])
-                    {
-                        $j++;
-                    }
-
-                }
-
-            }
-
-        }
-
-        //Check for Offer letter
-
-        if($i == $j)
-        {
-
-            $application = Application::create($input);
-
-            return $application;
-
-        }else{
-
-            return Helper::apiError('Sorry Your Application cant be accepted. You are not eligible!',null,402);
-
-        }
 
     }
 

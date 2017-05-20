@@ -10,7 +10,7 @@ class Application extends Model
     protected $table = 'applications';
 
     protected $fillable = [
-      'placement_id', 'student_id',
+      'placement_id', 'enroll_no',
     ];
 
 }

@@ -11,6 +11,7 @@ class PlacementCriteria extends Model
     protected $fillable = [
         'placement_id',
         'education_id',
+        'category_id',
         'cpi_required',
         'grade_required',
     ];

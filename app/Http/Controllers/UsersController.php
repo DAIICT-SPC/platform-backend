@@ -33,6 +33,7 @@ class UsersController extends Controller
 
     public function registerUser(CreateUser $request)                             //Creates user in USER Table as well as if role is student creates an entry in student table
     {
+
         $code = $request->only('code');                                     //while registering user - CODE and ROLE will be hidden but will come with request
 
         $activation = Activation::where('code',$code)->first();

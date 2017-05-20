@@ -19,8 +19,8 @@ class CreateApplicationLayer extends Migration
             $table->integer('placement_id')->unsigned();
             $table->foreign('placement_id')->references('placement_id')->on('placements_primary')->onDelete('cascade');
 
-            $table->integer('student_id')->unsigned();
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->integer('enroll_no')->unsigned();
+            $table->foreign('enroll_no')->references('enroll_no')->on('students')->onDelete('cascade');
 
             $table->timestamps();
         });
