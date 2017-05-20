@@ -236,23 +236,22 @@ class StudentsController extends Controller
     public function dashboard($user_id)
     {
 
-        $student = Student::where('user_id',$user_id)->first();
+        $placements = DB::table('placements_primary')
+            ->join('placements_open_for', 'placements_primary.placement_id', '=', 'placements_open_for.placement_id')
+            ->where('status','application')->get();
 
-        $placements = PlacementPrimary::where('status','application')->get();
+        $placements_array = json_decode(json_encode($placements), true);
+
+        $student = Student::where('user_id',$user_id)->first();
 
         $dashboard[] = null;
 
         $i = 0;
 
-        foreach ($placements as $placement)
+        foreach ($placements_array as $placement)
         {
 
-            $openFor = PlacementOpenFor::where('placement_id',$placement['placement_id'])->get();
-
-            foreach ($openFor as $open)
-            {
-
-                if( $student['category_id'] == $open['category_id'])
+                if( $student['category_id'] == $placement['category_id'])
                 {
 
                     $dashboard[$i] = $placement;
@@ -261,8 +260,6 @@ class StudentsController extends Controller
 
                 }
 
-            }
-
         }
 
         $dashboard_proper = array_reverse($dashboard);          //reversing because the NEWS FEED inserted recently should be shown first
@@ -270,6 +267,8 @@ class StudentsController extends Controller
         return $dashboard_proper;
 
     }
+
+
 
     public function uploadResume(Request $request, $user_id)
     {
@@ -384,7 +383,6 @@ class StudentsController extends Controller
 
         }
 
-
         $criterias = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$student_category)->get();
 
         $student_education_list = StudentEducation::where('enroll_no',$enroll_no)->get();
@@ -451,5 +449,47 @@ class StudentsController extends Controller
 
     }
 
+    public function capablePlacementList($user_id)
+    {
+
+        $student = Student::where('user_id',$user_id)->first();
+
+        if( !$student )
+        {
+
+            return Helper::apiError("No Student Found!",null,404);
+
+        }
+
+        $placements = DB::table('placements_primary')
+            ->leftjoin('placements_open_for', 'placements_primary.placement_id', '=', 'placements_open_for.placement_id')
+            ->leftjoin('placement_criterias', 'placements_primary.placement_id', '=', 'placement_criterias.placement_id')
+            ->where('status','application')->where('placements_open_for.category_id',$student['category_id'])->get();
+
+        $placements_array = json_decode(json_encode($placements), true);
+
+        $student_education_list = StudentEducation::where('enroll_no',$student['enroll_no'])->get();
+
+        $placement_capable = [];
+
+        $i = 0;
+
+        foreach ( $placements_array as $placement )
+        {
+
+            foreach ( $student_education_list as $student_education )
+            {
+
+                if( $student_education['education_id'] == $placement['education_id'] )
+                {
+
+                    if()
+
+                }
+
+            }
+        }
+
+    }
 
 }

@@ -228,12 +228,16 @@ class PlacementsController extends Controller
 
         $category_names = null;
 
+        $i = 0;
+
         foreach ($openFor as $category)             //fetching all names
         {
 
             $category_name = DB::table('categories')->where('id',$category['category_id'])->value('name');
 
-            $category_names[$category_name] = $category_name;
+            $category_names[$i] = $category_name;
+
+            $i++;
 
         }
 

@@ -210,4 +210,7 @@ Route::get('/{enroll_no_or_placement_id}/getOfferLetter', ['uses' => 'PlacementO
 Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
 
 
+Route::get('/{user_id}/capablePlacementList', ['uses' => 'StudentsController@capablePlacementList']);
+
+
 
