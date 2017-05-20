@@ -309,6 +309,27 @@ class PlacementsController extends Controller
 
     }
 
+
+    public function updateDateOfSelectionRound(Request $request, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
+    {
+
+        $input = $request->only('round_no','round_name','round_description','date_of_round');
+
+        $input = array_filter($input, function($value){
+            return $value != null;
+        });
+
+        $round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
+
+        //send mass mail to all the students who have registered
+        // MAIL TO
+
+        $round->update($input);
+
+        return $round;
+
+    }
+
     public function selectStudentsFromApplication(Request $request, $user_id, $placement_id)         //starting from application layer - select checkboxes and thus data will come in array format
     {
 
@@ -331,25 +352,5 @@ class PlacementsController extends Controller
 
     }
 
-
-    public function updateDateOfSelectionRound(Request $request, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
-    {
-
-        $input = $request->only('round_no','round_name','round_description','date_of_round');
-
-        $input = array_filter($input, function($value){
-            return $value != null;
-        });
-
-        $round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
-
-        //send mass mail to all the students who have registered
-        // MAIL TO
-
-        $round->update($input);
-
-        return $round;
-
-    }
 
 }

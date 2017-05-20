@@ -17,7 +17,9 @@ class CreatePlacementsPrimaryDetails extends Migration
             $table->increments('placement_id')->unsigned();
             $table->string('job_title');
             $table->text('job_description');
-            $table->date('last_date_for_registration');
+
+            $table->dateTime('last_date_for_registration');
+
             $table->string('location');
             $table->integer('no_of_students')->nullable();
             $table->float('package');

@@ -101,6 +101,10 @@ Route::group(["prefix"=>'users'], function() {
         Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
 
 
+        Route::post('/eligibility', ['uses' => 'StudentsController@eligibility']);
+
+
+
     });
 
 
@@ -201,3 +205,9 @@ Route::group(["prefix"=>'users'], function() {
     });
 
 Route::get('/{enroll_no_or_placement_id}/getOfferLetter', ['uses' => 'PlacementOffersController@getOfferLetter']);
+
+
+Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
+
+
+
