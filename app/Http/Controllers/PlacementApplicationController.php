@@ -144,4 +144,37 @@ class PlacementApplicationController extends Controller
 
     }
 
+
+    public function showAllApplications($user_id,$placement_id)           //Searched by Company as who all have registered.. Also Filter according to their CPI
+    {
+
+        $applications = Application::where('placement_id',$placement_id)->get();
+
+        $student_detail[] = null;
+
+        $i = 0;
+
+        foreach ($applications as $application)
+        {
+
+            $student_primary = Student::find($application['student_id']);
+
+            $enroll_no = $student_primary['enroll_no'];
+
+            $student_education = StudentEducation::where('enroll_no',$enroll_no)->get();
+
+            $student['student_primary'] = $student_primary;
+
+            $student['student_education'] = $student_education;
+
+            $student_detail[$i] = $student;
+
+            $i++;
+
+        }
+
+        return $student_detail;
+
+    }
+
 }

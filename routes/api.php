@@ -120,7 +120,7 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::post('/{placement_id}/setPlacementCriteria', ['uses' => 'PlacementsController@setPlacementCriteria']);
 
-        Route::get('/placement/{placement_id}', ['uses' => 'PlacementsController@showAllApplications']);
+        Route::get('/placement/{placement_id}', ['uses' => 'PlacementApplicationController@showAllApplications']);
 
         Route::post('/{placement_id}/setOpenForDetails', ['uses' => 'PlacementsController@placementDriveOpenFor']);
 
@@ -136,6 +136,7 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::post('/{placement_id}/cancelOffer', [ 'uses' => 'PlacementOffersController@cancelOfferLetter' ]);
 
+        Route::post('/{placement_id}/reOpenRegistration', ['uses' => 'PlacementsController@reOpenRegistration']);
 
     });
 
@@ -149,6 +150,7 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::get('/getAllOfferLetter', ['uses' => 'PlacementOffersController@getAllOfferLetter']);
 
+        Route::post('/{placement_id}/reOpenRegistration', ['uses' => 'PlacementsController@reOpenRegistration']);
 
     });
 
@@ -199,4 +201,3 @@ Route::group(["prefix"=>'users'], function() {
     });
 
 Route::get('/{enroll_no_or_placement_id}/getOfferLetter', ['uses' => 'PlacementOffersController@getOfferLetter']);
-
