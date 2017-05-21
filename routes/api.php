@@ -142,6 +142,10 @@ Route::group(["prefix"=>'users'], function() {
 
         Route::post('/{placement_id}/reOpenRegistration', ['uses' => 'PlacementsController@reOpenRegistration']);
 
+        Route::post('/{placement_id}/selectStudentsFromApplication', ['uses' => 'PlacementsController@selectStudentsFromApplication']);
+
+        Route::post('/{placement_id}/selectStudentsRoundwise', ['uses' => 'PlacementsController@selectStudentsRoundwise']);
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin'],function(){

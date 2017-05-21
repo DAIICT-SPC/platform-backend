@@ -10,6 +10,7 @@ use App\Http\Requests\CreatePlacementsPrimaryDetails;
 use App\Http\Requests\CreatePlacementsOpenForDetails;
 use App\Http\Requests\CreateReOpenRegistration;
 use App\Http\Requests\CreateSelectionRoundsDetails;
+use App\Http\Requests\CreateSelectStudentsRoundwise;
 use App\Http\Requests\CreateStudentRegistration;
 use App\Offer;
 use App\PlacementCriteria;
@@ -317,7 +318,7 @@ class PlacementsController extends Controller
     public function updateDateOfSelectionRound(Request $request, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
     {
 
-        $input = $request->only('round_no','round_name','round_description','date_of_round');
+        $input = $request->only('date_of_round');
 
         $input = array_filter($input, function($value){
             return $value != null;
@@ -334,25 +335,138 @@ class PlacementsController extends Controller
 
     }
 
+
     public function selectStudentsFromApplication(Request $request, $user_id, $placement_id)         //starting from application layer - select checkboxes and thus data will come in array format
     {
 
-        //mail everytime student reaches to next round
+        $students_from_applications = $request->only('students_from_applications_checkbox');                  //receiving enroll no
+
+        $student_enroll_no_list = $students_from_applications['students_from_applications_checkbox'];
+
+        $selectedStudents = [];
+
+        $i = 0;
+
+        foreach ( $student_enroll_no_list as $student_enroll_no )
+        {
+
+            $input['placement_id'] = $placement_id;
+
+            $input['enroll_no'] = $student_enroll_no;
+
+            $input['round_no'] = 1;
+
+            $selectedStudents[$i] = SelectStudentRoundwise::create($input);
+
+            if(!$selectedStudents[$i])
+            {
+
+                return Helper::apiError("Wasn't able to Insert $selectedStudents[$i]",null,404);
+
+            }
+
+            $i++;
+
+        }
+
+        return $selectedStudents;
 
     }
 
-    public function selectStudentsRoundwise()            //select_students_roundwise
+    public function selectStudentsRoundwise(Request $request, $user_id, $placement_id)            //select_students_roundwise - must be coming in form of checkbox
     {
 
+        $round_details = SelectionRound::where('placement_id',$placement_id)->get();
+
+        $no_of_rounds = sizeof($round_details);
+
+        $selection_round_currently = SelectStudentRoundwise::where('placement_id',$placement_id)->first();
+
+        $current_round = $selection_round_currently['round_no'];
+
+        if( $current_round == $no_of_rounds)
+        {
+
+            return Helper::apiError("Rounds Completed already!",null,402);
+
+        }
+
+        $students_roundwise = $request->only('student_roundwise');                  //receiving enroll no
+
+        $student_enroll_no_list = $students_roundwise['student_roundwise'];
+
+        $selection_round = [];
+
+        $i = 0;
+
+        foreach ( $student_enroll_no_list as $student_enroll_no )
+        {
+
+            $selection_round[$i] = SelectStudentRoundwise::where('enroll_no',$student_enroll_no)->where('placement_id',$placement_id)->first();
+
+            $selection_round[$i]->update(array('round_no' => ($current_round + 1)));
+
+            $i++;
+
+        }
+
+        return $selection_round;
+
     }
 
-    public function offerLetter()
-    {
-
-    }
 
     public function update()                                    //Update anything PlacementsPrimary, PlacementsOpenFor, Placements
     {
+
+    }
+
+    public function placementsAll(Request $request)
+    {
+
+        $status = $request->only('status');
+
+        $open_for = $request->only('open_for');
+
+        $location = $request->only('location');
+
+        if( is_null($status['status']) && is_null($open_for['open_for']) && is_null($location['location']))
+        {
+
+            $placements = DB::table('placements_primary')
+                ->leftjoin('placements_open_for', 'placements_primary.placement_id', '=', 'placements_open_for.placement_id')
+                ->leftjoin('placement_criterias', 'placements_primary.placement_id', '=', 'placement_criterias.placement_id')
+                ->leftjoin('selection_rounds', 'placements_primary.placement_id', '=', 'selection_rounds.placement_id')
+                ->join('education', 'placement_criterias.education_id', '=', 'education.id')
+                ->join('categories', 'placement_criterias.category_id', '=', 'categories.id')
+                ->leftjoin('job_types', 'placements_primary.job_type_id', '=', 'job_types.id')
+                ->select('placements_primary.*','job_types.job_type','job_types.duration','categories.name','selection_rounds.*','education.name')
+                ->whereIn('status',['application','closed'])
+                ->distinct()
+                ->get();
+
+            return $placements;
+
+        }
+
+    }
+
+    public function updateSelectionRound(Request $request, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
+    {
+
+        $input = $request->only('round_no','round_name','round_description','date_of_round');
+
+        $input = array_filter($input, function($value){
+            return $value != null;
+        });
+
+        $round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
+
+        //send mass mail to all the students who have registered
+        // MAIL TO
+
+        $round->update($input);
+
+        return $round;
 
     }
 

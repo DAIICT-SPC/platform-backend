@@ -11,7 +11,7 @@ class SelectStudentRoundwise extends Model
 
     protected $fillable = [
       'placement_id',
-        'student_id',
+        'enroll_no',
         'round_no',
     ];
 
