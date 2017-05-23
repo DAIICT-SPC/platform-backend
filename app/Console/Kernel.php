@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\PlacementPrimary;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,6 +27,26 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->call(function(){
+
+            $now = date('Y-m-d H:i:s');
+
+            $placements = PlacementPrimary::where('status','application')->get();
+
+            foreach ( $placements as $placement )
+            {
+
+                if( $now >= $placement['last_date_of_registration'] )
+                {
+
+                    $placement->update( array ( 'status' => 'closed' ) );
+
+                }
+
+            }
+
+        })->hourly();
+
     }
 
     /**

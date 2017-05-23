@@ -376,11 +376,22 @@ class PlacementsController extends Controller
     public function selectStudentsRoundwise(Request $request, $user_id, $placement_id)            //select_students_roundwise - must be coming in form of checkbox
     {
 
+        $students_roundwise = $request->only('student_roundwise');                  //receiving enroll no
+
+        $student_enroll_no_list = $students_roundwise['student_roundwise'];
+
         $round_details = SelectionRound::where('placement_id',$placement_id)->get();
 
         $no_of_rounds = sizeof($round_details);
 
-        $selection_round_currently = SelectStudentRoundwise::where('placement_id',$placement_id)->first();
+        if( is_null($student_enroll_no_list[0]) )
+        {
+
+            return Helper::apiError("No enroll no at first index",null,404);
+
+        }
+
+        $selection_round_currently = SelectStudentRoundwise::where('placement_id',$placement_id)->where('enroll_no',$student_enroll_no_list[0])->first();
 
         $current_round = $selection_round_currently['round_no'];
 
@@ -391,9 +402,6 @@ class PlacementsController extends Controller
 
         }
 
-        $students_roundwise = $request->only('student_roundwise');                  //receiving enroll no
-
-        $student_enroll_no_list = $students_roundwise['student_roundwise'];
 
         $selection_round = [];
 
