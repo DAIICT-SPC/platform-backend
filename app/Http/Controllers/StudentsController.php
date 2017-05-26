@@ -10,6 +10,7 @@ use App\Offer;
 use App\PlacementCriteria;
 use App\PlacementOpenFor;
 use App\PlacementPrimary;
+use App\User;
 use Illuminate\Http\Request;
 use App\Student;
 use App\Helper;
@@ -26,33 +27,60 @@ class StudentsController extends Controller
 
     public function index()             //to show it to admin as the list of students
     {
+
         $students = Student::all();
 
         if(!$students){
+
             return Helper::apiError('No Student Found!',null,404);
+
         }
 
         return $students;
+
     }
 
 
-    public function show($user_id)                                      //It will find the user based on foreign key user_id in student table
+    public function show($user_id = null)                                      //It will find the user based on foreign key user_id in student table
     {
-        $user = Student::where('user_id',$user_id)->first();            //first() because only one entry would be there in student for one user
 
-        if(!$user){
-            return Helper::apiError('No Student Found!',null,404);
+        if (is_null($user_id)) {
+
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
         }
 
-        return $user;
+        if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
+
+        }
+
+        return $student;
     }
 
     public function update(Request $request, $user_id)
     {
-        $student = Student::where('user_id',$user_id)->first();            //first() because only one entry would be there in student for one user
+
+
+        if (is_null($user_id)) {
+
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
 
         if(!$student){
+
             return Helper::apiError('No Student Found!',null,404);
+
         }
 
         $input = $request->only('enroll_no','student_name','category_id','temp_address','perm_address','contact_no','dob','gender','category','enrollment_date', 'cpi','resume_link');
@@ -142,13 +170,29 @@ class StudentsController extends Controller
 
     }
 
-    public function storeStudentEducation(CreateStudentEducation $request,$user_id)
+    public function storeStudentEducation(CreateStudentEducation $request,$user_id = null)
     {
 
-        $student = Student::find($user_id);
+        if (is_null($user_id)) {
+
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
 
         if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
+
+        }
+
+        if(!$student){
+
             Helper::apiError("No Student Found! Can't store Education details",null,404);
+
         }
 
         $enroll_no = $student['enroll_no'];
@@ -177,12 +221,23 @@ class StudentsController extends Controller
 
     }
 
-    public function fetchEducation($user_id)
+    public function fetchEducation($user_id = null)
     {
-        $student = Student::find($user_id)->first();
+
+        if (is_null($user_id)) {
+
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
 
         if(!$student){
-            Helper::apiError("No Student Found! Can't fetch Education details",null,404);
+
+            return Helper::apiError('No Student Found!',null,404);
+
         }
 
         $enroll_no = $student['enroll_no'];
@@ -198,12 +253,22 @@ class StudentsController extends Controller
 
     }
 
-    public function updateEducation(Request $request,$user_id,$education_id)
+    public function updateEducation(Request $request,$user_id = null,$education_id)
     {
-        $student = Student::find($user_id)->first();
+        if (is_null($user_id)) {
+
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
 
         if(!$student){
-            Helper::apiError("No Student Found!",null,404);
+
+            return Helper::apiError('No Student Found!',null,404);
+
         }
 
         $enroll_no = $student['enroll_no'];
@@ -213,7 +278,9 @@ class StudentsController extends Controller
         $input = $request->only('clg_school','cpi','start_year','end_year','drive_link');
 
         $input = array_filter($input, function($value){
+
             return $value != null;
+
         });
 
         $education->update($input);
@@ -270,15 +337,22 @@ class StudentsController extends Controller
 
 
 
-    public function uploadResume(Request $request, $user_id)
+    public function uploadResume(Request $request, $user_id = null)
     {
 
-        $student = Student::where('user_id',$user_id)->first();
+        if (is_null($user_id)) {
 
-        if(!$student)
-        {
+            $student = request()->user()->student;
 
-            return Helper::apiError("No student found!",null,404);
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
+
+        if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
 
         }
 
@@ -305,18 +379,25 @@ class StudentsController extends Controller
 
     }
 
-    public function getResume($user_id, $student_id = null)
+    public function getResume($user_id = null, $student_id = null)
     {
 
         if( is_null($student_id))
         {
 
-            $student = Student::where('user_id',$user_id)->first();
+            if (is_null($user_id)) {
 
-            if(!$student)
-            {
+                $student = request()->user()->student;
 
-                return Helper::apiError("No student found!",null,404);
+            } else {
+
+                $student = User::find($user_id)->student;
+
+            }
+
+            if(!$student){
+
+                return Helper::apiError('No Student Found!',null,404);
 
             }
 
@@ -326,7 +407,7 @@ class StudentsController extends Controller
 
         }else{
 
-            if(sizeof($student_id)<8)
+            if( sizeof($student_id)<8 )
             {
 
                 $student = Student::where('id',$student_id)->first();
@@ -353,14 +434,23 @@ class StudentsController extends Controller
     }
 
 
-    public function eligibility(CreateStudentRegistration $request, $user_id)          //student registering - Application giving layer - have to validate each student if its eligible or not
+    public function eligibility(CreateStudentRegistration $request, $user_id = null)          //student registering - Application giving layer - have to validate each student if its eligible or not
     {
 
-        $student = Student::where('user_id',$user_id)->first();
+        if (is_null($user_id)) {
 
-        if(!$student)
-        {
-            Helper::apiError('No such Student Exist!',null,404);
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
+
+        if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
+
         }
 
         $student_category = $student['category_id'];

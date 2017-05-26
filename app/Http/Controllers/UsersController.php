@@ -31,10 +31,10 @@ class UsersController extends Controller
     }
 
 
-    public function registerUser(CreateUser $request)                             //Creates user in USER Table as well as if role is student creates an entry in student table
+    public function registerUser(Request $request)                             //Creates user in USER Table as well as if role is student creates an entry in student table
     {
 
-        $code = $request->only('code');                                     //while registering user - CODE and ROLE will be hidden but will come with request
+        $code = $request->input('code');                                     //while registering user - CODE and ROLE will be hidden but will come with request
 
         $activation = Activation::where('code',$code)->first();
 
@@ -42,11 +42,19 @@ class UsersController extends Controller
             return Helper::apiError('No such activation code exist. Please try again.',null,404);
         }
 
-        $activation->delete();
-
-        $input = $request->only('email','role','password');                 //creates array
+        $input = $request->only('password');                 //creates array
 
         $input['password'] = bcrypt($input['password']);
+
+        $email = $activation['email'];
+
+        $role = $activation['role'];
+
+        $input['email'] = $email;
+
+        $input['role'] = $role;
+
+        $activation->delete();
 
         $user = User::create($input);
 
@@ -58,17 +66,35 @@ class UsersController extends Controller
 
         if($user->role == 'student')
         {
-            $this->createStudent(['id' => $user->id]);
+
+            $input_student = $request->only('enroll_no', 'student_name','category_id','temp_address','perm_address','gender','dob');
+
+            $input_student['user_id'] = $user->id;
+
+            $this->createStudent($input_student);
+
         }
 
         else if($user->role == 'company')
         {
-            $this->createCompany(['id' => $user->id]);
+
+            $input_company = $request->only('company_name', 'address', 'contact_person', 'contact_no','company_expertise','company_url');
+
+            $input_company['user_id'] = $user->id;
+
+            $this->createCompany($input_company);
+
         }
 
         else if($user->role == 'admin')
         {
-            $this->createAdmin(['id' => $user->id]);
+
+            $input_admin = $request->only('name', 'contact_no', 'position');
+
+            $input_admin['user_id'] = $user->id;
+
+            $this->createAdmin($input_admin);
+
         }
 
         return $user;
@@ -77,23 +103,17 @@ class UsersController extends Controller
 
         protected function createStudent(array $data)
         {
-            return Student::create([
-                'user_id' => $data['id'],
-            ]);
+            return Student::create($data);
         }
 
         protected function createCompany(array $data)
         {
-            return Company::create([
-                'user_id' => $data['id'],
-            ]);
+            return Company::create($data);
         }
 
         protected function createAdmin(array $data)
         {
-            return Admin::create([
-                'user_id' => $data['id'],
-            ]);
+            return Admin::create($data);
         }
 
         public function show($id)

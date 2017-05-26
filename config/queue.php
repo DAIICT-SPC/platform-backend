@@ -20,7 +20,7 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Queue Connections
-    |--------------------------------------------------------------------------
+    |--------------------------------------------------------------- -----------
     |
     | Here you may configure the connection information for each server that
     | is used by your application. A default configuration has been added

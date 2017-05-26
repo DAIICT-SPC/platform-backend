@@ -17,9 +17,7 @@ class CreateUser extends Request
     public function rules()
     {
         return [
-            'email' => 'bail|required|string|email|max:255',
             'password' => 'bail|required|string|min:6',
-            'role' => 'bail|required',
-        ];
+            ];
     }
 }

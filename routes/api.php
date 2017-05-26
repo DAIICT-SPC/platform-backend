@@ -62,7 +62,7 @@ Route::group(["prefix"=>'users'], function() {
         Route::delete('/{user_id}', ['uses' => 'UsersController@destroy']);
 
 
-    Route::group(['prefix'=>'/{user_id}/student'],function(){
+    Route::group(['prefix'=>'/{user_id?}/student'],function(){
 
         Route::get('/', ['uses' => 'StudentsController@show']);         //It will get the student entry from student table
 

@@ -10,19 +10,29 @@ use App\PlacementCriteria;
 use App\PlacementPrimary;
 use App\Student;
 use App\StudentEducation;
+use App\User;
 use Illuminate\Http\Request;
 
 class PlacementApplicationController extends Controller
 {
 
-    public function studentRegistration(CreateStudentRegistration $request, $user_id)          //student registering - Application giving layer - have to validate each student if its eligible or not
+    public function studentRegistration(CreateStudentRegistration $request, $user_id = null)          //student registering - Application giving layer - have to validate each student if its eligible or not
     {
 
-        $student = Student::where('user_id',$user_id)->first();
+        if (is_null($user_id)) {
 
-        if(!$student)
-        {
-            Helper::apiError('No such Student Exist!',null,404);
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
+
+        if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
+
         }
 
         $student_category = $student['category_id'];
@@ -65,7 +75,9 @@ class PlacementApplicationController extends Controller
 
                     if($student_education['cpi'] >= $criteria['cpi_required'])
                     {
+
                         $j++;
+
                     }
 
                 }
@@ -115,7 +127,7 @@ class PlacementApplicationController extends Controller
 
     }
 
-    public function cancelRegistration(Request $request, $user_id)
+    public function cancelRegistration(Request $request, $user_id = null)
     {
 
         $input = $request->only('placement_id');
@@ -127,7 +139,21 @@ class PlacementApplicationController extends Controller
 
         }
 
-        $student = Student::where('user_id',$user_id)->first();
+        if (is_null($user_id)) {
+
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
+
+        if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
+
+        }
 
         $application = Application::where('enroll_no',$student['enroll_no'])->where('placement_id',$input['placement_id'])->first();
 

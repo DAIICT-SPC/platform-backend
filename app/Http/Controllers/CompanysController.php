@@ -20,40 +20,58 @@ class CompanysController extends Controller
 
     public function show($user_id = null)
     {
+
         if (is_null($user_id)) {
 
             $company = request()->user()->company;
 
         } else {
-            $company = User::find($user_id)->company;            //first() because only one entry would be there in student for one user
+
+            $company = User::find($user_id)->company;
+
         }
 
         if(!$company){
+
             return Helper::apiError('No such Entry found for Company!',null,404);
+
         }
 
         return $company;
 
     }
 
-    public function update(Request $request, $user_id)
+    public function update(Request $request, $user_id = null)
     {
 
-        $user = Company::where('user_id',$user_id)->first();
 
-        if(!$user){
-            Helper::apiError('No such Entry found for Company',null,'404');
+        if (is_null($user_id)) {
+
+            $company = request()->user()->company;
+
+        } else {
+
+            $company = User::find($user_id)->company;
+
+        }
+
+        if(!$company){
+
+            return Helper::apiError('No such Entry found for Company!',null,404);
+
         }
 
         $input = $request->only('company_name', 'address', 'contact_person', 'contact_no', 'company_expertise', 'company_url');
 
         $input = array_filter($input, function($value){
+
             return $value != null;
+
         });
 
-        $user->update($input);
+        $company->update($input);
 
-        return $user;
+        return $company;
 
     }
 

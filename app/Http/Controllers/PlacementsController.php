@@ -16,6 +16,7 @@ use App\Offer;
 use App\PlacementCriteria;
 use App\SelectStudentRoundwise;
 use App\StudentEducation;
+use App\User;
 use Illuminate\Http\Request;
 use App\PlacementPrimary;
 use App\PlacementOpenFor;
@@ -40,30 +41,37 @@ class PlacementsController extends Controller
         return $placement;
     }
 
-    public function createPlacementDrive(CreatePlacementsPrimaryDetails $request, $user_id)
+    public function createPlacementDrive(CreatePlacementsPrimaryDetails $request, $user_id = null)
     {
 
         $input = $request->only('job_title','job_description','last_date_for_registration','location','no_of_students','package','job_type_id');
 
-        $company_details = Company::where('user_id',$user_id)->first();
+        if (is_null($user_id)) {
 
-        if(!$company_details)
-        {
-            Helper::apiError('No company has such user id!',null,404);
+            $company_details = request()->user()->company;
+
+        } else {
+
+            $company_details = User::find($user_id)->company;
+
+        }
+
+        if(!$company_details){
+
+            return Helper::apiError('No such Entry found for Company!',null,404);
+
         }
 
         $company_id = $company_details['id'];
 
         $input['company_id'] = $company_id;
 
-        //instead of above magajmari, i simply can do the following
-        //to fetch company id -> $request->user() so that current user will be known and then adding its id
-        //$input['company_id'] = $request->user()->id();
-
         $placement_primary =  PlacementPrimary::create($input);
 
         if(!$placement_primary){
+
             Helper::apiError("Can't create new Placement Drive",null,404);
+
         }
 
         return $placement_primary;
@@ -401,7 +409,6 @@ class PlacementsController extends Controller
             return Helper::apiError("Rounds Completed already!",null,402);
 
         }
-
 
         $selection_round = [];
 

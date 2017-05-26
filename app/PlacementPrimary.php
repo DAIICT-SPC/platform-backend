@@ -19,6 +19,7 @@ class PlacementPrimary extends Model
         'package',
         'job_type_id',
         'company_id',
+        'status',
     ];
 
     public function company(){
