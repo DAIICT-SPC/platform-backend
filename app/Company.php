@@ -9,7 +9,7 @@ class Company extends Model
 
     protected $table = "companys";
 
-    protected $fillable = ['company_name', 'user_id', 'address', 'contact_person', 'contact_no', 'company_expertise', 'company_url'];
+    protected $fillable = [ 'user_id', 'address', 'company_name', 'contact_no', 'company_expertise', 'company_url'];
 
     public function placementPrimary()
     {

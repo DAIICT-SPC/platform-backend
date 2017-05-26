@@ -61,7 +61,7 @@ class CompanysController extends Controller
 
         }
 
-        $input = $request->only('company_name', 'address', 'contact_person', 'contact_no', 'company_expertise', 'company_url');
+        $input = $request->only('company_name', 'address', 'contact_no', 'company_expertise', 'company_url');
 
         $input = array_filter($input, function($value){
 

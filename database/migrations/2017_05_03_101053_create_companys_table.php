@@ -18,7 +18,6 @@ class CreateCompanysTable extends Migration
             $table->increments('id')->unsigned();
             $table->string('company_name');
             $table->longText('address');
-            $table->string('contact_person');
             $table->string('contact_no');
             $table->longText('company_expertise');
             $table->string('company_url')->nullable();

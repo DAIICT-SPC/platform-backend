@@ -20,8 +20,6 @@ class CreateStudentsBasicDetails extends Migration
 
             $table->integer('enroll_no')->unsigned()->unique();
 
-            $table->string('student_name');
-
             $table->integer('category_id')->unsigned();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');;       //Btech, Mtech
 

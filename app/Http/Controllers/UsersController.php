@@ -42,7 +42,7 @@ class UsersController extends Controller
             return Helper::apiError('No such activation code exist. Please try again.',null,404);
         }
 
-        $input = $request->only('password');                 //creates array
+        $input = $request->only('password', 'name');                 //creates array
 
         $input['password'] = bcrypt($input['password']);
 
@@ -67,7 +67,7 @@ class UsersController extends Controller
         if($user->role == 'student')
         {
 
-            $input_student = $request->only('enroll_no', 'student_name','category_id','temp_address','perm_address','gender','dob');
+            $input_student = $request->only('enroll_no','category_id','temp_address','perm_address','gender','dob');
 
             $input_student['user_id'] = $user->id;
 
@@ -78,7 +78,7 @@ class UsersController extends Controller
         else if($user->role == 'company')
         {
 
-            $input_company = $request->only('company_name', 'address', 'contact_person', 'contact_no','company_expertise','company_url');
+            $input_company = $request->only( 'address', 'company_name', 'contact_no','company_expertise','company_url');
 
             $input_company['user_id'] = $user->id;
 
@@ -89,7 +89,7 @@ class UsersController extends Controller
         else if($user->role == 'admin')
         {
 
-            $input_admin = $request->only('name', 'contact_no', 'position');
+            $input_admin = $request->only( 'contact_no', 'position');
 
             $input_admin['user_id'] = $user->id;
 
@@ -141,7 +141,7 @@ class UsersController extends Controller
                 return Helper::apiError('User not Found!',null,404);
             }
 
-            $input = $request->only('username','email','password');
+            $input = $request->only('role','email','password', 'name');
 
             $input = array_filter($input, function($value){
                 return $value != null;

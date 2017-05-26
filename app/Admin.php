@@ -9,6 +9,6 @@ class Admin extends Model
 
     protected $table = "admin";
 
-    protected $fillable = ['name', 'user_id', 'contact_no', 'position'];
+    protected $fillable = [ 'user_id', 'contact_no', 'position'];
 
 }

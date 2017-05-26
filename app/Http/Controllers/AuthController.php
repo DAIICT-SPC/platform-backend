@@ -22,7 +22,7 @@ class AuthController extends Controller
         try{
 
             if( ! $token = \JWTAuth::attempt($credentials) ){
-                return Helper::apiError("User Credentials are not Correct",null,404);
+                return Helper::apiError("User Credentials are not Correct!",null,404);
             }
 
         }catch (JWTException $err) {

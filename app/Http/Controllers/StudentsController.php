@@ -87,7 +87,7 @@ class StudentsController extends Controller
 
         }
 
-        $input = $request->only('enroll_no','student_name','category_id','temp_address','perm_address','contact_no','dob','gender','category','enrollment_date', 'cpi','resume_link');
+        $input = $request->only('enroll_no','category_id','temp_address','perm_address','contact_no','dob','gender','category','enrollment_date', 'cpi','resume_link');
 
         $input = array_filter($input, function($value){
             return $value != null;
