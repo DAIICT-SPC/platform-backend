@@ -106,7 +106,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function selectionRound(Request $request, $user_id,$placement_id)
+    public function selectionRound(Request $request, $user_id, $placement_id)
     {
 
         $input = $request->only('round_no','round_name','round_description','date_of_round');
