@@ -116,8 +116,9 @@ class UsersController extends Controller
             return Admin::create($data);
         }
 
-        public function show($id)
+        public function show($id = null)
         {
+
             if(is_null($id)){
                 $user = request()->user();
             }else{

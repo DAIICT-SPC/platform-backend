@@ -78,7 +78,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function placementDriveOpenFor(Request $request, $placement_id)
+    public function placementDriveOpenFor(Request $request, $user_id, $placement_id)
     {
 
         $checkboxes = $request->input('openFor_checkbox');           //When i fetch " OPENFOR_CHECKBOX value " it should already be in array format and it contains id
@@ -126,7 +126,7 @@ class PlacementsController extends Controller
 
     public function setPlacementCriteria(CreatePlacementCriteria $request, $user_id, $placement_id)       //have a - set button and new button - on the first try show daiict (masters)
     {
-        $input = $request->only('education_id', 'cpi_required');
+        $input = $request->only('education_id', 'category_id', 'cpi_required');
 
         $input['placement_id'] = $placement_id;
 

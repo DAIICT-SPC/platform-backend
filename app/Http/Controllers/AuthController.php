@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth;
 
@@ -14,6 +16,7 @@ class AuthController extends Controller
 
     public function authenticate(Request $request)
     {
+
         $credentials = $request->only('email','password');
 
         try{
@@ -30,6 +33,17 @@ class AuthController extends Controller
         }
 
         return response()->json(compact('token'));
+
+    }
+
+    public function checkAuthentication()
+    {
+
+        $token = \JWTAuth::getToken();
+
+        $user = \JWTAuth::toUser($token);
+
+        return $user;
 
     }
 

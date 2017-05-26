@@ -3,19 +3,7 @@
 
     Route::post('/authenticate', ['uses' => 'AuthController@authenticate']);
 
-    Route::get('/', function (Request $request){
-
-        $token = \JWTAuth::getToken();
-
-        $user = \JWTAuth::toUser($token);
-
-        return $user;
-
-        //instead use
-
-        //request()->user()
-
-    })->middleware('jwt');
+    Route::get('/', ['uses' => 'AuthController@checkAuthentication'])->middleware('jwt');
 
 //
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -26,7 +14,7 @@
 
 
 
-    Route::group(["prefix"=>'activation'], function() {
+    Route::group(["prefix"=>'activation', 'middleware' => ['jwt']], function() {
 
         Route::post('/single', ['uses' => 'ActivationController@createSingleEntry']);
 
@@ -38,7 +26,7 @@
 
     });
 
-    Route::group(["prefix"=>'education'], function() {
+    Route::group(["prefix" => 'education', 'middleware' => ['jwt']], function() {
 
         Route::get('/' , ['uses' => 'EducationController@index']);
 
@@ -51,64 +39,61 @@
     });
 
 
-Route::group(["prefix"=>'users'], function() {
+Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/', ['uses' => 'UsersController@index','middleware'=>'jwt']);
 
         Route::post('/registerUser', ['uses' => 'UsersController@registerUser']);
 
-        Route::get('/{id}', ['uses' => 'UsersController@show']);
+        Route::get('/show/{id?}', ['uses' => 'UsersController@show']);
 
         Route::delete('/{user_id}', ['uses' => 'UsersController@destroy']);
 
 
-    Route::group(['prefix'=>'/{user_id?}/student'],function(){
+    Route::group(['prefix'=>'{user_id?}/student', 'middleware' => 'role:student'], function(){
 
-        Route::get('/', ['uses' => 'StudentsController@show']);         //It will get the student entry from student table
+            Route::get('/', ['uses' => 'StudentsController@show']);        //It will get the student entry from student table
 
-        Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);      //It will update details like email,username,password which are present in "USERS" table
+            Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);      //It will update details like email,username,password which are present in "USERS" table
 
-        Route::patch('/update', ['uses' => 'StudentsController@update']);
+            Route::patch('/update', ['uses' => 'StudentsController@update']);
 
-        Route::post('/previousEducation', ['uses' => 'StudentsController@storePreviousEducation']);
+            Route::post('/previousEducation', ['uses' => 'StudentsController@storePreviousEducation']);
 
-        Route::get('/previousEducation', ['uses' => 'StudentsController@fetchPreviousEducation']);
+            Route::get('/previousEducation', ['uses' => 'StudentsController@fetchPreviousEducation']);
 
-        Route::patch('/update/previousEducation/{id}', ['uses' => 'StudentsController@updateEducation']);
+            Route::patch('/update/previousEducation/{id}', ['uses' => 'StudentsController@updateEducation']);
 
-        Route::post('/project', ['uses' => 'StudentsController@storeProjects']);
+            Route::post('/project', ['uses' => 'StudentsController@storeProjects']);
 
-        Route::get('/project', ['uses' => 'StudentsController@fetchProjects']);
+            Route::get('/project', ['uses' => 'StudentsController@fetchProjects']);
 
-        Route::post('/internship', ['uses' => 'StudentsController@storeInternship']);
+            Route::post('/internship', ['uses' => 'StudentsController@storeInternship']);
 
-        Route::get('/internship', ['uses' => 'StudentsController@fetchInternships']);
+            Route::get('/internship', ['uses' => 'StudentsController@fetchInternships']);
 
-        Route::post('/placementRegistration', ['uses' => 'PlacementApplicationController@studentRegistration']);
+            Route::post('/placementRegistration', ['uses' => 'PlacementApplicationController@studentRegistration']);
 
-        Route::post('/cancelRegistration', ['uses' => 'PlacementApplicationController@cancelRegistration']);
+            Route::post('/cancelRegistration', ['uses' => 'PlacementApplicationController@cancelRegistration']);
 
-        Route::get('/dashboard', ['uses' => 'StudentsController@dashboard']);
+            Route::get('/dashboard', ['uses' => 'StudentsController@dashboard']);
 
-        Route::post('/education', ['uses' => 'StudentsController@storeStudentEducation']);
+            Route::post('/education', ['uses' => 'StudentsController@storeStudentEducation']);
 
-        Route::get('/education', ['uses' => 'StudentsController@fetchEducation']);
+            Route::get('/education', ['uses' => 'StudentsController@fetchEducation']);
 
-        Route::patch('/education/{education_id}', ['uses' => 'StudentsController@updateEducation']);
+            Route::patch('/education/{education_id}', ['uses' => 'StudentsController@updateEducation']);
 
-        Route::post('/uploadResume', ['uses' => 'StudentsController@uploadResume']);
+            Route::post('/uploadResume', ['uses' => 'StudentsController@uploadResume']);
 
-        Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
+            Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
 
-
-        Route::post('/eligibility', ['uses' => 'StudentsController@eligibility']);
-
-
+            Route::post('/eligibility', ['uses' => 'StudentsController@eligibility']);
 
     });
 
 
-    Route::group(['prefix'=>'/{user_id?}/company'],function(){
+    Route::group(['prefix'=>'/{user_id?}/company', 'middleware' => 'role:company'],function(){
 
         Route::get('/', ['uses' => 'CompanysController@show']);         //It will get the Company entry from company table
 
@@ -148,7 +133,7 @@ Route::group(["prefix"=>'users'], function() {
 
     });
 
-    Route::group(['prefix'=>'/{user_id}/admin'],function(){
+    Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
 
         Route::get('/', ['uses' => 'AdminsController@show']);         //It will get the Company entry from company table
 
@@ -179,7 +164,7 @@ Route::group(["prefix"=>'users'], function() {
     });
 
 
-    Route::group(['prefix'=>'/categories'],function(){
+    Route::group(['prefix'=>'/categories', 'middleware' => ['jwt']],function(){
 
         Route::get('/', ['uses' => 'CategoryController@index']);
 
@@ -193,7 +178,7 @@ Route::group(["prefix"=>'users'], function() {
 
     });
 
-    Route::group(['prefix'=>'/job_type'],function() {
+    Route::group(['prefix'=>'/job_type', 'middleware' => ['jwt']],function() {
 
         Route::get('/', ['uses' => 'JobTypeController@index']);
 

@@ -18,6 +18,7 @@ use App\Project;
 use App\Internship;
 use App\StudentEducation;
 use App\Http\Requests\CreateStudentEducation;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
@@ -50,7 +51,11 @@ class StudentsController extends Controller
 
         } else {
 
-            $student = User::find($user_id)->student;
+            $token = \JWTAuth::getToken();
+
+            $user = \JWTAuth::toUser($token);
+
+            $student = User::find($user['id'])->student;
 
         }
 
@@ -65,7 +70,6 @@ class StudentsController extends Controller
 
     public function update(Request $request, $user_id)
     {
-
 
         if (is_null($user_id)) {
 
@@ -466,11 +470,10 @@ class StudentsController extends Controller
 
         $application = Application::where('placement_id',$placement_id)->where('enroll_no',$enroll_no)->first();
 
+        // already applied
         if( !is_null($application) )
         {
-
-            return $application;
-
+            return response(['status' => "applied"]);
         }
 
         $criterias = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$student_category)->get();
@@ -506,7 +509,7 @@ class StudentsController extends Controller
         if( sizeof($offer) > 1 )
         {
 
-            return response("Not Eligible",402);
+            return response(['status' => "ineligible"], 402);
 
         }else{
 
@@ -521,7 +524,7 @@ class StudentsController extends Controller
             if( $salary * 1.5 > $package_to_be_given )
             {
 
-                return response("Not Eligible",402);
+                return response(['status' => "ineligible"], 402);
 
             }
 
@@ -530,11 +533,12 @@ class StudentsController extends Controller
         if($i == $j)
         {
 
-            return response("Eligible",200);
+            return response(['status' => "eligible"]);
 
         }else{
 
-            return response("Not Eligible",402);
+            return Helper::apiError("ineligible",null,402);
+
         }
 
     }
