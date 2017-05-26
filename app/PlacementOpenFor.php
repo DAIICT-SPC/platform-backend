@@ -14,4 +14,14 @@ class PlacementOpenFor extends Model
         'category_id',
     ];
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class,'category_id');
+    }
+
+    public function placements()
+    {
+        return $this->belongsTo(PlacementPrimary::class,'placement_id');
+    }
+
 }

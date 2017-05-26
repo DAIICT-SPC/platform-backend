@@ -11,13 +11,29 @@ class Student extends Model
 
     protected $fillable = ['enroll_no', 'user_id', 'category_id', 'temp_address', 'perm_address', 'contact_no', 'dob', 'gender', 'resume_link'];
 
-    public function projects()
+    public function user()
     {
-        return $this->hasMany(Project::class,'enroll_no');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function internships()
+    public function category()
     {
-        return $this->hasMany(Internship::class,'enroll_no');
+        return $this->belongsTo(Category::class, 'category_id');
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'enroll_no');
+    }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class, 'enroll_no');
+    }
+
+    public function educations()
+    {
+        return $this->belongsToMany(Education::çlass, 'student_education', 'enroll_no','education_id');
+    }
+
 }

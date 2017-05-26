@@ -13,4 +13,9 @@ class Offer extends Model
         'enroll_no',
         'package',
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'enroll_no');
+    }
 }

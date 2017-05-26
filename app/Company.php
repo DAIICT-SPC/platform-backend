@@ -11,9 +11,14 @@ class Company extends Model
 
     protected $fillable = [ 'user_id', 'address', 'company_name', 'contact_no', 'company_expertise', 'company_url'];
 
-    public function placementPrimary()
+    public function user()
     {
-        return $this->hasMany(PlacementPrimary::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function placements()
+    {
+        return $this->hasMany(PlacementPrimary::class,'company_id');
     }
 
 }

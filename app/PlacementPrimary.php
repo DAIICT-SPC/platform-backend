@@ -3,8 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Company;
-use App\PlacementOpenFor;
+
 
 class PlacementPrimary extends Model
 {
@@ -22,7 +21,8 @@ class PlacementPrimary extends Model
         'status',
     ];
 
-    public function company(){
+    public function company()
+    {
         return $this->belongsTo(Company::class,'company_id');
     }
 
@@ -30,4 +30,26 @@ class PlacementPrimary extends Model
     {
         return $this->belongsToMany(Category::class, 'placements_open_for', 'placement_id', 'category_id');
     }
+
+    public function placementCriteria()
+    {
+        return $this->hasMany(PlacementCriteria::class, 'placement_id');
+    }
+
+    public function placementSelection()
+    {
+        return $this->hasMany(SelectionRound::class,'placement_id');
+    }
+
+    public function jobType()
+    {
+        return $this->belongsTo(Job_Type::class,'job_type_id');
+    }
+
+    public function studentsInRound($round_no)
+    {
+        return $this->belongsToMany(Student::class, 'select_students_roundwise', 'placement_id', 'enroll_no')
+            ->where('select_students_roundwise.round_no', "<=", $round_no);
+    }
+
 }

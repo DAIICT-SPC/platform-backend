@@ -13,4 +13,9 @@ class Application extends Model
       'placement_id', 'enroll_no',
     ];
 
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'enroll_no');
+    }
+
 }

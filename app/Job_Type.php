@@ -12,4 +12,9 @@ class Job_Type extends Model
         'job_type',
         'duration',
     ];
+
+    public function placements()
+    {
+        return $this->hasOne(PlacementPrimary::class,'job_type_id');
+    }
 }

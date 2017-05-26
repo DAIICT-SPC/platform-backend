@@ -16,4 +16,9 @@ class SelectionRound extends Model
         'date_of_round',
     ];
 
+    public function placements()
+    {
+        return $this->belongsTo(PlacementPrimary::class,'placement_id');
+    }
+
 }

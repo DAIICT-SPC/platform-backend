@@ -16,4 +16,19 @@ class PlacementCriteria extends Model
         'grade_required',
     ];
 
+    public function placements()
+    {
+        return $this->belongsTo(PlacementPrimary::class,'placement_id');
+    }
+
+    public function education()
+    {
+        return $this->belongsTo(Education::class,'education_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class,'category_id');
+    }
+
 }
