@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PlacementPrimary extends Model
 {
+    protected $primaryKey = 'placement_id';
+
     protected $table = 'placements_primary';
 
     protected $fillable = [
@@ -31,7 +33,7 @@ class PlacementPrimary extends Model
         return $this->belongsToMany(Category::class, 'placements_open_for', 'placement_id', 'category_id');
     }
 
-    public function placementCriteria()
+    public function criterias()
     {
         return $this->hasMany(PlacementCriteria::class, 'placement_id');
     }

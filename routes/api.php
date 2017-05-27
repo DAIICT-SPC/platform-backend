@@ -131,6 +131,15 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/{placement_id}/selectStudentsRoundwise', ['uses' => 'PlacementsController@selectStudentsRoundwise']);
 
+        Route::get('/{placement_id}/showPlacementDetails/', ['uses' => 'PlacementsController@showPlacementDetails']);
+
+        Route::patch('/{placement_id}/updateOpenFor/', ['uses' => 'PlacementsController@updateOpenFor']);
+
+        Route::patch('/{placement_id}/updateCriteria/', ['uses' => 'PlacementsController@updateCriteria']);
+
+        Route::patch('/{placement_id}/updatePlacementsPrimary/', ['uses' => 'PlacementsController@updatePlacementsPrimary']);
+
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
@@ -144,6 +153,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/getAllOfferLetter', ['uses' => 'PlacementOffersController@getAllOfferLetter']);
 
         Route::post('/{placement_id}/reOpenRegistration', ['uses' => 'PlacementsController@reOpenRegistration']);
+
+        Route::post('/{placement_id}/selectStudentsRoundwise', ['uses' => 'PlacementsController@selectStudentsRoundwise']);
 
     });
 
@@ -198,8 +209,6 @@ Route::get('/{enroll_no_or_placement_id}/getOfferLetter', ['uses' => 'PlacementO
 
 Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
 
-
-Route::get('/{user_id}/capablePlacementList', ['uses' => 'StudentsController@capablePlacementList']);
 
 
 

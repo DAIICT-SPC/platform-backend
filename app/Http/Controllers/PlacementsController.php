@@ -209,64 +209,6 @@ class PlacementsController extends Controller
 
     }
 
-    public function showPlacement($placement_id)
-    {
-
-        $primary = PlacementPrimary::where('placement_id',$placement_id)->first();
-
-        if(!$primary)
-        {
-            Helper::apiError('No Placement Drive with such ID',null,404);
-        }
-
-        $companyName = DB::table('companys')->where('id', $primary['company_id'])->value('company_name');       //fetching company name from company_id
-
-        $primary['company_name'] = $companyName;
-
-        $typeName = DB::table('job_types')->where('id', $primary['job_type_id'])->value('job_type');
-
-        $primary['type_name'] = $typeName;
-
-
-        $openFor = PlacementOpenFor::where('placement_id',$placement_id)->get();
-
-        if(!$openFor)
-        {
-            Helper::apiError('No data for Open for Categories!',null,404);
-        }
-
-        $category_names = null;
-
-        $i = 0;
-
-        foreach ($openFor as $category)             //fetching all names
-        {
-
-            $category_name = DB::table('categories')->where('id',$category['category_id'])->value('name');
-
-            $category_names[$i] = $category_name;
-
-            $i++;
-
-        }
-
-        $selectionRound = SelectionRound::where('placement_id',$placement_id)->get();
-
-        if(!$selectionRound)
-        {
-            Helper::apiError('No Selection Round Details!',null,404);
-        }
-
-        $placement['primary'] = $primary;
-
-        $placement['openFor'] = $category_names;
-
-        $placement['selectionRound'] = $selectionRound;
-
-        return $placement;
-
-    }
-
     public function showPlacementsPrimary($placement_id)
     {
 
@@ -429,46 +371,71 @@ class PlacementsController extends Controller
 
     }
 
-
-    public function update()                                    //Update anything PlacementsPrimary, PlacementsOpenFor, Placements
+    public function updatePlacementsPrimary(Request $request, $placement_id)                                    //Update anything PlacementsPrimary, PlacementsOpenFor, Placements
     {
+
+        $input = $request->only('job_title','job_description','location','no_of_students','package','job_type_id');
+
+        $input = array_filter($input, function($value){
+
+            return $value != null;
+
+        });
+
+        $placements = PlacementPrimary::find($placement_id);
+
+        $placements->update($input);
+
+        return $placements;
 
     }
 
-    public function placementsAll(Request $request)
+    public function updateOpenFor(Request $request, $placement_id)
     {
 
-        $status = $request->only('status');
+        $placements = PlacementPrimary::find($placement_id);
 
-        $open_for = $request->only('open_for');
+        $input_array = $request->only('update_open_for');
 
-        $location = $request->only('location');
+        $input = $input_array['update_open_for'];
 
-        if( is_null($status['status']) && is_null($open_for['open_for']) && is_null($location['location']))
+        $placements->categories()->sync($input);
+
+        foreach ($input as $single)
         {
 
-            $placements = DB::table('placements_primary')
-                ->leftjoin('placements_open_for', 'placements_primary.placement_id', '=', 'placements_open_for.placement_id')
-                ->leftjoin('placement_criterias', 'placements_primary.placement_id', '=', 'placement_criterias.placement_id')
-                ->leftjoin('selection_rounds', 'placements_primary.placement_id', '=', 'selection_rounds.placement_id')
-                ->join('education', 'placement_criterias.education_id', '=', 'education.id')
-                ->join('categories', 'placement_criterias.category_id', '=', 'categories.id')
-                ->leftjoin('job_types', 'placements_primary.job_type_id', '=', 'job_types.id')
-                ->select('placements_primary.*','job_types.job_type','job_types.duration','categories.name','selection_rounds.*','education.name')
-                ->whereIn('status',['application','closed'])
-                ->distinct()
-                ->get();
-
-            return $placements;
+            PlacementCriteria::where('placement_id',$placement_id)->where('category_id','!=',$single)->delete();
 
         }
 
+        $placement_open_for = PlacementOpenFor::where('placement_id',$placement_id)->get();
+
+        return $placement_open_for;
+
     }
 
-    public function updateSelectionRound(Request $request, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
+    public function updateCriteria(Request $request, $placement_id)
     {
 
-        $input = $request->only('round_no','round_name','round_description','date_of_round');
+        $input = $request->only('education_id', 'category_id', 'cpi_required');
+
+        $placement_criteria = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$input['category_id'])->where('education_id',$input['education_id'])->first();
+
+        if(!$placement_criteria)
+        {
+            Helper::apiError("No such Criteria found!",null,404);
+        }
+
+        $placement_criteria->update($input);
+
+        return $placement_criteria;
+
+    }
+
+    public function updateSelectionRound(Request $request, $placement_id, $round_no)
+    {
+
+        $input = $request->only('round_no','round_name','round_description');
 
         $input = array_filter($input, function($value){
             return $value != null;
@@ -485,5 +452,21 @@ class PlacementsController extends Controller
 
     }
 
+    public function showPlacementDetails($placement_id)
+    {
+
+        $placement = PlacementPrimary::with(['company', 'categories.criterias' => function($q) use ($placement_id) {
+            $q->where('placement_id', $placement_id);
+        },
+        'jobType', 'placementSelection'])->find($placement_id);
+
+        if(!$placement)
+        {
+            Helper::apiError('No Placement Drive with such ID',null,404);
+        }
+
+        return $placement;
+
+    }
 
 }

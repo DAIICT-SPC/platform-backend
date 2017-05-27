@@ -21,7 +21,7 @@ class Category extends Model
         return $this->belongsToMany(PlacementPrimary::class, 'placements_open_for', 'category_id', 'placement_id');
     }
 
-    public function placementCriterias()
+    public function criterias()
     {
         return $this->hasMany(PlacementCriteria::class, 'category_id');
     }

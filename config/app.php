@@ -182,6 +182,9 @@ return [
 
         //excel file Provider
         Maatwebsite\Excel\ExcelServiceProvider::class,
+
+        //Debugbar
+        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -235,6 +238,7 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];
