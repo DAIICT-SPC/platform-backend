@@ -99,7 +99,7 @@ class UsersController extends Controller
 
         return $user;
 
-        }
+    }
 
         protected function createStudent(array $data)
         {
@@ -144,7 +144,9 @@ class UsersController extends Controller
             $input = $request->only('role','email','password', 'name');
 
             $input = array_filter($input, function($value){
+
                 return $value != null;
+
             });
 
             $user->update($input);

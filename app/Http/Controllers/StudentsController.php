@@ -257,7 +257,7 @@ class StudentsController extends Controller
 
     }
 
-    public function updateEducation(Request $request,$user_id = null,$education_id)
+    public function updateEducation(Request $request, $user_id = null,$education_id)
     {
         if (is_null($user_id)) {
 
@@ -307,22 +307,30 @@ class StudentsController extends Controller
     public function dashboard($user_id)
     {
 
-        $placements = DB::table('placements_primary')
-            ->join('placements_open_for', 'placements_primary.placement_id', '=', 'placements_open_for.placement_id')
-            ->where('status','application')->get();
-
-        $placements_array = json_decode(json_encode($placements), true);
-
         $student = Student::where('user_id',$user_id)->first();
 
         $dashboard[] = null;
 
         $i = 0;
 
-        foreach ($placements_array as $placement)
+        $placements = PlacementPrimary::where('status','application')->latest();
+
+        $placement_ids = $placements->pluck('placement_id');
+
+        foreach ( $placement_ids as $placement_id)
         {
 
-                if( $student['category_id'] == $placement['category_id'])
+            $placement = PlacementPrimary::with(['company', 'categories.criterias' => function($q) use ($placement_id) {
+                $q->where('placement_id', $placement_id);
+            },
+                'jobType', 'placementSelection'])->find($placement_id);
+
+            $placement_categories = $placement['categories'];
+
+            foreach ( $placement_categories as $placement_category)
+            {
+
+                if( $student['category_id'] == $placement_category['id'])
                 {
 
                     $dashboard[$i] = $placement;
@@ -331,12 +339,12 @@ class StudentsController extends Controller
 
                 }
 
+            }
+
         }
 
-        $dashboard_proper = array_reverse($dashboard);          //reversing because the NEWS FEED inserted recently should be shown first
-
-        return $dashboard_proper;
-
+        return $dashboard;
+        
     }
 
 

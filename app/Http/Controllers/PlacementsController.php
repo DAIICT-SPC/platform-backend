@@ -521,7 +521,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function showPlacementDetails($placement_id)
+    public function showPlacementDetails($user_id, $placement_id)
     {
 
         $placement = PlacementPrimary::with(['company', 'categories.criterias' => function($q) use ($placement_id) {

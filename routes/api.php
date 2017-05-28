@@ -186,7 +186,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
 
 
-    Route::group(['prefix'=>'/placement/{placement_id}'],function() {
+    Route::group(['prefix'=>'/placement/{placement_id}' ],function() {
 
         Route::get('/', ['uses' => 'PlacementsController@getPlacementPrimary']);            //to find placement basic detial so that id can be known
 
@@ -199,7 +199,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
     });
 
 
-    Route::group(['prefix'=>'/categories', 'middleware' => ['jwt']],function(){
+    Route::group(['prefix'=>'/categories', 'middleware' => ['jwt', 'role:admin']],function(){
 
         Route::get('/', ['uses' => 'CategoryController@index']);
 
@@ -213,7 +213,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
     });
 
-    Route::group(['prefix'=>'/job_type', 'middleware' => ['jwt']],function() {
+    Route::group(['prefix'=>'/job_type', 'middleware' => ['jwt'], 'role:admin'],function() {
 
         Route::get('/', ['uses' => 'JobTypeController@index']);
 

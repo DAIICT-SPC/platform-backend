@@ -115,7 +115,7 @@ class ActivationController extends Controller
 
                         if (!empty($data) && !is_null($data)) {         // if either sheet is not empty
 
-                            foreach ($data as $emails) {                // in single sheet fetching each emails
+                            foreach ($data as $emails) {                // in single sheet fetching emails
 
                                 $email_fetch = array_values($emails);
 
