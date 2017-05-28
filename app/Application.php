@@ -18,4 +18,9 @@ class Application extends Model
         return $this->belongsTo(Student::class, 'enroll_no');
     }
 
+    public function placements()
+    {
+        return $this->belongsTo(PlacementPrimary::class,'placement_id');
+    }
+
 }

@@ -130,9 +130,4 @@ class PlacementOffersController extends Controller
 
     }
 
-    public function updateOfferLetter()
-    {
-
-    }
-
 }

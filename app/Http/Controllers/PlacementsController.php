@@ -96,7 +96,18 @@ class PlacementsController extends Controller
 
             $input['placement_id'] = $placement_id;
 
-            $openfor[$i] = PlacementOpenFor::create($input);
+            $already_in_db = PlacementOpenFor::where('placement_id',$placement_id)->where('category_id',$checkbox)->first();
+
+            if( !is_null($already_in_db))
+            {
+
+                $openfor[$i] = PlacementOpenFor::create($input);
+
+                $i++;
+
+            }
+
+            $openfor[$i] = $already_in_db;
 
             $i++;
 
@@ -112,6 +123,13 @@ class PlacementsController extends Controller
         $input = $request->only('round_no','round_name','round_description','date_of_round');
 
         $input['placement_id'] = $placement_id;
+
+        $already_in_db = SelectionRound::where('placement_id',$placement_id)->where('round_no',$input['round_no'])->first();
+
+        if( !is_null($already_in_db))
+        {
+            return $already_in_db;
+        }
 
         $selectionRound = SelectionRound::create($input);
 
@@ -130,7 +148,19 @@ class PlacementsController extends Controller
 
         $input['placement_id'] = $placement_id;
 
+        $already_in_db = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$input['category_id'])->where('education_id',$input['education_id'])->first();
+
+        if(!is_null($already_in_db))
+        {
+            return $already_in_db;
+        }
+
         $placement_criteria = PlacementCriteria::create($input);
+
+        if(!$placement_criteria)
+        {
+            Helper::apiError("Cannot create Placement Criteria!",null,404);
+        }
 
         return $placement_criteria;
 
@@ -167,7 +197,7 @@ class PlacementsController extends Controller
 
         }
 
-        PlacementPrimary::where('placement_id',$placement_id)->update( array('last_date_for_registration' => $input['last_date_for_registration']));
+        PlacementPrimary::where('placement_id',$placement_id)->update( array('last_date_for_registration' => $input['last_date_for_registration'], 'status' => 'application'));
 
         $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
 
@@ -192,8 +222,6 @@ class PlacementsController extends Controller
         return $placement_primary;
 
     }
-
-
 
     public function showAllSelectionRound($placement_id)
     {
@@ -392,7 +420,7 @@ class PlacementsController extends Controller
 
         }
 
-        $input = $request->only('job_title','job_description','location','no_of_students','package','job_type_id');
+        $input = $request->only('job_title','job_description','location','no_of_students','package','job_type_id', 'last_date_of_registration');
 
         $input = array_filter($input, function($value){
 

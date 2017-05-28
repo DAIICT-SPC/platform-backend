@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Application;
+use App\Company;
 use App\Helper;
 use App\Http\Requests\CreateStudentRegistration;
 use App\Offer;
@@ -174,6 +175,24 @@ class PlacementApplicationController extends Controller
 
     public function showAllApplications($user_id, $placement_id)           //Searched by Company as who all have registered.. Also Filter according to their CPI
     {
+
+        $identity = User::where('id',$user_id)->first();
+
+        $role =  $identity["role"];
+
+        if( $role == 'company')
+        {
+            $placements = PlacementPrimary::find($placement_id);
+
+            $company = Company::where('user_id',$user_id)->first();
+
+            if( $company->id != $placements['company_id']){
+
+                return Helper::apiError("Unauthorized access",null,401);
+
+            }
+
+        }
 
         $applications = DB::table('applications')
             ->join('students', 'applications.enroll_no', '=', 'students.enroll_no')

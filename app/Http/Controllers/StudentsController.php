@@ -344,7 +344,7 @@ class StudentsController extends Controller
         }
 
         return $dashboard;
-        
+
     }
 
 
@@ -550,6 +550,5 @@ class StudentsController extends Controller
         }
 
     }
-
 
 }
