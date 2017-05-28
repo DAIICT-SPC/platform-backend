@@ -371,8 +371,26 @@ class PlacementsController extends Controller
 
     }
 
-    public function updatePlacementsPrimary(Request $request, $placement_id)                                    //Update anything PlacementsPrimary, PlacementsOpenFor, Placements
+    public function updatePlacementsPrimary(Request $request, $user_id, $placement_id)                                    //Update anything PlacementsPrimary, PlacementsOpenFor, Placements
     {
+
+        $identity = User::where('id',$user_id)->first();
+
+        $role =  $identity["role"];
+
+        if( $role == 'company')
+        {
+            $placements = PlacementPrimary::find($placement_id);
+
+            $company = Company::where('user_id',$user_id)->first();
+
+            if( $company->id != $placements['company_id']){
+
+                return Helper::apiError("Unauthorized access",null,401);
+
+            }
+
+        }
 
         $input = $request->only('job_title','job_description','location','no_of_students','package','job_type_id');
 
@@ -390,8 +408,26 @@ class PlacementsController extends Controller
 
     }
 
-    public function updateOpenFor(Request $request, $placement_id)
+    public function updateOpenFor(Request $request,$user_id, $placement_id)
     {
+
+        $identity = User::where('id',$user_id)->first();
+
+        $role =  $identity["role"];
+
+        if( $role == 'company')
+        {
+            $placements = PlacementPrimary::find($placement_id);
+
+            $company = Company::where('user_id',$user_id)->first();
+
+            if( $company->id != $placements['company_id']){
+
+                return Helper::apiError("Unauthorized access",null,401);
+
+            }
+
+        }
 
         $placements = PlacementPrimary::find($placement_id);
 
@@ -414,8 +450,26 @@ class PlacementsController extends Controller
 
     }
 
-    public function updateCriteria(Request $request, $placement_id)
+    public function updateCriteria(Request $request, $user_id, $placement_id)
     {
+
+        $identity = User::where('id',$user_id)->first();
+
+        $role =  $identity["role"];
+
+        if( $role == 'company')
+        {
+            $placements = PlacementPrimary::find($placement_id);
+
+            $company = Company::where('user_id',$user_id)->first();
+
+            if( $company->id != $placements['company_id']){
+
+                return Helper::apiError("Unauthorized access",null,401);
+
+            }
+
+        }
 
         $input = $request->only('education_id', 'category_id', 'cpi_required');
 
@@ -432,8 +486,26 @@ class PlacementsController extends Controller
 
     }
 
-    public function updateSelectionRound(Request $request, $placement_id, $round_no)
+    public function updateSelectionRound(Request $request, $user_id, $placement_id)
     {
+
+        $identity = User::where('id',$user_id)->first();
+
+        $role =  $identity["role"];
+
+        if( $role == 'company')
+        {
+            $placements = PlacementPrimary::find($placement_id);
+
+            $company = Company::where('user_id',$user_id)->first();
+
+            if( $company->id != $placements['company_id']){
+
+                return Helper::apiError("Unauthorized access",null,401);
+
+            }
+
+        }
 
         $input = $request->only('round_no','round_name','round_description');
 
@@ -442,9 +514,6 @@ class PlacementsController extends Controller
         });
 
         $round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
-
-        //send mass mail to all the students who have registered
-        // MAIL TO
 
         $round->update($input);
 
