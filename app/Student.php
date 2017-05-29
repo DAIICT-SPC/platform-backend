@@ -37,4 +37,9 @@ class Student extends Model
         return $this->belongsToMany(Education::class, 'students_education', 'enroll_no','education_id');
     }
 
+    public function student_education()
+    {
+        return $this->hasMany(StudentEducation::class,'enroll_no');
+    }
+
 }

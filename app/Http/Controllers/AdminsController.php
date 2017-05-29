@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Application;
 use App\Category;
 use App\Http\Requests\GetFromToYear;
 use App\Offer;
+use App\PlacementPrimary;
+use App\SelectionRound;
+use App\SelectStudentRoundwise;
 use App\Student;
+use App\StudentEducation;
 use Illuminate\Http\Request;
 
 use App\Admin;
@@ -211,7 +216,7 @@ class AdminsController extends Controller
     public function studentDetail($user_id, $enroll_no)
     {
 
-        $student = Student::with(['category', 'educations'])->where('enroll_no',$enroll_no)->first();
+        $student = Student::with(['category'])->where('enroll_no',$enroll_no)->first();
 
         if(!$student)
         {
@@ -220,37 +225,101 @@ class AdminsController extends Controller
 
         }
 
+        $student['education'] = StudentEducation::where('enroll_no',$enroll_no)->get();
+
         return $student;
 
     }
 
-    public function placementsCompanyWise($company_id)
+    public function placementDriveByCompany($company_id)
     {
 
     }
 
-    public function listOfStudentsPlacedInPlacements($placement_id)
+    public function placementsCompanyWise($user_id, $company_id)
     {
+
+        $all_placements = PlacementPrimary::with(['offers' => function($q){
+            $q->where('id','!=',null);
+        }])->where('company_id',$company_id)->get();
+
+        $placements_done = [];
+
+        foreach ($all_placements as $placement)
+        {
+
+            if(!is_null($placement['offers']) and sizeof($placement['offers'])!=0)
+            {
+                array_push($placements_done,$placement);
+            }
+
+        }
+
+        return $placements_done;
 
     }
 
-    public function listOfStudentsRegisteredForPlacement($placement_id)
+    public function placementDrivesByCompany($user_id, $company_id)
     {
+
+        $all_placements = PlacementPrimary::with(['criterias', 'placementSelection', 'jobType'])->where('company_id',$company_id)->where('status','!=','draft')->get();
+
+        if(! $all_placements )
+        {
+            Helper::apiError("No Placement by this Company!",null,404);
+        }
+
+        return $all_placements;
 
     }
 
-    public function listOfStudentsAppearedForRound($placement_id)       //non true for resume shortlisting
+    public function listOfStudentsPlacedInPlacements($user_id, $placement_id)
     {
+
+        $placed_students = Offer::with(['student', 'student.student_education'])->where('placement_id',$placement_id)->get();
+
+        if(!$placed_students)
+        {
+            Helper::apiError("No Students Placed!",null,404);
+        }
+
+        return $placed_students;
 
     }
 
-    public function roundWisePlacementDetail($placement_id)
+    public function listOfStudentsRegisteredForPlacement($user_id, $placement_id)
     {
+
+        $registered_students = Application::with('student', 'student.category', 'student.student_education')->where('placement_id',$placement_id)->get();
+
+        if(!$registered_students)
+        {
+            return Helper::apiError("No Students Registered!",null,404);
+        }
+
+        return $registered_students;
 
     }
 
-    public function roundWisePlacementDetailDescription($placement_id)
+    public function roundWisePlacementDetail($user_id, $placement_id)       //only student list
     {
+
+        $rounds = SelectionRound::where('placement_id',$placement_id)->get();
+
+        $round_detail = [];
+
+        foreach ($rounds as $round)
+        {
+
+            $students = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round['round_no'])->pluck('enroll_no');
+
+            $round['students'] = $students;
+
+            $round_detail[$round['round_no']] = $round;
+
+        }
+
+        return $round_detail;
 
     }
 

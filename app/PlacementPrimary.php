@@ -54,4 +54,9 @@ class PlacementPrimary extends Model
             ->where('select_students_roundwise.round_no', "<=", $round_no);
     }
 
+    public function offers()
+    {
+        return $this->hasMany(Offer::class,'placement_id');
+    }
+
 }

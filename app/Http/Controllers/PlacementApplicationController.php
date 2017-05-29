@@ -194,9 +194,12 @@ class PlacementApplicationController extends Controller
 
         }
 
-        $applications = DB::table('applications')
-            ->join('students', 'applications.enroll_no', '=', 'students.enroll_no')
-            ->where('placement_id',$placement_id)->get();
+        $applications = Application::with('student', 'student.category', 'student.student_education')->where('placement_id',$placement_id)->get();
+
+        if(!$applications)
+        {
+            return Helper::apiError("No Applications done by Students!",null,404);
+        }
 
         return $applications;
 

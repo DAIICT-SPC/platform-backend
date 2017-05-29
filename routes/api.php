@@ -178,6 +178,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::patch('/{placement_id}/update/{round_no}', ['uses' => 'PlacementsController@updateDateOfSelectionRound']);
 
+        Route::get('/placement/{placement_id}', ['uses' => 'PlacementApplicationController@showAllApplications']);
+
         Route::get('/{student_id}/getResume', ['uses' => 'StudentsController@getResume']);
 
         Route::get('/listOfStudentsPlaced', ['uses' => 'AdminsController@listOfStudentsPlaced']);   // listOfStudentsPlaced?from_date=01-01-2017&to_date=02-02-2017
@@ -189,6 +191,16 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/studentsUnplacedCategoryWise', ['uses' => 'AdminsController@studentsUnplacedCategoryWise']);
 
         Route::get('/studentDetail/{enroll_no}', ['uses' => 'AdminsController@studentDetail']);
+
+        Route::get('/placementsCompanyWise/{company_id}', ['uses' => 'AdminsController@placementsCompanyWise']);
+
+        Route::get('/placementDrivesByCompany/{company_id}', ['uses' => 'AdminsController@placementDrivesByCompany']);
+
+        Route::get('/listOfStudentsPlacedInPlacements/{placement_id}', ['uses' => 'AdminsController@listOfStudentsPlacedInPlacements']);
+
+        Route::get('/listOfStudentsRegisteredForPlacement/{placement_id}', ['uses' => 'AdminsController@listOfStudentsRegisteredForPlacement']);
+
+        Route::get('/roundWisePlacementDetail/{placement_id}', ['uses' => 'AdminsController@roundWisePlacementDetail']);
 
     });
 

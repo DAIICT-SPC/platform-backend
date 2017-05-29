@@ -19,4 +19,9 @@ class StudentEducation extends Model
         'cpi',
     ];
 
+    public function student()
+    {
+        return $this->belongsTo(Student::class,'enroll_no');
+    }
+
 }
