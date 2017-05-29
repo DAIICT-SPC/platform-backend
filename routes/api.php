@@ -180,6 +180,16 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/{student_id}/getResume', ['uses' => 'StudentsController@getResume']);
 
+        Route::get('/listOfStudentsPlaced', ['uses' => 'AdminsController@listOfStudentsPlaced']);   // listOfStudentsPlaced?from_date=01-01-2017&to_date=02-02-2017
+
+        Route::get('/listOfStudentsPlacedCategoryWise/{category_id}', ['uses' => 'AdminsController@listOfStudentsPlacedCategoryWise']);    // listOfStudentsPlacedCategoryWise/ 2 ?from_date=2015-01-01&to_date=2017-02-02
+
+        Route::get('/studentsUnplaced', ['uses' => 'AdminsController@studentsUnplaced']);
+
+        Route::get('/studentsUnplacedCategoryWise', ['uses' => 'AdminsController@studentsUnplacedCategoryWise']);
+
+        Route::get('/studentDetail/{enroll_no}', ['uses' => 'AdminsController@studentDetail']);
+
     });
 
 });

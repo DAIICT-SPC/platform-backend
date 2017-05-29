@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
+    protected $primaryKey = 'enroll_no';
+
     protected $table = "students";
 
     protected $fillable = ['enroll_no', 'user_id', 'category_id', 'temp_address', 'perm_address', 'contact_no', 'dob', 'gender', 'resume_link'];
@@ -32,7 +34,7 @@ class Student extends Model
 
     public function educations()
     {
-        return $this->belongsToMany(Education::çlass, 'student_education', 'enroll_no','education_id');
+        return $this->belongsToMany(Education::class, 'students_education', 'enroll_no','education_id');
     }
 
 }

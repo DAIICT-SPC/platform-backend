@@ -18,4 +18,11 @@ class Offer extends Model
     {
         return $this->belongsTo(Student::class, 'enroll_no');
     }
+
+    public function placement()
+    {
+
+        return $this->belongsTo(PlacementPrimary::class, 'placement_id');
+
+    }
 }
