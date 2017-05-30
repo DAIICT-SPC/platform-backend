@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
+use App\Http\Requests\Allow_Disallow_Company;
 use App\Http\Requests\CreatePlacementSeason;
 use App\PlacementSeason;
 use Illuminate\Http\Request;
@@ -79,17 +80,38 @@ class PlacementSeasonController extends Controller
 
     }
 
-    public function startSeason()
+    public function startSeason($placement_season_id)
     {
+
+        $placement_season = PlacementSeason::where('id',$placement_season_id)->first();
+
+        if(!$placement_season)
+        {
+            return Helper::apiError("No Placement Season!",null,404);
+        }
+
+        $placement_season->update(array('status'=>'open'));
+
+        return $placement_season;
 
     }
 
-    public function closeSeason()
+    public function closeSeason($placement_season_id)
     {
+        $placement_season = PlacementSeason::where('id',$placement_season_id)->first();
+
+        if(!$placement_season)
+        {
+            return Helper::apiError("No Placement Season!",null,404);
+        }
+
+        $placement_season->update(array('status'=>'closed'));
+
+        return $placement_season;
 
     }
 
-    public function allowCompany()
+    public function allowCompany(Allow_Disallow_Company $request, $placement_season_id)
     {
 
     }

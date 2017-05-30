@@ -271,4 +271,8 @@ Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
 
         Route::delete('/{placement_season_id}' , ['uses' => 'PlacementSeasonController@destroy']);
 
+        Route::post('/startSeason/{placement_season_id}', ['uses' => 'PlacementSeasonController@startSeason']);
+
+        Route::post('/closeSeason/{placement_season_id}', ['uses' => 'PlacementSeasonController@closeSeason']);
+
     });
