@@ -14,7 +14,7 @@
 
 
 
-    Route::group(["prefix"=>'activation', 'middleware' => ['jwt']], function() {
+    Route::group(["prefix"=>'activation'], function() {
 
         Route::post('/single', ['uses' => 'ActivationController@createSingleEntry']);
 
