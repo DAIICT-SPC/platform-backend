@@ -222,10 +222,10 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
     });
 
+    Route::get('/categories/', ['uses' => 'CategoryController@index']);
 
     Route::group(['prefix'=>'/categories', 'middleware' => ['jwt', 'role:admin']],function(){
 
-        Route::get('/', ['uses' => 'CategoryController@index']);
 
         Route::post('/create', ['uses' => 'CategoryController@create']);
 
@@ -237,9 +237,11 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
     });
 
-    Route::group(['prefix'=>'/job_type', 'middleware' => ['jwt'], 'role:admin'],function() {
 
-        Route::get('/', ['uses' => 'JobTypeController@index']);
+Route::get('/job_type/', ['uses' => 'JobTypeController@index']);
+
+
+Route::group(['prefix'=>'/job_type', 'middleware' => ['jwt'], 'role:admin'],function() {
 
         Route::post('/create', ['uses' => 'JobTypeController@create']);
 
