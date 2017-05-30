@@ -259,7 +259,7 @@ Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
 
 
 
-    Route::group(["prefix" => 'placement_season'], function() {
+    Route::group(["prefix" => 'placement_season', 'middleware' => ['jwt'], 'role:admin'], function() {
 
         Route::get('/' , ['uses' => 'PlacementSeasonController@index']);
 
