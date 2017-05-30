@@ -239,7 +239,7 @@ class AdminsController extends Controller
     public function placementsCompanyWise($user_id, $company_id)
     {
 
-        $all_placements = PlacementPrimary::with(['offers' => function($q){
+        $all_placements = PlacementPrimary::with(['placement_season', 'offers' => function($q){
             $q->where('id','!=',null);
         }])->where('company_id',$company_id)->get();
 
@@ -262,7 +262,7 @@ class AdminsController extends Controller
     public function placementDrivesByCompany($user_id, $company_id)
     {
 
-        $all_placements = PlacementPrimary::with(['criterias', 'placementSelection', 'jobType'])->where('company_id',$company_id)->where('status','!=','draft')->get();
+        $all_placements = PlacementPrimary::with(['criterias', 'placement_season','placementSelection', 'jobType'])->where('company_id',$company_id)->where('status','!=','draft')->get();
 
         if(! $all_placements )
         {

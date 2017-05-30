@@ -32,7 +32,7 @@ class PlacementsController extends Controller
 
     public function getPlacementPrimary($placement_id)
     {
-        $placement = PlacementPrimary::where('placement_id',$placement_id)->first();
+        $placement = PlacementPrimary::with(['company','placement_season'])->where('placement_id',$placement_id)->first();
 
         if(!$placement)
         {
@@ -430,7 +430,7 @@ class PlacementsController extends Controller
 
         }
 
-        $input = $request->only('job_title','job_description','location','no_of_students','package','job_type_id', 'last_date_of_registration');
+        $input = $request->only('job_title','job_description','location','no_of_students','package','job_type_id', 'last_date_of_registration','placement_season_id');
 
         $input = array_filter($input, function($value){
 
@@ -562,7 +562,7 @@ class PlacementsController extends Controller
     public function showPlacementDetails($user_id, $placement_id)
     {
 
-        $placement = PlacementPrimary::with(['company', 'categories.criterias' => function($q) use ($placement_id) {
+        $placement = PlacementPrimary::with(['company', 'placement_season', 'categories.criterias' => function($q) use ($placement_id) {
             $q->where('placement_id', $placement_id);
         },
         'jobType', 'placementSelection'])->find($placement_id);
@@ -573,6 +573,20 @@ class PlacementsController extends Controller
         }
 
         return $placement;
+
+    }
+
+    public function showStudentsInRound($user_id, $placement_id, $round_no)
+    {
+
+        $students = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->get();
+
+        if(!$students)
+        {
+            return Helper::apiError("No Students in this round!",null,404);
+        }
+
+        return $students;
 
     }
 
