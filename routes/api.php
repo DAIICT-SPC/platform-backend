@@ -258,3 +258,17 @@ Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
 
 
 
+
+    Route::group(["prefix" => 'placement_season'], function() {
+
+        Route::get('/' , ['uses' => 'PlacementSeasonController@index']);
+
+        Route::get('/show/{placement_season_id}' , ['uses' => 'PlacementSeasonController@show']);
+
+        Route::post('/', ['uses' => 'PlacementSeasonController@create']);
+
+        Route::patch('/{placement_season_id}', ['uses' => 'PlacementSeasonController@update']);
+
+        Route::delete('/{placement_season_id}' , ['uses' => 'PlacementSeasonController@destroy']);
+
+    });

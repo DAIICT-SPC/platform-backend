@@ -24,6 +24,9 @@ class CreatePlacementsPrimaryDetails extends Migration
             $table->integer('no_of_students')->nullable();
             $table->float('package');
 
+            $table->integer('placement_season_id')->unsigned();
+            $table->foreign('placement_season_id')->references('id')->on('placements_season');
+
             $table->integer('company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companys');
 

@@ -21,6 +21,7 @@ class PlacementPrimary extends Model
         'job_type_id',
         'company_id',
         'status',
+        'placement_season_id',
     ];
 
     public function company()
@@ -57,6 +58,11 @@ class PlacementPrimary extends Model
     public function offers()
     {
         return $this->hasMany(Offer::class,'placement_id');
+    }
+
+    public function placement_season()
+    {
+        return $this->belongsTo(PlacementSeason::class,'placement_season_id');
     }
 
 }

@@ -223,7 +223,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function showAllSelectionRound($placement_id)
+    public function showAllSelectionRound($user_id, $placement_id)
     {
 
         $selection_rounds = SelectionRound::where('placement_id',$placement_id)->get();
@@ -237,7 +237,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function showPlacementsPrimary($placement_id)
+    public function showPlacementsPrimary($user_id, $placement_id)
     {
 
         $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
@@ -251,7 +251,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function showOpenForCategories($placement_id)            //finding ALL OPENFORDETAILS  -  To send them updates on dashboard and via mail
+    public function showOpenForCategories($user_id, $placement_id)            //finding ALL OPENFORDETAILS  -  To send them updates on dashboard and via mail
     {
 
         $openFor = PlacementOpenFor::where('placement_id',$placement_id)->get();
@@ -265,7 +265,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function categoryWisePlacementMail($placement_id)             //to send them mail
+    public function categoryWisePlacementMail($user_id, $placement_id)             //to send them mail
     {
 
         $openFor = $this->showOpenForCategories($placement_id);
@@ -293,7 +293,7 @@ class PlacementsController extends Controller
     }
 
 
-    public function updateDateOfSelectionRound(Request $request, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
+    public function updateDateOfSelectionRound(Request $request,$user_id, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
     {
 
         $input = $request->only('date_of_round');
