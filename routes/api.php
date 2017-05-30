@@ -26,22 +26,23 @@
 
     });
 
+    Route::get('/education/' , ['uses' => 'EducationController@index']);
+
     Route::group(["prefix" => 'education', 'middleware' => ['jwt']], function() {
 
-        Route::get('/' , ['uses' => 'EducationController@index']);
 
-        Route::post('/', ['uses' => 'EducationController@createNew']);
+            Route::post('/', ['uses' => 'EducationController@createNew']);
 
-        Route::patch('/{id}', ['uses' => 'EducationController@updateEducation']);
+            Route::patch('/{id}', ['uses' => 'EducationController@updateEducation']);
 
-        Route::delete('/{id}' , ['uses' => 'EducationController@destroy']);
+            Route::delete('/{id}' , ['uses' => 'EducationController@destroy']);
 
     });
 
 
 Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
-        Route::get('/', ['uses' => 'UsersController@index','middleware'=>'jwt']);
+        Route::get('/', ['uses' => 'UsersController@index']);
 
         Route::post('/registerUser', ['uses' => 'UsersController@registerUser']);
 
@@ -51,8 +52,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
 
     Route::group(['prefix'=>'{user_id?}/student', 'middleware' => 'role:student'], function(){
-
-            Route::get('/', ['uses' => 'StudentsController@show']);        //It will get the student entry from student table
 
             Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);      //It will update details like email,username,password which are present in "USERS" table
 
@@ -94,8 +93,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
 
     Route::group(['prefix'=>'/{user_id?}/company', 'middleware' => 'role:company'],function(){
-
-        Route::get('/', ['uses' => 'CompanysController@show']);         //It will get the Company entry from company table
 
         Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);          //It will update details like email,username,password which are present in "USERS" table
 
@@ -145,6 +142,10 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
+
+        Route::get('/students', ['uses' => 'StudentsController@show']);
+
+        Route::get('/companies', ['uses' => 'CompanysController@show']);
 
         Route::get('/', ['uses' => 'AdminsController@show']);         //It will get the Company entry from company table
 
@@ -238,21 +239,22 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
     });
 
 
-Route::get('/job_type/', ['uses' => 'JobTypeController@index']);
+    Route::get('/job_type/', ['uses' => 'JobTypeController@index']);
 
 
-Route::group(['prefix'=>'/job_type', 'middleware' => ['jwt'], 'role:admin'],function() {
+    Route::group(['prefix'=>'/job_type', 'middleware' => ['jwt'], 'role:admin'],function() {
 
-        Route::post('/create', ['uses' => 'JobTypeController@create']);
+            Route::post('/create', ['uses' => 'JobTypeController@create']);
 
-        Route::get('/{id}',[ 'uses' => 'JobTypeController@show' ] );
+            Route::get('/{id}',[ 'uses' => 'JobTypeController@show' ] );
 
-        Route::patch('/{id}',[ 'uses' => 'JobTypeController@update' ] );
+            Route::patch('/{id}',[ 'uses' => 'JobTypeController@update' ] );
 
-        Route::delete('/{id}',[ 'uses' => 'JobTypeController@destroy' ]);
+            Route::delete('/{id}',[ 'uses' => 'JobTypeController@destroy' ]);
 
 
     });
+
 
 Route::get('/{enroll_no_or_placement_id}/getOfferLetter', ['uses' => 'PlacementOffersController@getOfferLetter']);
 

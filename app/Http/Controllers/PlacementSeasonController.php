@@ -14,6 +14,18 @@ use Psy\Output\ShellOutput;
 class PlacementSeasonController extends Controller
 {
 
+    public function index()
+    {
+        $placement_season_list = PlacementSeason::all();
+
+        if(!$placement_season_list)
+        {
+            return Helper::apiError("No Placement Season!",null,404);
+        }
+
+        return $placement_season_list;
+    }
+
     public function create(CreatePlacementSeason $request)
     {
         $input = $request->only('title');
