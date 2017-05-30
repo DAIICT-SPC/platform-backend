@@ -275,4 +275,14 @@ Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
 
         Route::post('/closeSeason/{placement_season_id}', ['uses' => 'PlacementSeasonController@closeSeason']);
 
+        Route::post('/allowCompany/{placement_season_id}', ['uses' => 'PlacementSeasonController@allowCompany']);
+
+        Route::post('/allowCompanies/{placement_season_id}', ['uses' => 'PlacementSeasonController@allowCompanies']);
+
+        Route::post('/disallowCompany/{placement_season_id}', ['uses' => 'PlacementSeasonController@disallowCompany']);
+
+        Route::get('/allAllowedCompanies/{placement_season_id}', ['uses' => 'PlacementSeasonController@allAllowedCompanies']);
+
+        Route::get('/remainingCompanies/{placement_season_id}', ['uses' => 'PlacementSeasonController@remainingCompanies']);
+
     });

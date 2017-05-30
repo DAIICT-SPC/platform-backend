@@ -21,4 +21,9 @@ class Company extends Model
         return $this->hasMany(PlacementPrimary::class,'company_id');
     }
 
+    public function placement_seasons()
+    {
+        return $this->belongsToMany(PlacementSeason::class,'placements_season_company','company_id','placement_season_id');
+    }
+
 }
