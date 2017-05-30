@@ -19,7 +19,7 @@ class CreatePlacementsPrimaryDetails extends FormRequest
             'job_description' => 'bail|required',
             'last_date_for_registration' => 'required',
             'location' => 'bail|required|max:191',
-
+            'placement_season_id' => 'required',
             'package' => 'bail|required',
         ];
     }

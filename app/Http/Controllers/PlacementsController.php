@@ -14,6 +14,7 @@ use App\Http\Requests\CreateSelectStudentsRoundwise;
 use App\Http\Requests\CreateStudentRegistration;
 use App\Offer;
 use App\PlacementCriteria;
+use App\PlacementSeason_Company;
 use App\SelectStudentRoundwise;
 use App\StudentEducation;
 use App\User;
@@ -44,7 +45,7 @@ class PlacementsController extends Controller
     public function createPlacementDrive(CreatePlacementsPrimaryDetails $request, $user_id = null)
     {
 
-        $input = $request->only('job_title','job_description','last_date_for_registration','location','no_of_students','package','job_type_id');
+        $input = $request->only('job_title','job_description','last_date_for_registration','location','no_of_students','package','job_type_id','placement_season_id');
 
         if (is_null($user_id)) {
 
@@ -63,6 +64,15 @@ class PlacementsController extends Controller
         }
 
         $company_id = $company_details['id'];
+
+        $allowed_in_placement_season = PlacementSeason_Company::where('company_id',$company_id)->where('placement_season_id',$input['placement_season_id'])->get();
+
+        if(sizeof($allowed_in_placement_season) == 0)
+        {
+
+            return response("You are unauthorised to create Placement Drive in this placement season",402);
+
+        }
 
         $input['company_id'] = $company_id;
 
