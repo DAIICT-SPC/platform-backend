@@ -185,6 +185,7 @@ return [
 
         //Debugbar
         Barryvdh\Debugbar\ServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
     ],
 
     /*
