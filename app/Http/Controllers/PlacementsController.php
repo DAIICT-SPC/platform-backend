@@ -541,7 +541,7 @@ class PlacementsController extends Controller
             return $value != null;
         });
 
-        $round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
+        $round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$input['round_no'])->first();
 
         $round->update($input);
 
@@ -565,5 +565,6 @@ class PlacementsController extends Controller
         return $placement;
 
     }
+
 
 }
