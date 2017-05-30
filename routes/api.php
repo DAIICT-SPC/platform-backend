@@ -1,7 +1,7 @@
 <?php
 
 
-    Route::post('/authenticate', ['uses' => 'AuthController@authenticate']);
+    Route::post('/login', ['uses' => 'AuthController@authenticate']);
 
     Route::get('/', ['uses' => 'AuthController@checkAuthentication'])->middleware('jwt');
 
@@ -16,9 +16,9 @@
 
     Route::group(["prefix"=>'activation'], function() {
 
-        Route::post('/single', ['uses' => 'ActivationController@createSingleEntry']);
+        Route::post('/single', ['uses' => 'ActivationController@createSingleEntry'])->middleware(['jwt','role:admin']);;
 
-        Route::post('/file', ['uses' => 'ActivationController@createViaFile']);
+        Route::post('/file', ['uses' => 'ActivationController@createViaFile'])->middleware(['jwt','role:admin']);
 
         Route::get('/activate/{code}' , ['uses' => 'ActivationController@findCode']);
 
