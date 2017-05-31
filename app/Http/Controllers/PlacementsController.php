@@ -14,6 +14,7 @@ use App\Http\Requests\CreateSelectStudentsRoundwise;
 use App\Http\Requests\CreateStudentRegistration;
 use App\Offer;
 use App\PlacementCriteria;
+use App\PlacementSeason;
 use App\PlacementSeason_Company;
 use App\SelectStudentRoundwise;
 use App\StudentEducation;
@@ -64,6 +65,18 @@ class PlacementsController extends Controller
         }
 
         $company_id = $company_details['id'];
+
+        $placement_season = PlacementSeason::where('id',$input['placement_season_id'])->first();
+
+        if($placement_season['status'] == 'draft')
+        {
+            return Helper::apiError("Placement Season has not started yet!",null,404);
+        }
+
+        if($placement_season['status' == 'closed'])
+        {
+            return Helper::apiError("Placement Season has got Closed!",null,404);
+        }
 
         $allowed_in_placement_season = PlacementSeason_Company::where('company_id',$company_id)->where('placement_season_id',$input['placement_season_id'])->get();
 

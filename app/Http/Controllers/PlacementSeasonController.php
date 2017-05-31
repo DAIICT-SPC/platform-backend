@@ -246,4 +246,68 @@ class PlacementSeasonController extends Controller
 
     }
 
+    public function showPlacementSeasonAvailable($user_id)
+    {
+
+        $company = Company::where('user_id',$user_id)->first();
+
+        $placement_seasons = PlacementSeason::with(['companies' => function($q) use($company){
+            $q->where('companys.id',$company['id']);
+        }])->where('status','=','open')->get();
+
+        if(!$placement_seasons or sizeof($placement_seasons) == 0)
+        {
+            return Helper::apiError("No Placement Season Found!",null,404);
+        }
+
+        $placement_season_list = [];
+
+        foreach ( $placement_seasons as $placement_season)
+        {
+
+            if(sizeof($placement_season['companies']) != 0)
+            {
+
+                array_push($placement_season_list,$placement_season);
+
+            }
+
+        }
+
+        return $placement_season_list;
+
+    }
+
+    public function showPlacementSeasonAvailableToCompany($user_id, $company_id)
+    {
+
+        $placement_seasons = PlacementSeason::with(['companies' => function($q) use($company_id){
+            $q->where('companys.id',$company_id);
+        }])->where('status','=','open')->get();
+
+        if(!$placement_seasons or sizeof($placement_seasons) == 0)
+        {
+            return Helper::apiError("No Placement Season Found!",null,404);
+        }
+
+        $placement_season_list = [];
+
+        foreach ( $placement_seasons as $placement_season)
+        {
+
+            if(sizeof($placement_season['companies']) != 0)
+            {
+
+                array_push($placement_season_list,$placement_season);
+
+            }
+
+        }
+
+        return $placement_season_list;
+
+    }
+
+
+
 }

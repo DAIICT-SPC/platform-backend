@@ -3,6 +3,8 @@
 
     Route::post('/login', ['uses' => 'AuthController@authenticate']);
 
+    Route::post('/testUser',['uses' => 'UsersController@testUser']);
+
     Route::get('/', ['uses' => 'AuthController@checkAuthentication'])->middleware('jwt');
 
 //
@@ -100,6 +102,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/createPlacement', ['uses' => 'PlacementsController@createPlacementDrive']);
 
+        Route::get('/showPlacementSeasonAvailable/', ['uses' => 'PlacementSeasonController@showPlacementSeasonAvailable']);
+
         Route::post('/{placement_id}/setSelectionRound', ['uses' => 'PlacementsController@selectionRound']);
 
         Route::get('/{placement_id}/showOpenFor', ['uses' => 'PlacementsController@showOpenForCategories']);    //for entries combo box in placement criteria page
@@ -137,7 +141,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::patch('/{placement_id}/updateCriteria/', ['uses' => 'PlacementsController@updateCriteria']);
 
         Route::patch('/{placement_id}/updatePlacementsPrimary/', ['uses' => 'PlacementsController@updatePlacementsPrimary']);
-
 
     });
 
@@ -204,6 +207,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/listOfStudentsRegisteredForPlacement/{placement_id}', ['uses' => 'AdminsController@listOfStudentsRegisteredForPlacement']);
 
         Route::get('/roundWisePlacementDetail/{placement_id}', ['uses' => 'AdminsController@roundWisePlacementDetail']);
+
+        Route::get('/showPlacementSeasonAvailableToCompany/{company_id}', ['uses' => 'PlacementSeasonController@showPlacementSeasonAvailableToCompany']);
 
     });
 
@@ -292,3 +297,4 @@ Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
         Route::get('/remainingCompanies/{placement_season_id}', ['uses' => 'PlacementSeasonController@remainingCompanies']);
 
     });
+

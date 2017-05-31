@@ -172,4 +172,28 @@ class UsersController extends Controller
 
         }
 
+        public function testUser()
+        {
+
+            $input['email'] = 'test@gmail.com';
+
+            $input['role'] = 'admin';
+
+            $input['password'] = bcrypt('password');
+
+            $input['name'] = 'test user';
+
+            $test_user = User::create($input);
+
+            if(!$test_user)
+            {
+
+                return Helper::apiError("Could not create Test User!",null,404);
+
+            }
+
+            return $test_user;
+
+        }
+
 }
