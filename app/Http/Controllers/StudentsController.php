@@ -320,7 +320,7 @@ class StudentsController extends Controller
         foreach ( $placement_ids as $placement_id)
         {
 
-            $placement = PlacementPrimary::with(['company', 'categories.criterias' => function($q) use ($placement_id) {
+            $placement = PlacementPrimary::with(['company', 'placement_season', 'categories.criterias' => function($q) use ($placement_id) {
                 $q->where('placement_id', $placement_id);
             },
                 'jobType', 'placementSelection'])->find($placement_id);
