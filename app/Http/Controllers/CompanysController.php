@@ -15,6 +15,11 @@ class CompanysController extends Controller
     {
         $companies = Company::all();
 
+        if(!$companies)
+        {
+            return Helper::apiError("No Company Found!",null,404);
+        }
+
         return $companies;
     }
 

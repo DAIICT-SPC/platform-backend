@@ -146,9 +146,9 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
 
-        Route::get('/students', ['uses' => 'StudentsController@show']);
+        Route::get('/students', ['uses' => 'StudentsController@index']);
 
-        Route::get('/companies', ['uses' => 'CompanysController@show']);
+        Route::get('/companies', ['uses' => 'CompanysController@index']);
 
         Route::get('/', ['uses' => 'AdminsController@show']);         //It will get the Company entry from company table
 
@@ -209,6 +209,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/roundWisePlacementDetail/{placement_id}', ['uses' => 'AdminsController@roundWisePlacementDetail']);
 
         Route::get('/showPlacementSeasonAvailableToCompany/{company_id}', ['uses' => 'PlacementSeasonController@showPlacementSeasonAvailableToCompany']);
+
+        Route::post('/externalAllowToStudents/{placement_id}', ['uses' => 'AdminsController@externalAllowToStudents']);
 
     });
 

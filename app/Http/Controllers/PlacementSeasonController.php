@@ -320,12 +320,14 @@ class PlacementSeasonController extends Controller
 
         foreach ($all_placements as $placement)
         {
+
             if(is_null($placement['placement_season']))
             {
 
             }else{
                array_push($placement_drive_list,$placement);
             }
+
         }
 
         return $placement_drive_list;

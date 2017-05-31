@@ -323,4 +323,33 @@ class AdminsController extends Controller
 
     }
 
+    public function externalAllowToStudents(Request $request, $user_id, $placement_id)
+    {
+
+        $input = $request->only('enroll_no');
+
+        $input['placement_id'] = $placement_id;
+
+        $enroll_no = $input['enroll_no'];
+
+        $check_in_db = Application::where('placement_id',$placement_id)->where('enroll_no',$enroll_no)->first();
+
+        if($check_in_db != null)
+        {
+
+            return $check_in_db;
+
+        }
+
+        $new_application = Application::create($input);
+
+        if(!$new_application)
+        {
+            return Helper::apiError("Cant Allow Student!",null,404);
+        }
+
+        return $new_application;
+
+    }
+
 }
