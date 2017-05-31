@@ -42,7 +42,7 @@
     });
 
 
-Route::post('/users/registerUser', ['uses' => 'UsersController@registerUser']);
+    Route::post('/users/registerUser', ['uses' => 'UsersController@registerUser']);
 
 Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
