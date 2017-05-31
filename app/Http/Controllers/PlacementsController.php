@@ -603,5 +603,57 @@ class PlacementsController extends Controller
 
     }
 
+    public function remainingStudentsInApplication($user_id, $placement_id)
+    {
+
+        $round_details = SelectionRound::where('placement_id',$placement_id)->first();
+
+        $round_no = $round_details['round_no'];
+
+        $students_in_round_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->get();
+
+        if(!$students_in_round_details)
+        {
+            return Helper::apiError("No Student Found in Round Layer!",null,404);
+        }
+
+        if(sizeof($students_in_round_details)==0)
+        {
+            return response("All Students in Application Layer only!",200);
+        }
+
+        $student_round = [];
+
+        foreach ($students_in_round_details as $student_in_round)
+        {
+
+            array_push($student_round,$student_in_round['enroll_no']);
+
+        }
+
+        $students_in_application = Application::where('placement_id',$placement_id)->get();
+
+        $student_application = [];
+
+        foreach ($students_in_application as $student_in_application)
+        {
+
+            array_push($student_application,$student_in_application['enroll_no']);
+
+        }
+
+        $array_diff = array_diff($student_application,$student_round);
+
+        $remaining_student = array_values($array_diff);
+
+        if(sizeof($remaining_student)==0)
+        {
+            return response("All Students move to Rounds",200);
+        }
+
+        return $remaining_student;
+
+    }
+
 
 }

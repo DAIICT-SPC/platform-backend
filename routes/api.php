@@ -142,6 +142,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::patch('/{placement_id}/updatePlacementsPrimary/', ['uses' => 'PlacementsController@updatePlacementsPrimary']);
 
+        Route::get('/remainingStudentsInApplication/{placement_id}', ['uses' => 'PlacementsController@remainingStudentsInApplication']);
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
