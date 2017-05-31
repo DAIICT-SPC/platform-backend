@@ -44,6 +44,11 @@
 
     Route::post('/users/registerUser', ['uses' => 'UsersController@registerUser']);
 
+
+
+Route::get('/users/{user_id?}/student/dashboard', ['uses' => 'StudentsController@dashboard']);
+
+
 Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/', ['uses' => 'UsersController@index']);
@@ -76,8 +81,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
             Route::post('/placementRegistration', ['uses' => 'PlacementApplicationController@studentRegistration']);
 
             Route::post('/cancelRegistration', ['uses' => 'PlacementApplicationController@cancelRegistration']);
-
-            Route::get('/dashboard', ['uses' => 'StudentsController@dashboard']);
 
             Route::post('/education', ['uses' => 'StudentsController@storeStudentEducation']);
 
@@ -143,6 +146,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::patch('/{placement_id}/updatePlacementsPrimary/', ['uses' => 'PlacementsController@updatePlacementsPrimary']);
 
         Route::get('/remainingStudentsInApplication/{placement_id}', ['uses' => 'PlacementsController@remainingStudentsInApplication']);
+
+        Route::get('/remainingStudentsRoundwise/{placement_id}/{round_no}', ['uses' => 'PlacementsController@remainingStudentsRoundwise']);
 
     });
 

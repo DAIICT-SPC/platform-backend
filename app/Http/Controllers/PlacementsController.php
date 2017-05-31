@@ -655,5 +655,72 @@ class PlacementsController extends Controller
 
     }
 
+    public function remainingStudentsRoundwise($user_id, $placement_id, $round_no)  //if about round1 then round1 me wo sare students jo round2 me move nai ho paye
+    {
+
+        $round_details = SelectionRound::where('placement_id',$placement_id)->get();
+
+        $size = sizeof($round_details);
+
+        if($round_no == $size)
+        {
+            return Helper::apiError("Already in Last Round plz check in remainingStudentsForOffer!",null,404);
+        }
+
+        $current_round = null;
+
+        $next_round = null;
+
+        foreach ($round_details as $round)
+        {
+
+            if( $round_no == $round['round_no'])
+            {
+
+                $current_round = $round;
+
+            }
+
+            if( ($round_no+1) == $round['round_no'])
+            {
+
+                $next_round = $round;
+
+            }
+
+        }
+
+        $selection_round_current_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$current_round['round_no'])->get();
+
+        $selection_round_next_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$next_round['round_no'])->get();
+
+        if(sizeof($selection_round_next_details)==0)
+        {
+            return Helper::apiError("All Students in Current Round itself!",null,404);
+        }
+
+        $current_round_students = [];
+
+        foreach ($selection_round_current_details as $selection_round_current)
+        {
+
+            array_push($current_round_students, $selection_round_current);
+
+        }
+
+        $next_round_students = [];
+
+        foreach ($selection_round_next_details as $selection_round_next)
+        {
+
+            array_push($next_round_students, $selection_round_next);
+
+        }
+
+        $remaining_students = array_diff($current_round_students,$next_round_students);
+
+        return $remaining_students;
+
+    }
 
 }
