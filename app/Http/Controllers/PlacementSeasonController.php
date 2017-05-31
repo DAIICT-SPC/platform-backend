@@ -6,6 +6,7 @@ use App\Company;
 use App\Helper;
 use App\Http\Requests\Allow_Disallow_Company;
 use App\Http\Requests\CreatePlacementSeason;
+use App\PlacementPrimary;
 use App\PlacementSeason;
 use App\PlacementSeason_Company;
 use Illuminate\Http\Request;
@@ -308,6 +309,28 @@ class PlacementSeasonController extends Controller
 
     }
 
+    public function placementsInPlacementSeason($placement_season_id)
+    {
+
+        $all_placements = PlacementPrimary::with(['placement_season' => function($q) use($placement_season_id){
+            $q->where('id',$placement_season_id);
+        }])->where('status','!=','draft')->get();
+
+        $placement_drive_list = [];
+
+        foreach ($all_placements as $placement)
+        {
+            if(is_null($placement['placement_season']))
+            {
+
+            }else{
+               array_push($placement_drive_list,$placement);
+            }
+        }
+
+        return $placement_drive_list;
+
+    }
 
 
 }

@@ -296,5 +296,7 @@ Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
 
         Route::get('/remainingCompanies/{placement_season_id}', ['uses' => 'PlacementSeasonController@remainingCompanies']);
 
+        Route::get('/placementsInPlacementSeason/{placement_season_id}', ['uses' => 'PlacementSeasonController@placementsInPlacementSeason']);
+
     });
 

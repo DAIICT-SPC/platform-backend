@@ -183,6 +183,13 @@ class UsersController extends Controller
 
             $input['name'] = 'test user';
 
+            $testUser = User::where('email',$input['email'])->first();
+
+            if($testUser)
+            {
+                return $testUser;
+            }
+
             $test_user = User::create($input);
 
             if(!$test_user)
