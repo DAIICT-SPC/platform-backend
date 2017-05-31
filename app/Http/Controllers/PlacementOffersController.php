@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class PlacementOffersController extends Controller
 {
 
-    public function giveOfferLetter(CreateOffer $request, $placement_id)
+    public function giveOfferLetter(CreateOffer $request, $placement_id)        //insert in OFFER Block.. check if student completed last round PlacementController@checkIfRoundsCompleted
     {
 
         $enroll_check_boxes = $request->only('enroll_no');

@@ -151,6 +151,10 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/remainingStudentsRoundwise/{placement_id}/{round_no}', ['uses' => 'PlacementsController@remainingStudentsRoundwise']);
 
+        Route::get('/checkIfRoundsCompleted/{placement_id}/{round_no}', ['uses' => 'PlacementsController@checkIfRoundsCompleted']);
+
+        Route::get('/remainingStudentsForOffer/{placement_id}', ['uses' => 'PlacementsController@remainingStudentsForOffer']);
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){

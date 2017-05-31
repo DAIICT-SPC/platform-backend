@@ -610,7 +610,7 @@ class PlacementsController extends Controller
 
         $round_no = $round_details['round_no'];
 
-        $students_in_round_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->get();
+        $students_in_round_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->pluck('enroll_no');
 
         if(!$students_in_round_details)
         {
@@ -622,27 +622,9 @@ class PlacementsController extends Controller
             return response("All Students in Application Layer only!",200);
         }
 
-        $student_round = [];
+        $students_in_application = Application::where('placement_id',$placement_id)->pluck('enroll_no');
 
-        foreach ($students_in_round_details as $student_in_round)
-        {
-
-            array_push($student_round,$student_in_round['enroll_no']);
-
-        }
-
-        $students_in_application = Application::where('placement_id',$placement_id)->get();
-
-        $student_application = [];
-
-        foreach ($students_in_application as $student_in_application)
-        {
-
-            array_push($student_application,$student_in_application['enroll_no']);
-
-        }
-
-        $array_diff = array_diff($student_application,$student_round);
+        $array_diff = array_diff($students_in_application->toArray(),$students_in_round_details->toArray());
 
         $remaining_student = array_values($array_diff);
 
@@ -658,7 +640,7 @@ class PlacementsController extends Controller
     public function remainingStudentsRoundwise($user_id, $placement_id, $round_no)  //if about round1 then round1 me wo sare students jo round2 me move nai ho paye
     {
 
-        $round_details = SelectionRound::where('placement_id',$placement_id)->get();
+        $round_details = SelectionRound::where('placement_id',$placement_id)->pluck('round_no');
 
         $size = sizeof($round_details);
 
@@ -667,59 +649,72 @@ class PlacementsController extends Controller
             return Helper::apiError("Already in Last Round plz check in remainingStudentsForOffer!",null,404);
         }
 
-        $current_round = null;
+        $current_round = $round_no;
 
-        $next_round = null;
+        $next_round = $round_no + 1;
 
-        foreach ($round_details as $round)
-        {
+        $selection_round_current_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$current_round)->pluck('enroll_no');
 
-            if( $round_no == $round['round_no'])
-            {
-
-                $current_round = $round;
-
-            }
-
-            if( ($round_no+1) == $round['round_no'])
-            {
-
-                $next_round = $round;
-
-            }
-
-        }
-
-        $selection_round_current_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$current_round['round_no'])->get();
-
-        $selection_round_next_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$next_round['round_no'])->get();
+        $selection_round_next_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$next_round)->pluck('enroll_no');
 
         if(sizeof($selection_round_next_details)==0)
         {
             return Helper::apiError("All Students in Current Round itself!",null,404);
         }
 
-        $current_round_students = [];
+        $remaining_student = array_diff($selection_round_current_details->toArray(),$selection_round_next_details->toArray());
 
-        foreach ($selection_round_current_details as $selection_round_current)
+        return array_values($remaining_student);
+
+    }
+
+    public function checkIfRoundsCompleted($user_id,$placement_id, $round_no)
+    {
+
+        $round_details = SelectionRound::where('placement_id',$placement_id)->pluck('round_no');
+
+        $size = sizeof($round_details);
+
+        if($round_no == $size)
+        {
+            return response("Selection Round Complete!",200);
+        }
+
+        return response("Selection Round Incomplete!",200);
+
+    }
+
+    public function remainingStudentsForOffer($user_id,$placement_id)
+    {
+
+        $students_offered = Offer::where('placement_id',$placement_id)->pluck('enroll_no');
+
+        $selection_rounds = SelectionRound::where('placement_id',$placement_id)->pluck('round_no');
+
+        $last_round = 1;
+
+        foreach ($selection_rounds as $selection_round)
         {
 
-            array_push($current_round_students, $selection_round_current);
+            if($selection_round > $last_round)
+            {
+
+                $last_round = $selection_round;
+
+            }
 
         }
 
-        $next_round_students = [];
+        $students_in_last_round = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$last_round)->pluck('enroll_no');
 
-        foreach ($selection_round_next_details as $selection_round_next)
+        $remaining_students = array_diff($students_in_last_round->toArray(),$students_offered->toArray());
+
+        if(sizeof($remaining_students)==0)
         {
-
-            array_push($next_round_students, $selection_round_next);
-
+            return Helper::apiError("All Students in Last Round got offered",null,404);
         }
 
-        $remaining_students = array_diff($current_round_students,$next_round_students);
-
-        return $remaining_students;
+        return array_values($remaining_students);
 
     }
 
