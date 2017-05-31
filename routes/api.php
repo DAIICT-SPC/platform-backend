@@ -111,6 +111,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/{placement_id}/showOpenFor', ['uses' => 'PlacementsController@showOpenForCategories']);    //for entries combo box in placement criteria page
 
+        Route::get('/fetchEducationAccordingToCategory/{category_id}', ['uses' => 'CategoryController@fetchEducationAccordingToCategory']);    //for entries combo box in placement criteria page
+
         Route::post('/{placement_id}/setPlacementCriteria', ['uses' => 'PlacementsController@setPlacementCriteria']);
 
         Route::get('/placement/{placement_id}', ['uses' => 'PlacementApplicationController@showAllApplications']);
@@ -218,6 +220,10 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/showPlacementSeasonAvailableToCompany/{company_id}', ['uses' => 'PlacementSeasonController@showPlacementSeasonAvailableToCompany']);
 
         Route::post('/externalAllowToStudents/{placement_id}', ['uses' => 'AdminsController@externalAllowToStudents']);
+
+        Route::get('/remainingStudentsInApplication/{placement_id}', ['uses' => 'PlacementsController@remainingStudentsInApplication']);
+
+        Route::get('/remainingStudentsRoundwise/{placement_id}/{round_no}', ['uses' => 'PlacementsController@remainingStudentsRoundwise']);
 
     });
 

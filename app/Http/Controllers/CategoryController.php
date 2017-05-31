@@ -94,4 +94,17 @@ class CategoryController extends Controller
         return response("",204);
     }
 
+    public function fetchEducationAccordingToCategory($category_id)
+    {
+
+        if($category_id==2)
+        {
+            return array(2,3,4);
+        }else
+        {
+            return array(1,2,3,4);
+        }
+
+    }
+
 }
