@@ -60,6 +60,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
     Route::group(['prefix'=>'{user_id?}/student', 'middleware' => 'role:student'], function(){
 
+            Route::get('/show', ['uses' => 'StudentsController@show']);
+
             Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);      //It will update details like email,username,password which are present in "USERS" table
 
             Route::patch('/update', ['uses' => 'StudentsController@update']);
@@ -98,6 +100,9 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
 
     Route::group(['prefix'=>'/{user_id?}/company', 'middleware' => 'role:company'],function(){
+
+
+        Route::get('/show', ['uses' => 'CompanysController@show']);
 
         Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);          //It will update details like email,username,password which are present in "USERS" table
 
@@ -163,7 +168,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/companies', ['uses' => 'CompanysController@index']);
 
-        Route::get('/', ['uses' => 'AdminsController@show']);         //It will get the Company entry from company table
+        Route::get('/show', ['uses' => 'AdminsController@show']);         //It will get the Company entry from company table
 
         Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);          //It will update details like email,username,password which are present in "USERS" table
 
