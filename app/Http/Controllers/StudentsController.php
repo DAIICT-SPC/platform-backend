@@ -51,7 +51,7 @@ class StudentsController extends Controller
 
         } else {
 
-            $student = Student::with(['category'])->where('user_id',$user_id);
+            $student = Student::with(['category'])->where('user_id',$user_id)->first();
 
         }
 
