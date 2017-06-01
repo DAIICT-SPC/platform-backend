@@ -51,11 +51,7 @@ class StudentsController extends Controller
 
         } else {
 
-            $token = \JWTAuth::getToken();
-
-            $user = \JWTAuth::toUser($token);
-
-            $student = User::find($user['id'])->student;
+            $student = Student::with(['category'])->where('user_id',$user_id);
 
         }
 
