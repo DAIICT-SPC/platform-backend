@@ -718,4 +718,38 @@ class PlacementsController extends Controller
 
     }
 
+    public function jobProfile($user_id)
+    {
+
+        $student = Student::where('user_id',$user_id)->first();
+
+        if(!$student)
+        {
+
+            Helper::apiError("No Student Found!",null,404);
+
+        }
+
+        $placement_primary = PlacementPrimary::with(['categories' => function($q) use($student){
+            $q->where('category_id',$student['category_id']);
+        }])->where('status','!=','draft')->get();
+
+        if(is_null($placement_primary))
+        {
+
+            return Helper::apiError("No placement Primary Found!",null,404);
+
+        }
+
+        if(sizeof($placement_primary)==0)
+        {
+
+            return Helper::apiError("No placement Primary Found!",null,404);
+
+        }
+
+        return $placement_primary;
+
+    }
+
 }
