@@ -11,6 +11,7 @@ use App\SelectionRound;
 use App\SelectStudentRoundwise;
 use App\Student;
 use App\StudentEducation;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Admin;
@@ -28,13 +29,25 @@ class AdminsController extends Controller
     public function show($user_id)
     {
 
-        $user = Admin::where('user_id',$user_id)->first();
+        $admin = Admin::where('user_id',$user_id)->first();
 
-        if(!$user){
+        if(!$admin){
             Helper::apiError('No such Admin exist!',null,404);
         }
 
-        return $user;
+
+        $user_name = User::where('id',$user_id)->pluck('name');
+
+        if(!$user_name)
+        {
+
+            return Helper::apiError("No Name found",null,404);
+
+        }
+
+        $admin['name'] = $user_name[0];
+
+        return $admin;
 
     }
 
