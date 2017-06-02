@@ -42,6 +42,17 @@ class CompanysController extends Controller
 
         }
 
+        $user_name = User::where('id',$user_id)->pluck('name');
+
+        if(!$user_name)
+        {
+
+            return Helper::apiError("No Name found",null,404);
+
+        }
+
+        $company['name'] = $user_name[0];
+
         return $company;
 
     }
