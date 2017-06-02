@@ -98,6 +98,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
             Route::post('/eligibility', ['uses' => 'StudentsController@eligibility']);
 
+            Route::get('/{placement_id}/showPlacementDetails/', ['uses' => 'PlacementsController@showPlacementDetails']);
+
     });
 
 
