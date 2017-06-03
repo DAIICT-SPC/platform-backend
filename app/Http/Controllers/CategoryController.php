@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCategory;
+use App\Student;
 use Illuminate\Http\Request;
 use App\Category;
 
@@ -103,6 +104,34 @@ class CategoryController extends Controller
         }else
         {
             return array(1,2,3,4);
+        }
+
+    }
+
+    public function fetchEducationAccordingToCategoryForStudent($user_id)
+    {
+
+        $student = Student::where('user_id',$user_id)->first();
+
+        if(!$student)
+        {
+            return Helper::apiError("Can't fetch Student!",null,404);
+        }
+
+        $category_id = $student['category_id'];
+
+
+        if($category_id==2)
+        {
+
+            return array(2,3,4);
+
+        }
+        else
+        {
+
+            return array(1,2,3,4);
+
         }
 
     }

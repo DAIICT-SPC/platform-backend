@@ -102,6 +102,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
             Route::get('/applyToAppliedButton/{placement_id}', ['uses' => 'PlacementApplicationController@applyToAppliedButton']);
 
+            Route::get('/fetchEducationAccordingToCategoryForStudent', ['uses' => 'CategoryController@fetchEducationAccordingToCategoryForStudent']);    //for entries combo box in placement criteria page
+
     });
 
 
