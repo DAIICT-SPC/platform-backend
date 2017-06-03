@@ -129,6 +129,40 @@ class PlacementApplicationController extends Controller
 
     }
 
+    public function applyToAppliedButton($user_id,$placement_id)
+    {
+
+        if (is_null($user_id)) {
+
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
+
+        if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
+
+        }
+
+        $enroll_no = $student['enroll_no'];
+
+        $application = Application::where('placement_id',$placement_id)->where('enroll_no',$enroll_no)->first();
+
+        if( !is_null($application) )
+        {
+
+            return 1;
+
+        }
+
+        return 0;
+
+    }
+
     public function cancelRegistration(Request $request, $user_id = null)
     {
 

@@ -166,6 +166,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/placementPrimaryAll', ['uses' => 'PlacementsController@placementPrimaryAll']);          //Contains all
 
+        Route::get('/applyToAppliedButton/{placement_id}', ['uses' => 'PlacementApplicationController@applyToAppliedButton']);
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
@@ -251,8 +253,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/', ['uses' => 'PlacementsController@getPlacementPrimary']);            //to find placement basic detial so that id can be known
 
         Route::get('/selectionRound', ['uses' => 'PlacementsController@showAllSelectionRound']);
-
-        Route::get('/placementDriveDetail', ['uses' => 'PlacementsController@showPlacement']);          //Contains all
 
         Route::get('/categoryWisePlacementMail', ['uses' => 'PlacementsController@categoryWisePlacementMail']);          //Contains all
 
