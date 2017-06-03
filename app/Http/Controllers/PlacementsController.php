@@ -578,7 +578,7 @@ class PlacementsController extends Controller
         $placement = PlacementPrimary::with(['company', 'placement_season', 'categories.criterias' => function($q) use ($placement_id) {
             $q->where('placement_id', $placement_id);
         },
-        'jobType', 'placementSelection'])->find($placement_id);
+        'jobType', 'placementSelection', 'categories.criterias.education'])->find($placement_id);
 
         if(!$placement)
         {
