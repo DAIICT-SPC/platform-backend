@@ -730,7 +730,7 @@ class PlacementsController extends Controller
 
         }
 
-        $placement_primary = PlacementPrimary::with(['categories' => function($q) use($student){
+        $placement_primary = PlacementPrimary::with(['company','categories' => function($q) use($student){
             $q->where('category_id',$student['category_id']);
         }])->where('status','!=','draft')->get();
 
