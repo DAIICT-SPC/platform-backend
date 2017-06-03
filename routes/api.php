@@ -164,6 +164,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/remainingStudentsForOffer/{placement_id}', ['uses' => 'PlacementsController@remainingStudentsForOffer']);
 
+        Route::get('/placementPrimaryAll', ['uses' => 'PlacementsController@placementPrimaryAll']);          //Contains all
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){

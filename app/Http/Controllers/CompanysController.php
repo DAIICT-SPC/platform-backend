@@ -87,6 +87,18 @@ class CompanysController extends Controller
 
         $company->update($input);
 
+        $company_contact_name = $request->only('name');     //contact person name
+
+        $company_contact_name = array_filter($company_contact_name, function($value){
+
+            return $value != null;
+
+        });
+
+        $user = User::where('id',$user_id)->first();
+
+        $user->update($company_contact_name);
+
         return $company;
 
     }
