@@ -100,11 +100,12 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
             Route::get('/{placement_id}/showPlacementDetails/', ['uses' => 'PlacementsController@showPlacementDetails']);
 
+            Route::get('/applyToAppliedButton/{placement_id}', ['uses' => 'PlacementApplicationController@applyToAppliedButton']);
+
     });
 
 
     Route::group(['prefix'=>'/{user_id?}/company', 'middleware' => 'role:company'],function(){
-
 
         Route::get('/show', ['uses' => 'CompanysController@show']);
 
@@ -165,8 +166,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/remainingStudentsForOffer/{placement_id}', ['uses' => 'PlacementsController@remainingStudentsForOffer']);
 
         Route::get('/placementPrimaryAll', ['uses' => 'PlacementsController@placementPrimaryAll']);          //Contains all
-
-        Route::get('/applyToAppliedButton/{placement_id}', ['uses' => 'PlacementApplicationController@applyToAppliedButton']);
 
     });
 
