@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreatePlacementsPrimaryDetails extends FormRequest
+class CreatePlacementsPrimaryDetails extends Request
 {
 
     public function authorize()
@@ -15,7 +15,7 @@ class CreatePlacementsPrimaryDetails extends FormRequest
     public function rules()
     {
         return [
-            'job_title' => 'bail|required|max:191',
+            'job_title' => 'bail|required|max:1',
             'job_description' => 'bail|required',
             'last_date_for_registration' => 'required',
             'location' => 'bail|required|max:191',

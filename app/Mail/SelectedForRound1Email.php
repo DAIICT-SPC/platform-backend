@@ -20,6 +20,7 @@ class SelectedForRound1Email extends Mailable
 
     public function __construct($data)
     {
+
         $this->job_title = $data['job_title'];
         $this->location = $data['location'];
         $this->company_name = $data['company_name'];

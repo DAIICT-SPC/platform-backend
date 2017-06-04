@@ -449,6 +449,39 @@ class PlacementsController extends Controller
 
         }
 
+        $next_round_details = SelectionRound::where('placement_id',$placement_id)->where('round_no',$current_round+1)->first();
+
+        $placement_primary = PlacementPrimary::with(['company'])->where('placement_id',$placement_id)->first();
+
+        if(!$placement_primary)
+        {
+
+            return Helper::apiError("No Placement Found with this id!",null,404);
+
+        }
+
+
+        $job_title = $placement_primary['job_title'];
+
+        $location = $placement_primary['location'];
+
+        $company_name = $placement_primary["company"]['company_name'];
+
+        $job_type = Job_Type::where('id',$placement_primary['job_type_id'])->pluck('job_type');
+
+        $job_type_name = $job_type[0];
+
+        $data = [
+
+            'job_title' => $job_title,
+            'location' => $location,
+            'company_name' => $company_name,
+            'job_type_name' => $job_type_name,
+            'round_no' => $next_round_details['round_no'],
+            'round_name' => $next_round_details['round_name'],
+
+        ];
+
         $selection_round = [];
 
         $i = 0;
@@ -461,6 +494,8 @@ class PlacementsController extends Controller
             $selection_round[$i]->update(array('round_no' => ($current_round + 1)));
 
             $i++;
+
+            Mail::to("$student_enroll_no@daiict.ac.in")->send(new SelectedForRound1Email($data);
 
         }
 

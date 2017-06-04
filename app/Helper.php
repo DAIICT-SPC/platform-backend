@@ -8,8 +8,9 @@
 
 namespace App;
 
+use App\Http\Requests\Request;
 
-class Helper
+class Helper extends Request
 {
 
     public static function apiError($message='',$content=null,$code=500){
