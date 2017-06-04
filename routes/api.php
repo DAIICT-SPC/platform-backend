@@ -12,7 +12,16 @@
 //    return $request->user();
 //});
 
-
+//
+//    Route::get('mail/queue',function(){
+//
+//        Mail::later(5,'vendor.mail.queued_mail',['name' => 'Gaurav'],function ($message){
+//            $message->to('foo@example.com','John')->subject('Welcome!');
+//        });
+//
+//        return "email will be sent!";
+//
+//    });
 
 
 
@@ -68,11 +77,11 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
             Route::patch('/update', ['uses' => 'StudentsController@update']);
 
-            Route::post('/previousEducation', ['uses' => 'StudentsController@storePreviousEducation']);
+        //    Route::post('/previousEducation', ['uses' => 'StudentsController@storePreviousEducation']);
 
-            Route::get('/previousEducation', ['uses' => 'StudentsController@fetchPreviousEducation']);
+        //    Route::get('/previousEducation', ['uses' => 'StudentsController@fetchPreviousEducation']);
 
-            Route::patch('/update/previousEducation/{id}', ['uses' => 'StudentsController@updateEducation']);
+        //    Route::patch('/update/previousEducation/{id}', ['uses' => 'StudentsController@updateEducation']);
 
             Route::post('/project', ['uses' => 'StudentsController@storeProjects']);
 

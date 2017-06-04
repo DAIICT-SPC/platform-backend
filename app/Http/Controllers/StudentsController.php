@@ -253,7 +253,7 @@ class StudentsController extends Controller
 
         $enroll_no = $student['enroll_no'];
 
-        $education_details = StudentEducation::where('enroll_no',$enroll_no)->get();
+        $education_details = StudentEducation::with(['education'])->where('enroll_no',$enroll_no)->get();
 
         if(!$education_details)
         {

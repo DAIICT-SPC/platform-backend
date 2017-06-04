@@ -24,4 +24,9 @@ class StudentEducation extends Model
         return $this->belongsTo(Student::class,'enroll_no');
     }
 
+    public function education()
+    {
+        return $this->belongsTo(Education::class,'education_id');
+    }
+
 }
