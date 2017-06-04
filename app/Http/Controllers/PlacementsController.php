@@ -495,7 +495,7 @@ class PlacementsController extends Controller
 
             $i++;
 
-            Mail::to("$student_enroll_no@daiict.ac.in")->send(new SelectedForRound1Email($data);
+            Mail::to("$student_enroll_no@daiict.ac.in")->send(new SelectedForRound1Email($data));
 
         }
 
