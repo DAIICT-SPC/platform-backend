@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Http\Requests\CreateOffer;
+use App\Job_Type;
+use App\Mail\SelectedAndOfferMail;
 use App\Offer;
 use App\PlacementPrimary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PlacementOffersController extends Controller
 {
@@ -14,42 +17,57 @@ class PlacementOffersController extends Controller
     public function giveOfferLetter(CreateOffer $request, $placement_id)        //insert in OFFER Block.. check if student completed last round PlacementController@checkIfRoundsCompleted
     {
 
-        $enroll_check_boxes = $request->only('enroll_no');
+        $enroll_nos = $request->only('enroll_no');
+
+        $enroll_no = $enroll_nos['enroll_no'];
 
         $input = $request->only('package');
 
         $input['placement_id'] = $placement_id;
 
-        $enroll_nos  = array_values($enroll_check_boxes);
+        $placement_primary = PlacementPrimary::with(['company'])->where('placement_id', $placement_id)->first();
 
-        $offer = [];
+        if (!$placement_primary) {
 
-        $i=0;
+            return Helper::apiError("No Placement Found with this id!", null, 404);
 
-        foreach ($enroll_nos as $enroll_no)
-        {
+        }
 
-            foreach ( $enroll_no as $single) {
 
-                $offer_db = Offer::where('placement_id', $input['placement_id'])->where('enroll_no', $enroll_no)->first();
+        $job_title = $placement_primary['job_title'];
 
-                if (is_null($offer_db)) {
+        $location = $placement_primary['location'];
 
-                    $input['enroll_no'] = $single;
+        $company_name = $placement_primary["company"]['company_name'];
 
-                    $offer[$i] = Offer::create($input);
+        $job_type = Job_Type::where('id', $placement_primary['job_type_id'])->pluck('job_type');
 
-                    $i++;
+        $job_type_name = $job_type[0];
 
-                }else{
+        $data = [
 
-                    $offer[$i] = $offer_db;
+            'job_title' => $job_title,
+            'location' => $location,
+            'company_name' => $company_name,
+            'job_type_name' => $job_type_name,
+            'offer' => $input['package'],
 
-                    $i++;
+        ];
 
-                }
 
-            }
+        $offer_db = Offer::where('placement_id', $input['placement_id'])->where('enroll_no', $enroll_no)->first();
+
+        if (is_null($offer_db)) {
+
+            $input['enroll_no'] = $enroll_no;
+
+            $offer = Offer::create($input);
+
+            Mail::to("$enroll_no@daiict.ac.in")->send(new SelectedAndOfferMail($data));
+
+        } else {
+
+            $offer = $offer_db;
 
         }
 
