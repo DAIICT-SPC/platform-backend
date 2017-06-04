@@ -558,4 +558,27 @@ class StudentsController extends Controller
 
     }
 
+    public function remainingEducationsToInsert($user_id)
+    {
+
+        if (is_null($user_id)) {
+
+            $student = request()->user()->student;
+
+        } else {
+
+            $student = User::find($user_id)->student;
+
+        }
+
+        if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
+
+        }
+
+        return $student;
+
+    }
+
 }

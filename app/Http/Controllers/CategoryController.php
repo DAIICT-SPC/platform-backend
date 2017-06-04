@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCategory;
 use App\Student;
+use App\StudentEducation;
 use Illuminate\Http\Request;
 use App\Category;
 
@@ -120,17 +121,45 @@ class CategoryController extends Controller
 
         $category_id = $student['category_id'];
 
-
         if($category_id==2)
         {
 
-            return array(2,3,4);
+            $education_db = StudentEducation::where('enroll_no',$student['enroll_no'])->pluck('education_id');
+
+            if(sizeof($education_db)==0)
+            {
+
+                $final = array(2,3,4);
+
+                return $final;
+
+            }else{
+
+                $final = array(2,3,4);
+
+                return array_values(array_diff($final,$education_db->toArray()));
+
+            }
 
         }
         else
         {
+            $education_db = StudentEducation::where('enroll_no',$student['enroll_no'])->pluck('education_id');
 
-            return array(1,2,3,4);
+            if(sizeof($education_db)==0)
+            {
+
+                $final = array(1,2,3,4);
+
+                return $final;
+
+            }else{
+
+                $final = array(1,2,3,4);
+
+                return array_values(array_diff($final,$education_db->toArray()));
+
+            }
 
         }
 
