@@ -1,6 +1,6 @@
 <tr>
     <td class="header">
-        <a href="{{ $url }}">
+        <a>
             {{ $slot }}
         </a>
     </td>

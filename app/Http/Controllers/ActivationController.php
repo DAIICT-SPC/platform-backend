@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\MailController;
 use App\Http\Requests\CreateActivation;
+use App\Mail\ActivationEmail;
 use Illuminate\Http\Request;
 use App\Activation;
 use App\Helper;
 use Illuminate\Support\Facades\File;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\User;
 
@@ -47,9 +49,7 @@ class ActivationController extends Controller
 
         }
 
-    //        $this->activationEmail($activation);
-
-        return $activation;
+        return $this->activationEmail($activation);
 
     }
 
@@ -199,20 +199,20 @@ class ActivationController extends Controller
 
     public function activationEmail($input){
 
+        $email = $input['email'];
+
+        $code = $input['code'];
+
         $data = [
 
             'code' => $input['code'],                   //You can access it directly as $code and $link in EMAIL BLADE - {{$code}}
+            'url' => "http://localhost:8080/signup/$code"
 
             ];
 
-        Mail::send('EMAIL BLADE', $data, function($message) use($input) {
-
-            $message->to($input['email'])->subject('SPC activation code');
-
-            $message->from('spc@daiict.ac.in','SPC');
-
-        });
+        Mail::to($email)->send(new ActivationEmail($data));
 
     }
+
 
 }

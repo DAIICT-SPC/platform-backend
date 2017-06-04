@@ -33,6 +33,8 @@
 
         Route::get('/activate/{code}' , ['uses' => 'ActivationController@findCode']);
 
+        Route::post('/testing', ['uses' => 'ActivationController@testing']);
+
         //Deletion of code is done when user is created hence refer to UsersController@registerUser - users/registerUser
 
     });
@@ -339,4 +341,5 @@ Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
         Route::get('/placementsInPlacementSeason/{placement_season_id}', ['uses' => 'PlacementSeasonController@placementsInPlacementSeason']);
 
     });
+
 
