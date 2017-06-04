@@ -188,7 +188,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/companies', ['uses' => 'CompanysController@index']);
 
-        Route::get('/show', ['uses' => 'AdminsController@show']);         //It will get the Company entry from company table
+        Route::get('/show', ['uses' => 'AdminsController@show']);
 
         Route::patch('/updatePersonal', ['uses' => 'UsersController@update']);          //It will update details like email,username,password which are present in "USERS" table
 

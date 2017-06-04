@@ -42,16 +42,18 @@ class CompanysController extends Controller
 
         }
 
-        $user_name = User::where('id',$user_id)->pluck('name');
+        $user = User::where('id',$user_id)->first();
 
-        if(!$user_name)
+        if(!$user)
         {
 
             return Helper::apiError("No Name found",null,404);
 
         }
 
-        $company['name'] = $user_name[0];
+        $company['name'] = $user['name'];
+
+        $company['email'] = $user['email'];
 
         return $company;
 

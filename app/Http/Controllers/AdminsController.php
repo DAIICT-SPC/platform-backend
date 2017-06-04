@@ -36,16 +36,18 @@ class AdminsController extends Controller
         }
 
 
-        $user_name = User::where('id',$user_id)->pluck('name');
+        $user = User::where('id',$user_id)->first;
 
-        if(!$user_name)
+        if(!$user)
         {
 
             return Helper::apiError("No Name found",null,404);
 
         }
 
-        $admin['name'] = $user_name[0];
+        $admin['name'] = $user['name'];
+
+        $admin['email'] = $user['email'];
 
         return $admin;
 
