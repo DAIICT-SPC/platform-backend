@@ -36,7 +36,7 @@ class AdminsController extends Controller
         }
 
 
-        $user = User::where('id',$user_id)->first;
+        $user = User::where('id',$user_id)->first();
 
         if(!$user)
         {
