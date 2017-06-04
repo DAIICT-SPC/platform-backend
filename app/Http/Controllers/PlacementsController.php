@@ -189,7 +189,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function openRegistrationForPlacement($user_id, $placement_id)
+    public function openRegistrationForPlacement($user_id, $placement_id)           //start - change status to application
     {
 
         $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
@@ -200,6 +200,18 @@ class PlacementsController extends Controller
         }
 
         PlacementPrimary::where('placement_id', $placement_id)->update(array('status' => 'application'));
+
+        //send mail to all students belonging to open for category
+
+
+        $open_for_list = PlacementOpenFor::where('placement_id',$placement_id)->pluck('category_id');
+
+        foreach ($open_for_list as $open_for)
+        {
+
+
+
+        }
 
         $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
 
@@ -730,7 +742,11 @@ class PlacementsController extends Controller
 
         }
 
-        $placement_primary = PlacementPrimary::with(['company'])->where('status','!=','draft')->get();
+        $category_id = $student['category_id'];
+
+        $placement_primary = PlacementPrimary::with(['company','categories' => function($q) use ($category_id){
+            $q->where('categories.id',$category_id);
+        }])->where('status','!=','draft')->get();
 
         if(is_null($placement_primary))
         {
@@ -746,7 +762,21 @@ class PlacementsController extends Controller
 
         }
 
-        return $placement_primary;
+        $placements = [];
+
+        foreach ($placement_primary as $single)
+        {
+
+            if(sizeof($single["categories"]) != 0)
+            {
+
+                array_push($placements,$single);
+
+            }
+
+        }
+
+        return $placements;
 
     }
 
