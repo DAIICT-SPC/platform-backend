@@ -42,6 +42,13 @@ class ActivationController extends Controller
 
         $input['code'] = time().str_random(5);            //need to check if the string does'nt repeat in database
 
+        $activation = Activation::where('email',$input['email'])->where('code',$input['code'])->where('role',$input['role'])->first();
+
+        if(sizeof($activation)!=0)
+        {
+            return $activation;
+        }
+
         $activation = Activation::create($input);
 
         if(!$activation){
