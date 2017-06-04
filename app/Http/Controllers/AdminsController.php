@@ -62,11 +62,26 @@ class AdminsController extends Controller
             Helper::apiError('No such Admin exist!',null,404);
         }
 
-        $input = $request->only('name', 'contact_no', 'position');
+        $input = $request->only('contact_no', 'position');
+
+        $input_user = $request->only('name');
+
+        $userr = User::where('id',$user_id)->first();
+
+        if(!$userr)
+        {
+            return Helper::apiError("Can't fetch user",null,404);
+        }
 
         $input = array_filter($input, function($value){
             return $value != null;
         });
+
+        $input_user = array_filter($input_user, function($value){
+            return $value != null;
+        });
+
+        $userr->update($input_user);
 
         $user->update($input);
 
