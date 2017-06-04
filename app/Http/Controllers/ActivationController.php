@@ -155,11 +155,11 @@ class ActivationController extends Controller
 
         }
 
-            foreach ($emails as $email){
+        $activation = [];
 
-                $activation = [];
+        $i = 0;
 
-                $i = 0;
+        foreach ($emails as $email){
 
                 $input = $request->only('role');
 
@@ -179,9 +179,7 @@ class ActivationController extends Controller
 
             }
 
-        return $activation;
-
-        //send mail to each activation email
+            return $this->activationEmailsCreatedViaFile($activation);
 
     }
 
@@ -213,6 +211,29 @@ class ActivationController extends Controller
         Mail::to($email)->send(new ActivationEmail($data));
 
     }
+
+    public function activationEmailsCreatedViaFile($inputs){
+
+        foreach ($inputs as $input)
+        {
+
+            $email = $input['email'];
+
+            $code = $input['code'];
+
+            $data = [
+
+                'code' => $input['code'],                   //You can access it directly as $code and $link in EMAIL BLADE - {{$code}}
+                'url' => "http://localhost:8080/signup/$code"
+
+            ];
+
+            Mail::to($email)->send(new ActivationEmail($data));
+
+        }
+
+    }
+
 
 
 }
