@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\MailController;
 use App\Http\Requests\CreateActivation;
 use App\Mail\ActivationEmail;
+use App\Mail\SelectedForRound1Email;
 use Illuminate\Http\Request;
 use App\Activation;
 use App\Helper;
@@ -234,6 +235,26 @@ class ActivationController extends Controller
 
     }
 
+
+    public function testing()
+    {
+
+        $email = 'jiandanigaurav';
+
+        $data = [
+
+            'job_title' => "Web Developer",
+            'location' => "ahmedabad",
+            'company_name' => "XYZ",
+            'job_type_name' => "summer internship",
+            'round_name' => "aptitude",
+            'round_no' => 1,
+
+        ];
+
+        Mail::to("$email@gmail.com")->send(new SelectedForRound1Email($data));
+
+    }
 
 
 }

@@ -12,6 +12,7 @@ use App\Http\Requests\CreateReOpenRegistration;
 use App\Http\Requests\CreateSelectionRoundsDetails;
 use App\Http\Requests\CreateSelectStudentsRoundwise;
 use App\Http\Requests\CreateStudentRegistration;
+use App\Mail\SelectedForRound1Email;
 use App\Offer;
 use App\PlacementCriteria;
 use App\PlacementSeason;
@@ -27,6 +28,7 @@ use App\Job_Type;
 use App\Company;
 use App\Student;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PlacementsController extends Controller
 {
@@ -201,17 +203,14 @@ class PlacementsController extends Controller
 
         PlacementPrimary::where('placement_id', $placement_id)->update(array('status' => 'application'));
 
-        //send mail to all students belonging to open for category
-
-
-        $open_for_list = PlacementOpenFor::where('placement_id',$placement_id)->pluck('category_id');
-
-        foreach ($open_for_list as $open_for)
-        {
-
-
-
-        }
+//        send mail to all students belonging to open for category
+//
+//        $open_for_list = PlacementOpenFor::where('placement_id',$placement_id)->pluck('category_id');
+//
+//        foreach ($open_for_list as $open_for)
+//        {
+//
+//        }
 
         $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
 
@@ -360,6 +359,37 @@ class PlacementsController extends Controller
 
         $i = 0;
 
+        $placement_primary = PlacementPrimary::with(['company'])->where('placement_id',$placement_id)->first();
+
+        if(!$placement_primary)
+        {
+
+            return Helper::apiError("No Placement Found with this id!",null,404);
+
+        }
+
+
+        $job_title = $placement_primary['job_title'];
+
+        $location = $placement_primary['location'];
+
+        $company_name = $placement_primary["company"]['company_name'];
+
+        $job_type = Job_Type::where('id',$placement_primary['job_type_id'])->pluck('job_type');
+
+        $job_type_name = $job_type[0];
+
+        $selection_round_detail = SelectionRound::where('placement_id',$placement_id)->where('round_no',1)->first();
+
+        $data = [
+
+            'job_title' => $job_title,
+            'location' => $location,
+            'company_name' => $company_name,
+            'job_type_name' => $job_type_name,
+            'round_name' => $selection_round_detail['round_name'],
+        ];
+
         foreach ( $student_enroll_no_list as $student_enroll_no )
         {
 
@@ -374,11 +404,15 @@ class PlacementsController extends Controller
             if(!$selectedStudents[$i])
             {
 
-                return Helper::apiError("Wasn't able to Insert $selectedStudents[$i]",null,404);
+                return Helper::apiError("Wasn't able to Insert!",null,404);
 
             }
 
+            $data['round'] = 1;
+
             $i++;
+
+            Mail::to("$student_enroll_no@daiict.ac.in")->send(new SelectedForRound1Email($data));
 
         }
 

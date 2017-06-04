@@ -10,7 +10,8 @@ You can also Click Below to Activate!
 @component('mail::button', ['url' => $url, 'color' => 'green'])
 Activate
 @endcomponent
-
+<br>
 Thanks,<br>
-SPC, DA-IICT
+<b>SPC,</b><br>
+<b>DA-IICT.</b>
 @endcomponent
