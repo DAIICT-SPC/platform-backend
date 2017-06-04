@@ -232,14 +232,12 @@ class PlacementSeasonController extends Controller
 
         $remaining_companies = array_diff($company_ids->toArray(),$allowed_companies->toArray());
 
-        $remain_companies = [];
+        $remain_companies = Company::whereIn('id', $remaining_companies)->get();;
 
-        foreach ($remaining_companies as $id)
+        if(!$remain_companies)
         {
 
-            $company = Company::find($id);
-
-            array_push($remain_companies,$company);
+            return Helper::apiError("No Company Detail Found!",null,404);
 
         }
 
@@ -334,5 +332,90 @@ class PlacementSeasonController extends Controller
 
     }
 
+    public function placementsCompanyWiseListing($placement_season_id, $company_id)
+    {
+
+        $all_placements = PlacementPrimary::with(['placement_season' => function($q) use($placement_season_id){
+            $q->where('id',$placement_season_id);
+        }])->where('status','!=','draft')->where('company_id',$company_id)->get();
+
+        $placement_drive_list = [];
+
+        foreach ($all_placements as $placement)
+        {
+
+            if(is_null($placement['placement_season']))
+            {
+
+            }else{
+                array_push($placement_drive_list,$placement);
+            }
+
+        }
+
+        return $placement_drive_list;
+
+    }
+
+    public function companiesAllowedOrNot($placement_season_id)
+    {
+
+        $allowed_companies_detail = PlacementSeason_Company::where('placement_season_id',$placement_season_id)->get();
+
+        $allowed_companies = $allowed_companies_detail->pluck('company_id');
+
+        $companies = Company::all();
+
+        if(!$allowed_companies or is_null($allowed_companies))
+        {
+
+            return $companies;
+
+        }
+
+        $company_ids = $companies->pluck('id');
+
+        $remaining_companies = array_diff($company_ids->toArray(),$allowed_companies->toArray());
+
+        $allowed_companies = Company::whereIn('id', $allowed_companies)->get();;
+
+        $remain_companies = Company::whereIn('id', $remaining_companies)->get();;
+
+        if(!$remain_companies)
+        {
+
+            return Helper::apiError("No Company Detail Found!",null,404);
+
+        }
+
+        $companies_allowed_or_not = [];
+
+        foreach ($allowed_companies as $allowed_company)
+        {
+
+            $temp['company_detail'] = $allowed_company;
+
+            $temp['status'] = 'allowed';
+
+            array_push($companies_allowed_or_not,$temp);
+
+        }
+
+        foreach ($remain_companies as $remain_company)
+        {
+
+            $temp['company_detail'] = $remain_company;
+
+            $temp['status'] = 'Not Allowed';
+
+            array_push($companies_allowed_or_not,$temp);
+
+        }
+
+        shuffle($companies_allowed_or_not);
+
+        return $companies_allowed_or_not;
+
+    }
 
 }

@@ -340,6 +340,10 @@ Route::get('/placementsAll', ['uses' => 'PlacementsController@placementsAll']);
 
         Route::get('/placementsInPlacementSeason/{placement_season_id}', ['uses' => 'PlacementSeasonController@placementsInPlacementSeason']);
 
+        Route::get('/placementsCompanyWiseListing/{placement_season_id}/{company_id}', ['uses' => 'PlacementSeasonController@placementsCompanyWiseListing']);
+
+        Route::get('/companiesAllowedOrNot/{placement_season_id}', ['uses' => 'PlacementSeasonController@companiesAllowedOrNot']);
+
     });
 
 
