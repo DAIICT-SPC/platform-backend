@@ -61,7 +61,7 @@ class StudentsController extends Controller
 
         }
 
-        $user_name = User::where('id',$user_id)->pluck('name');
+        $user_name = User::where('id',$user_id)->first();
 
         if(!$user_name)
         {
@@ -70,7 +70,9 @@ class StudentsController extends Controller
 
         }
 
-        $student['name'] = $user_name[0];
+        $student['name'] = $user_name['name'];
+
+        $student['profile_picture'] = $user_name['profile_picture'];
 
         return $student;
     }

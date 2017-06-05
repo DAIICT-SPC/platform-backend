@@ -49,6 +49,8 @@ class AdminsController extends Controller
 
         $admin['email'] = $user['email'];
 
+        $admin['profile_picture'] = $user['profile_picture'];
+
         return $admin;
 
     }
