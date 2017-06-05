@@ -731,6 +731,11 @@ class PlacementsController extends Controller
 
         $selection_round_current_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$current_round)->pluck('enroll_no');
 
+        if(sizeof($selection_round_current_details)==0)
+        {
+            return response("All Students moved to next Round!",200);
+        }
+
         $selection_round_next_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$next_round)->pluck('enroll_no');
 
         $students = Student::with(['user','category'])->whereIn('enroll_no',$selection_round_current_details)->get();
