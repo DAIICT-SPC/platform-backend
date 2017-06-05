@@ -747,6 +747,8 @@ class PlacementsController extends Controller
         if($round_no == $size)
         {
 
+            $offers = Offer::where('placement_id',$placement_id)->pluck('enroll_no');
+
             $selection_round_current_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->pluck('enroll_no');
 
             if(sizeof($selection_round_current_details)==0 or is_null($selection_round_current_details) or !$selection_round_current_details)
@@ -754,16 +756,25 @@ class PlacementsController extends Controller
                 return response("All Students of this round moved to Offer Layer!",200);
             }
 
-            $students = Student::with(['user','category'])->whereIn('enroll_no',$selection_round_current_details)->get();
+            $remaining_enroll_nos = array_values(array_diff($selection_round_current_details,$offers));
 
-            if(sizeof($students)==0)
+            if(sizeof($remaining_enroll_nos)!=0)
             {
 
-                return Helper::apiError("Can't fetch Students!",null,404);
+                $students = Student::with(['user','category'])->whereIn('enroll_no',$remaining_enroll_nos)->get();
+
+                if(sizeof($students)==0)
+                {
+
+                    return Helper::apiError("Can't fetch Students!",null,404);
+
+                }
+
+                return $students;
 
             }
 
-            return $students;
+            return response("All Students in Last Round got Offer!",200);
 
         }
 
