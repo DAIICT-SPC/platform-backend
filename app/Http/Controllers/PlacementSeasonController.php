@@ -203,14 +203,16 @@ class PlacementSeasonController extends Controller
     public function allAllowedCompanies($placement_season_id)
     {
 
-        $allowed_companies = PlacementSeason::with(['companies'])->where('id',$placement_season_id)->get();
+        $allowed_companies = PlacementSeason_Company::where('placement_season_id',$placement_season_id)->pluck('company_id');
 
         if(!$allowed_companies or is_null($allowed_companies))
         {
             return Helper::apiError("No Companies allowed Yet!",null,404);
         }
 
-        return $allowed_companies;
+        $companies_list = Company::whereIn('id',$allowed_companies)->orderBy('company_name','asc')->get();
+
+        return $companies_list;
 
     }
 
@@ -232,7 +234,7 @@ class PlacementSeasonController extends Controller
 
         $remaining_companies = array_diff($company_ids->toArray(),$allowed_companies->toArray());
 
-        $remain_companies = Company::whereIn('id', $remaining_companies)->get();;
+        $remain_companies = Company::whereIn('id', $remaining_companies)->orderBy('company_name','asc')->get();;
 
         if(!$remain_companies)
         {
