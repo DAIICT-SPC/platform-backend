@@ -731,7 +731,7 @@ class PlacementsController extends Controller
 
         $selection_round_current_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$current_round)->pluck('enroll_no');
 
-        if(sizeof($selection_round_current_details)==0)
+        if(sizeof($selection_round_current_details)==0 or is_null($selection_round_current_details) or !$selection_round_current_details)
         {
             return response("All Students moved to next Round!",200);
         }
