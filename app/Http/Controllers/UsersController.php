@@ -20,7 +20,6 @@ use App\Company;
 use App\Activation;
 
 use Illuminate\Support\Facades\Storage;
-
 use Intervention\Image\Image;
 
 class UsersController extends Controller
@@ -211,13 +210,29 @@ class UsersController extends Controller
         public function storeProfilePicture(Request $request, $user_id)
         {
 
-           $pic = $request->hasFile('prof_pic');
+           if($request->hasFile('prof_pic'))
+           {
+
+               $pic = $request->file('prof_pic');
+
+               $extension = $pic->getClientOriginalExtension();
+
+               $filename = $user_id.time().','.$extension;
+
+               $path = public_path();
 
 
-           $extension = $request->file('prof_pic')->getClientOriginalExtension();
-           // the actual path is app/storage/Profile_Pictures/{}
-           // $arr = explode("/", $path);
-            return $extension;
+               \Intervention\Image\Facades\Image::make($pic)->resize(300,300)->save($path);
+
+               $user = User::where('id',$user_id)->first();
+
+               $user->profile_picture = $filename;
+
+               $user->save();
+
+           }
+
+           return response("",200);
 
         }
 
