@@ -672,6 +672,11 @@ class PlacementsController extends Controller
 
         $students_in_application = Application::where('placement_id',$placement_id)->pluck('enroll_no');
 
+        if(sizeof($students_in_application)==0)
+        {
+            return response("None has applied yet!",200);
+        }
+
         $students = Student::with(['category'])->whereIn('enroll_no',$students_in_application)->get();
 
         if(sizeof($students)==0)
