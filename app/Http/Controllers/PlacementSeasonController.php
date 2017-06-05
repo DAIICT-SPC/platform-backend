@@ -337,7 +337,7 @@ class PlacementSeasonController extends Controller
     public function placementsCompanyWiseListing($placement_season_id, $company_id)
     {
 
-        $all_placements = PlacementPrimary::with(['placement_season' => function($q) use($placement_season_id){
+        $all_placements = PlacementPrimary::with(['company','placement_season' => function($q) use($placement_season_id){
             $q->where('id',$placement_season_id);
         }])->where('status','!=','draft')->where('company_id',$company_id)->get();
 
