@@ -677,7 +677,7 @@ class PlacementsController extends Controller
             return response("None has applied yet!",200);
         }
 
-        $students = Student::with(['category'])->whereIn('enroll_no',$students_in_application)->get();
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$students_in_application)->get();
 
         if(sizeof($students)==0)
         {
@@ -700,7 +700,7 @@ class PlacementsController extends Controller
             return response("All Students move to Rounds",200);
         }
 
-        $students = Student::with(['category'])->whereIn('enroll_no',$remaining_student)->get();
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$remaining_student)->get();
 
         if(sizeof($students)==0)
         {
@@ -733,7 +733,7 @@ class PlacementsController extends Controller
 
         $selection_round_next_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$next_round)->pluck('enroll_no');
 
-        $students = Student::with(['category'])->whereIn('enroll_no',$remaining_students)->get();
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$remaining_students)->get();
 
         if(sizeof($students)==0)
         {
@@ -753,7 +753,7 @@ class PlacementsController extends Controller
 
         $remaining_students = array_values($remaining_student);
 
-        $students = Student::with(['category'])->whereIn('enroll_no',$remaining_students)->get();
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$remaining_students)->get();
 
         if(sizeof($students)==0)
         {
@@ -814,7 +814,7 @@ class PlacementsController extends Controller
 
         $remaining_students = array_values($remaining_students);
 
-        $students = Student::with(['category'])->whereIn('enroll_no',$remaining_students)->get();
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$remaining_students)->get();
 
         if(sizeof($students)==0)
         {
