@@ -70,7 +70,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/storeProfilePicture/{user_id}', ['uses' => 'UsersController@storeProfilePicture']);
 
-        Route::post('/viewProfilePicture/{user_id}', ['uses' => 'UsersController@viewProfilePicture']);
+        Route::get('/viewProfilePicture/{user_id}', ['uses' => 'UsersController@viewProfilePicture']);
 
         Route::post('/removeProfilePicture/{user_id}', ['uses' => 'UsersController@removeProfilePicture']);
 
@@ -230,7 +230,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/placement/{placement_id}', ['uses' => 'PlacementApplicationController@showAllApplications']);
 
-        Route::get('/{student_id}/getResume', ['uses' => 'StudentsController@getResume']);
+        Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
 
         Route::get('/listOfStudentsPlaced', ['uses' => 'AdminsController@listOfStudentsPlaced']);   // listOfStudentsPlaced?from_date=01-01-2017&to_date=02-02-2017
 

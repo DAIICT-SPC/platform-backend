@@ -435,7 +435,9 @@ class StudentsController extends Controller
 
             }
 
-            //$path = base_path().'/'.$student['resume'];
+            $name = $student['resume'];
+
+            return $name;
 
         }else{
 
@@ -451,15 +453,25 @@ class StudentsController extends Controller
 
                 }
 
-                $enroll_no = $student['enroll_no'];
+                $name = $student['resume'];
 
-                return base_path().Storage::url("resume/$enroll_no");
+                return $name;
 
             }
 
-            $enroll_no = $student_id;
 
-            return Storage::url("resume/$enroll_no");
+            $student = Student::where('enroll_no',$student_id)->first();
+
+            if(!$student)
+            {
+
+                return Helper::apiError("No student found!",null,404);
+
+            }
+
+            $name = $student['resume'];
+
+            return $name;
 
         }
 

@@ -250,9 +250,9 @@ class UsersController extends Controller
                 return response("No Profile picture!",200);
             }
 
-            $path = base_path().'/public/uploads/Profile_Pictures/'.$profile_picture;
+            $name = $profile_picture;
 
-            return $path;
+            return $name;
 
         }
 
