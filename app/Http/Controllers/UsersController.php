@@ -18,7 +18,10 @@ use App\Admin;
 use App\Company;
 
 use App\Activation;
+
 use Illuminate\Support\Facades\Storage;
+
+use Intervention\Image\Image;
 
 class UsersController extends Controller
 {
@@ -208,7 +211,9 @@ class UsersController extends Controller
         public function storeProfilePicture(Request $request, $user_id)
         {
 
-           $path = $request->file('prof_pic')->storeAs('Profile_Pictures', $user_id.time());
+           $pic = $request->hasFile('prof_pic');
+
+
            $extension = $request->file('prof_pic')->getClientOriginalExtension();
            // the actual path is app/storage/Profile_Pictures/{}
            // $arr = explode("/", $path);

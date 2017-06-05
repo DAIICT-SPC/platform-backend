@@ -186,6 +186,9 @@ return [
         //Debugbar
         Barryvdh\Debugbar\ServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+
+        //Image Intervention
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -240,6 +243,7 @@ return [
 
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

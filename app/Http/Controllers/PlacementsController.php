@@ -380,7 +380,7 @@ class PlacementsController extends Controller
 
             }
 
-            $data['round'] = 1;
+            $data['round_no'] = 1;
 
             $i++;
 
