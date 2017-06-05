@@ -185,7 +185,7 @@ class PlacementSeasonController extends Controller
 
         $input = $request->only('company_id');
 
-        $company_list = $input['company_id'];
+        $company_id = $input['company_id'];
 
         $placements = PlacementSeason::find($placement_season_id);
 
@@ -194,7 +194,7 @@ class PlacementSeasonController extends Controller
             return Helper::apiError("No Placement Found!",null,404);
         }
 
-        $placements->companies()->detach($company_list);
+        $placements->companies()->detach($company_id);
 
         return response("",200);
 
