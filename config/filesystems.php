@@ -63,6 +63,11 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'resume' => [
+            'driver' => 'local',
+            'root'   => base_path() . '/public/uploads/Resumes/',
+        ],
+
     ],
 
 ];

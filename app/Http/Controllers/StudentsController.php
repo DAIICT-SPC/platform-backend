@@ -390,7 +390,20 @@ class StudentsController extends Controller
         if ( $inputfile->getClientOriginalExtension() == 'pdf' )
         {
 
-            Storage::put("resume/$enroll_no", $inputfile);
+            $filename = $enroll_no.time().'.pdf';
+
+            $inputfile->move('uploads/Resumes/',$filename);
+
+            $student = Student::where('user_id',$user_id)->first();
+
+            if(!$student)
+            {
+                return Helper::apiError("No Student Found!",null,404);
+            }
+
+            $student->resume = $filename;
+
+            $student->save();
 
             return response("",204);
 
@@ -422,9 +435,7 @@ class StudentsController extends Controller
 
             }
 
-            $enroll_no = $student['enroll_no'];
-
-            return Storage::url("resume/$enroll_no");
+            //$path = base_path().'/'.$student['resume'];
 
         }else{
 
