@@ -217,12 +217,11 @@ class UsersController extends Controller
 
                $extension = $pic->getClientOriginalExtension();
 
-               $filename = $user_id.time().','.$extension;
+               $filename = $user_id.time().'.'.$extension;
 
-               $path = public_path();
+               $path = base_path().'/public/uploads/Profile_Pictures/'.$filename;
 
-
-               \Intervention\Image\Facades\Image::make($pic)->resize(300,300)->save($path);
+               \Intervention\Image\Facades\Image::make($pic->getRealPath())->resize(300,300)->save($path);
 
                $user = User::where('id',$user_id)->first();
 
@@ -236,17 +235,35 @@ class UsersController extends Controller
 
         }
 
-        public function viewProfilePicture(Request $request, $user_id)
+        public function viewProfilePicture($user_id)
         {
 
-            return asset('Profile_Pictures/11496663179');;
+            $profile_picture = User::where('id',$user_id)->pluck('profile_picture');
+
+            if(sizeof($profile_picture)==0)
+            {
+                return Helper::apiError("No Student Found!",null,404);
+            }
+
+            if($profile_picture == 'default.jpg' or $profile_picture=='null')
+            {
+                return response("No Profile picture!",200);
+            }
+
+            $path = base_path().'/public/uploads/Profile_Pictures/'.$profile_picture;
+
+            return $path;
 
         }
 
-        public function deleteProfilePicture(Request $request,$user_id)
+        public function removeProfilePicture($user_id)
         {
 
-            Storage::delete('file.jpg');
+            $user = User::where('id',$user_id)->first();
+
+            $user->update(array('profile_picture'=>'default.jpg'));
+
+            return $user;
 
         }
 

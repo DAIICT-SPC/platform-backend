@@ -70,6 +70,10 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/storeProfilePicture/{user_id}', ['uses' => 'UsersController@storeProfilePicture']);
 
+        Route::post('/viewProfilePicture/{user_id}', ['uses' => 'UsersController@viewProfilePicture']);
+
+        Route::post('/removeProfilePicture/{user_id}', ['uses' => 'UsersController@removeProfilePicture']);
+
 
     Route::group(['prefix'=>'{user_id?}/student', 'middleware' => 'role:student'], function(){
 
