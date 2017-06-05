@@ -299,34 +299,6 @@ class PlacementsController extends Controller
 
     }
 
-    public function categoryWisePlacementMail($user_id, $placement_id)             //to send them mail
-    {
-
-        $openFor = $this->showOpenForCategories($placement_id);
-
-        // foreach category find all students that belong to that category and send them mail one by one
-
-        foreach ($openFor as $aa)
-        {
-
-            if($aa != null)
-            {
-                $studentsBelongingToCategory = Student::where('category_id',$aa['category_id'])->get();
-
-                foreach ($studentsBelongingToCategory as $student)
-                {
-                    // Mail to Students
-                }
-
-            }
-
-        }
-
-        return "Successfully sent mail to all students";
-
-    }
-
-
     public function updateDateOfSelectionRound(Request $request,$user_id, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
     {
 
