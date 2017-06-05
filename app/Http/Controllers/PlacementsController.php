@@ -430,10 +430,6 @@ class PlacementsController extends Controller
 
             $input['placement_id'] = $placement_id;
 
-            $package = PlacementPrimary::where('placement_id',$placement_id)->pluck('package');
-
-            $input['package'] = $package[0];
-
             foreach ( $student_enroll_no_list as $student_enroll_no )
             {
 
@@ -747,7 +743,7 @@ class PlacementsController extends Controller
         if($round_no == $size)
         {
 
-            $offers = Offer::where('placement_id',$placement_id)->pluck('enroll_no');
+            $offers = Offer::where('placement_id',$placement_id)->where('package','!=',NULL)->pluck('enroll_no');
 
             $selection_round_current_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->pluck('enroll_no');
 
@@ -852,7 +848,7 @@ class PlacementsController extends Controller
     public function remainingStudentsForOffer($user_id,$placement_id)
     {
 
-        $students_offered = Offer::where('placement_id',$placement_id)->pluck('enroll_no');
+        $students_offered = Offer::where('placement_id',$placement_id)->where('package','!=',NULL)->pluck('enroll_no');
 
         $selection_rounds = SelectionRound::where('placement_id',$placement_id)->pluck('round_no');
 

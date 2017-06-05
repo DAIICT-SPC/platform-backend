@@ -91,157 +91,155 @@ class AdminsController extends Controller
 
     }
 
-    public function externalAllow($enroll_no)
-    {
-        //directly allow his insertion in application table
-    }
-
-    public function listOfStudentsPlaced(GetFromToYear $request)
+    public function listOfStudentsPlaced($placement_season_id)
     {
 
-        $input = $request->only('from_year', 'to_year');
+        $placement_detail = PlacementPrimary::with(['company','jobType','placement_season' => function($q) use($placement_season_id){
+            $q->where('id',$placement_season_id);
+        }])->where('status','!=','draft')->get();
 
-        $from_year = $input['from_year'];
+        $placements = $placement_detail->pluck('placement_id');
 
-        $converting_date = strtotime($from_year);
-
-        $new_from_year = date('Y',$converting_date);
-
-        $to_year = $input['to_year'];
-
-        $converting_date = strtotime($to_year);
-
-        $new_to_year = date('Y',$converting_date);
-
-        $all_placements = Offer::with(['placement'])->whereYear('created_at','>=',$new_from_year)->whereYear('created_at','<=',$new_to_year)->get();
-
-        return $all_placements;
-
-    }
-
-    public function listOfStudentsPlacedCategoryWise(GetFromToYear $request, $user_id, $category_id)
-    {
-
-        $input = $request->only('from_year', 'to_year');
-
-        $from_year = $input['from_year'];
-
-        $converting_date = strtotime($from_year);
-
-        $new_from_year = date('Y',$converting_date);
-
-        $to_year = $input['to_year'];
-
-        $converting_date = strtotime($to_year);
-
-        $new_to_year = date('Y',$converting_date);
-
-        $all_placements = Offer::with(['placement', 'student'])->whereYear('created_at','>=',$new_from_year)->whereYear('created_at','<=',$new_to_year)->get();
-
-        $list = [];
-
-        $i = 0;
-
-        foreach ( $all_placements as $placement)
+        if(sizeof($placements)==0)
         {
 
-            if($placement['student']['category_id'] == $category_id)
+            return response("No Placements for this season!",200);
+
+        }
+
+        $student_placed_detail = Offer::with(['student','student.user','student.category','placement','placement.company'])->whereIn('placement_id',$placements)->distinct()->get();
+
+        if(sizeof($student_placed_detail)==0)
+        {
+            return response("No Student got Offer!",200);
+        }
+
+        return $student_placed_detail;
+
+    }
+
+    public function listOfStudentsPlacedCategoryWise($user_id, $placement_season_id, $category_id)
+    {
+
+        $placement_detail = PlacementPrimary::with(['company','jobType','placement_season' => function($q) use($placement_season_id){
+            $q->where('id',$placement_season_id);
+        }])->where('status','!=','draft')->get();
+
+        $placements = $placement_detail->pluck('placement_id');
+
+        if(sizeof($placements)==0)
+        {
+
+            return response("No Placements for this season!",200);
+
+        }
+
+        $student_placed_detail = Offer::with(['student' => function($q) use($category_id) {
+            $q->where('category_id','=',$category_id);
+        },'student.user','placement','placement.company'])->whereIn('placement_id',$placements)->distinct()->get();
+
+        if(sizeof($student_placed_detail)==0)
+        {
+            return response("No Student got Offer!",200);
+        }
+
+        $student_placed = [];
+
+        foreach ($student_placed_detail as $student)
+        {
+
+            if(!is_null($student['student']))
             {
 
-                $list[$i] = $placement;
-
-                $i++;
+                array_push($student_placed,$student);
 
             }
 
         }
 
-        return $list;
-
-    }
-
-    public function studentsUnplaced(GetFromToYear $request)
-    {
-
-        $input = $request->only('from_year', 'to_year');
-
-        $from_year = $input['from_year'];
-
-        $converting_date = strtotime($from_year);
-
-        $new_from_year = date('Y',$converting_date);
-
-        $to_year = $input['to_year'];
-
-        $converting_date = strtotime($to_year);
-
-        $new_to_year = date('Y',$converting_date);
-
-        $students = Student::where('category_id','!=',null)->whereYear('created_at','>=',$new_from_year)->whereYear('created_at','<=',$new_to_year)->pluck('enroll_no');
-
-        $student_placed = Offer::whereYear('created_at','>=',$new_from_year)->whereYear('created_at','<=',$new_to_year)->pluck('enroll_no');
-
-        $student_placed_unique = array_unique($student_placed->toArray());
-
-        $unplaced_student = array_diff($students->toArray(),$student_placed_unique);
-
-        return array_values($unplaced_student);
-
-    }
-
-    public function studentsUnplacedCategoryWise(GetFromToYear $request)
-    {
-
-        $input = $request->only('from_year', 'to_year');
-
-        $from_year = $input['from_year'];
-
-        $converting_date = strtotime($from_year);
-
-        $new_from_year = date('Y',$converting_date);
-
-        $to_year = $input['to_year'];
-
-        $converting_date = strtotime($to_year);
-
-        $new_to_year = date('Y',$converting_date);
-
-        $category_ids = Category::all()->pluck('id');
-
-        $unplaced_category_wise = [];
-
-        foreach ($category_ids as $category_id)
+        if(sizeof($student_placed)==0)
         {
 
-            $students = Student::where('category_id','=',$category_id)->whereYear('created_at','>=',$new_from_year)->whereYear('created_at','<=',$new_to_year)->pluck('enroll_no');
-
-            $all_placements = Offer::with(['student' ])->whereYear('created_at','>=',$new_from_year)->whereYear('created_at','<=',$new_to_year)->get();
-
-            $list = [];
-
-            foreach ( $all_placements as $placement)
-            {
-
-                if($placement['student']['category_id'] == $category_id)
-                {
-
-                    array_push($list,$placement['student']['enroll_no']);
-
-                }
-
-            }
-
-            $unplaced_category_wise[$category_id] = array_values( array_diff($students->toArray(),$list) );
+            return response("No Student in this category got Placed!",200);
 
         }
 
-        $unplaced_category_wise = array_filter($unplaced_category_wise, function($value){
+        return $student_placed;
 
-            return $value != null;
+    }
 
-        });
+    public function studentsUnplaced($placement_season_id)
+    {
 
-        return $unplaced_category_wise;
+        $placement_detail = PlacementPrimary::with(['company','jobType','placement_season' => function($q) use($placement_season_id){
+            $q->where('id',$placement_season_id);
+        }])->where('status','!=','draft')->pluck('placement_id');
+
+        if(sizeof($placement_detail)==0)
+        {
+
+            return response("No Placements for this season!",200);
+
+        }
+
+        $registered = Application::whereIn('placement_id',$placement_detail)->distinct()->pluck('enroll_no');
+
+        if(!$registered)
+        {
+
+            return Helper::apiError("Could not fetch registered student list!",null,404);
+
+        }
+
+        if(sizeof($registered)==0)
+        {
+
+            return response("No Student Registered for any placement!",200);
+
+        }
+
+        $offered = Offer::whereIn('placement_id',$placement_detail)->distinct()->pluck('enroll_no');
+
+        if(!$offered)
+        {
+
+            return Helper::apiError("Could not fetch registered student list!",null,404);
+
+        }
+
+        if(sizeof($offered)==0)
+        {
+
+            return response("No Student Registered for any placement!",200);
+
+        }
+
+        $unplaced_enroll = array_values(array_diff($registered->toArray(),$offered->toArray()));
+
+        if(sizeof($unplaced_enroll)==0)
+        {
+
+            return response("All Registeredd Student got placement!",200);
+
+        }
+
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$unplaced_enroll)->get();
+
+        if(!$students)
+        {
+
+            return Helper::apiError("Could not fetch student detail!",null,404);
+
+        }
+
+        return $students;
+
+    }
+
+    public function studentsUnplacedCategoryWise($placement_season_id, $category_id)
+    {
+
+
 
     }
 
@@ -260,11 +258,6 @@ class AdminsController extends Controller
         $student['education'] = StudentEducation::where('enroll_no',$enroll_no)->get();
 
         return $student;
-
-    }
-
-    public function placementDriveByCompany($company_id)
-    {
 
     }
 

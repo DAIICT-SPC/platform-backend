@@ -55,7 +55,7 @@ class PlacementOffersController extends Controller
         ];
 
 
-        $offer_db = Offer::where('placement_id', $input['placement_id'])->where('enroll_no', $enroll_no)->first();
+        $offer_db = Offer::where('placement_id', $input['placement_id'])->where('package','!=',NULL)->where('enroll_no', $enroll_no)->first();
 
         if (is_null($offer_db)) {
 
@@ -65,13 +65,17 @@ class PlacementOffersController extends Controller
 
             Mail::to("$enroll_no@daiict.ac.in")->send(new SelectedAndOfferMail($data));
 
+            return $offer;
+
         } else {
 
             $offer_db->update($input);
 
-        }
+            Mail::to("$enroll_no@daiict.ac.in")->send(new SelectedAndOfferMail($data));
 
-        return $offer;
+            return $offer_db;
+
+        }
 
     }
 
@@ -100,7 +104,7 @@ class PlacementOffersController extends Controller
     public function getAllOfferLetter()         //for admin
     {
 
-        $offers = Offer::all();
+        $offers = Offer::where('package','!=',NULL)->get();
 
         if( !$offers )
         {
@@ -135,7 +139,7 @@ class PlacementOffersController extends Controller
     public function getOfferLetter($enroll_no_or_placement_id)
     {
 
-        $offer = Offer::where('enroll_no',$enroll_no_or_placement_id)->orWhere('placement_id',$enroll_no_or_placement_id)->first();
+        $offer = Offer::where('enroll_no',$enroll_no_or_placement_id)->orWhere('placement_id',$enroll_no_or_placement_id)->where('package','!=',NULL)->first();
 
         if( !$offer )
         {

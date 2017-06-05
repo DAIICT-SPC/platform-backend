@@ -236,11 +236,11 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
 
-        Route::get('/listOfStudentsPlaced', ['uses' => 'AdminsController@listOfStudentsPlaced']);   // listOfStudentsPlaced?from_date=01-01-2017&to_date=02-02-2017
+        Route::get('/listOfStudentsPlaced/{placement_season_id}', ['uses' => 'AdminsController@listOfStudentsPlaced']);   // listOfStudentsPlaced?from_date=01-01-2017&to_date=02-02-2017
 
-        Route::get('/listOfStudentsPlacedCategoryWise/{category_id}', ['uses' => 'AdminsController@listOfStudentsPlacedCategoryWise']);    // listOfStudentsPlacedCategoryWise/ 2 ?from_date=2015-01-01&to_date=2017-02-02
+        Route::get('/listOfStudentsPlacedCategoryWise/{placement_season_id}/{category_id}', ['uses' => 'AdminsController@listOfStudentsPlacedCategoryWise']);    // listOfStudentsPlacedCategoryWise/ 2 ?from_date=2015-01-01&to_date=2017-02-02
 
-        Route::get('/studentsUnplaced', ['uses' => 'AdminsController@studentsUnplaced']);
+        Route::get('/studentsUnplaced/{placement_season_id}', ['uses' => 'AdminsController@studentsUnplaced']);
 
         Route::get('/studentsUnplacedCategoryWise', ['uses' => 'AdminsController@studentsUnplacedCategoryWise']);
 
