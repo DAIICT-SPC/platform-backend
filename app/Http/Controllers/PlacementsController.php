@@ -756,7 +756,7 @@ class PlacementsController extends Controller
                 return response("All Students of this round moved to Offer Layer!",200);
             }
 
-            $remaining_enroll_nos = array_values(array_diff($selection_round_current_details,$offers));
+            $remaining_enroll_nos = array_values(array_diff($selection_round_current_details->toArray(),$offers->toArray()));
 
             if(sizeof($remaining_enroll_nos)!=0)
             {
