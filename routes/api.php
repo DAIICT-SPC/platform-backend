@@ -68,6 +68,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::delete('/{user_id}', ['uses' => 'UsersController@destroy']);
 
+        Route::post('/storeProfilePicture/{user_id}', ['uses' => 'UsersController@storeProfilePicture']);
+
 
     Route::group(['prefix'=>'{user_id?}/student', 'middleware' => 'role:student'], function(){
 

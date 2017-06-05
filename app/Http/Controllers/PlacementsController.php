@@ -670,12 +670,21 @@ class PlacementsController extends Controller
             return Helper::apiError("No Student Found in Round Layer!",null,404);
         }
 
-        if(sizeof($students_in_round_details)==0)
+        $students_in_application = Application::where('placement_id',$placement_id)->pluck('enroll_no');
+
+        $students = Student::with(['category'])->whereIn('enroll_no',$students_in_application)->get();
+
+        if(sizeof($students)==0)
         {
-            return response("All Students in Application Layer only!",200);
+
+            return Helper::apiError("Can't fetch Students!",null,404);
+
         }
 
-        $students_in_application = Application::where('placement_id',$placement_id)->pluck('enroll_no');
+        if(sizeof($students_in_round_details)==0)
+        {
+            return $students;
+        }
 
         $array_diff = array_diff($students_in_application->toArray(),$students_in_round_details->toArray());
 
@@ -686,7 +695,16 @@ class PlacementsController extends Controller
             return response("All Students move to Rounds",200);
         }
 
-        return $remaining_student;
+        $students = Student::with(['category'])->whereIn('enroll_no',$remaining_student)->get();
+
+        if(sizeof($students)==0)
+        {
+
+            return Helper::apiError("Can't fetch Students!",null,404);
+
+        }
+
+        return $students;
 
     }
 
@@ -699,7 +717,7 @@ class PlacementsController extends Controller
 
         if($round_no == $size)
         {
-            return Helper::apiError("Already in Last Round plz check in remainingStudentsForOffer!",null,404);
+            return response("Already in Last Round plz check in remainingStudentsForOffer!",200);
         }
 
         $current_round = $round_no;
@@ -710,14 +728,36 @@ class PlacementsController extends Controller
 
         $selection_round_next_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$next_round)->pluck('enroll_no');
 
+        $students = Student::with(['category'])->whereIn('enroll_no',$remaining_students)->get();
+
+        if(sizeof($students)==0)
+        {
+
+            return Helper::apiError("Can't fetch Students!",null,404);
+
+        }
+
         if(sizeof($selection_round_next_details)==0)
         {
-            return Helper::apiError("All Students in Current Round itself!",null,404);
+
+            return $students;
+
         }
 
         $remaining_student = array_diff($selection_round_current_details->toArray(),$selection_round_next_details->toArray());
 
-        return array_values($remaining_student);
+        $remaining_students = array_values($remaining_student);
+
+        $students = Student::with(['category'])->whereIn('enroll_no',$remaining_students)->get();
+
+        if(sizeof($students)==0)
+        {
+
+            return Helper::apiError("Can't fetch Students!",null,404);
+
+        }
+
+        return $students;
 
     }
 
@@ -764,10 +804,21 @@ class PlacementsController extends Controller
 
         if(sizeof($remaining_students)==0)
         {
-            return Helper::apiError("All Students in Last Round got offered",null,404);
+            return response("All Students in last round got offer",200);
         }
 
-        return array_values($remaining_students);
+        $remaining_students = array_values($remaining_students);
+
+        $students = Student::with(['category'])->whereIn('enroll_no',$remaining_students)->get();
+
+        if(sizeof($students)==0)
+        {
+
+            return Helper::apiError("Can't fetch Students!",null,404);
+
+        }
+
+        return $students;
 
     }
 

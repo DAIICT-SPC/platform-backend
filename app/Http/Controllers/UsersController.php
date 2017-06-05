@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Faker\Provider\File;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\CreateUser;
@@ -17,6 +18,7 @@ use App\Admin;
 use App\Company;
 
 use App\Activation;
+use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
@@ -200,6 +202,31 @@ class UsersController extends Controller
             }
 
             return $test_user;
+
+        }
+
+        public function storeProfilePicture(Request $request, $user_id)
+        {
+
+           $path = $request->file('prof_pic')->storeAs('Profile_Pictures', $user_id.time());
+           $extension = $request->file('prof_pic')->getClientOriginalExtension();
+           // the actual path is app/storage/Profile_Pictures/{}
+           // $arr = explode("/", $path);
+            return $extension;
+
+        }
+
+        public function viewProfilePicture(Request $request, $user_id)
+        {
+
+            return asset('Profile_Pictures/11496663179');;
+
+        }
+
+        public function deleteProfilePicture(Request $request,$user_id)
+        {
+
+            Storage::delete('file.jpg');
 
         }
 
