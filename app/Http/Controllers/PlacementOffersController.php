@@ -67,7 +67,7 @@ class PlacementOffersController extends Controller
 
         } else {
 
-            $offer = $offer_db;
+            $offer_db->update($input);
 
         }
 

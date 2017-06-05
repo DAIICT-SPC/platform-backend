@@ -417,7 +417,7 @@ class PlacementsController extends Controller
         if( $current_round == $no_of_rounds)
         {
 
-            return Helper::apiError("Rounds Completed already!",null,402);
+            return response("Rounds Completed!",200);
 
         }
 
@@ -468,6 +468,49 @@ class PlacementsController extends Controller
             $i++;
 
             //Mail::to("$student_enroll_no@daiict.ac.in")->send(new SelectedForRound1Email($data));
+
+        }
+
+        return $selection_round;
+
+    }
+
+    public function selectStudentsFromLastRound(Request $request, $user_id, $placement_id)
+    {
+
+        $students_roundwise = $request->only('student_roundwise');                  //receiving enroll no
+
+        $student_enroll_no_list = $students_roundwise['student_roundwise'];
+
+        $round_details = SelectionRound::where('placement_id',$placement_id)->get();
+
+        $no_of_rounds = sizeof($round_details);
+
+        if( is_null($student_enroll_no_list[0]) )
+        {
+
+            return Helper::apiError("No enroll no at first index",null,404);
+
+        }
+
+        $selection_round = [];
+
+        $i = 0;
+
+        $input['placement_id'] = $placement_id;
+
+        $package = PlacementPrimary::where('placement_id',$placement_id)->pluck('package');
+
+        $input['package'] = $package[0];
+
+        foreach ( $student_enroll_no_list as $student_enroll_no )
+        {
+
+            $input['enroll_no'] = $student_enroll_no;
+
+            $selection_round[$i] = Offer::create($input);
+
+            $i++;
 
         }
 
@@ -832,6 +875,11 @@ class PlacementsController extends Controller
         }
 
         $students_in_last_round = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$last_round)->pluck('enroll_no');
+
+        if(sizeof($students_in_last_round)==0)
+        {
+            return response("No Student reached till last round!",200);
+        }
 
         $remaining_students = array_diff($students_in_last_round->toArray(),$students_offered->toArray());
 

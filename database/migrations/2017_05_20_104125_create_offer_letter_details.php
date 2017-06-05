@@ -23,7 +23,7 @@ class CreateOfferLetterDetails extends Migration
             $table->integer('enroll_no')->unsigned();
             $table->foreign('enroll_no')->references('enroll_no')->on('students')->onDelete('cascade');
 
-            $table->double('package');
+            $table->double('package')->nullable();
 
             $table->timestamps();
 
