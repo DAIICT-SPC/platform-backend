@@ -19,7 +19,7 @@ class CreateSelectionRoundsDetails extends Migration
 
             $table->string('round_name');
             $table->text('round_description');
-            $table->date('date_of_round')->nullable();
+            $table->dateTime('date_of_round')->nullable();
             $table->timestamps();
         });
     }

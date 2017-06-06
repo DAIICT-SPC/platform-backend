@@ -189,6 +189,9 @@ return [
 
         //Image Intervention
         Intervention\Image\ImageServiceProvider::class,
+
+        //Zipper class
+        Chumper\Zipper\ZipperServiceProvider::class,
     ],
 
     /*
@@ -244,6 +247,7 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Zipper' => Chumper\Zipper\Zipper::class,
     ],
 
 ];

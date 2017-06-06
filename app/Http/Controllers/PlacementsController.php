@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Application;
 use App\Category;
+use App\Events\EmailNotification;
 use App\Helper;
 use App\Http\Requests\CreatePlacementCriteria;
 use App\Http\Requests\CreatePlacementsPrimaryDetails;
@@ -301,19 +302,95 @@ class PlacementsController extends Controller
 
     public function updateDateOfSelectionRound(Request $request,$user_id, $placement_id, $round_no)              //here to update the status and date of rounds.. as while creating not necessary they will insert that
     {
-
+        //date_of_round , venue, date, time
         $input = $request->only('date_of_round');
 
+        $venue_input = $request->only('venue');
+
+        $venue = $venue_input['venue'];
+
+        $date_input = $request->only('date');
+
+        $date = $venue_input['venue'];
+
+        $time_input = $request->only('venue');
+
+        $time = $venue_input['venue'];
+
         $input = array_filter($input, function($value){
+
             return $value != null;
+
         });
 
         $round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
 
+
         //send mass mail to all the students who have registered
-        // MAIL TO
+
+        $students_in_application = Application::where('placement_id',$placement_id)->pluck('enroll_no');
+
+        if(sizeof($students_in_application)==0)
+        {
+
+            $round->update($input);
+
+            return $round;
+
+        }
+
+        if(!$students_in_application)
+        {
+
+            return Helper::apiError("No Student Found!",null,404);
+
+        }
+
 
         $round->update($input);
+
+
+//        $placement_primary = PlacementPrimary::with(['company'])->where('placement_id',$placement_id)->first();
+//
+//        if(!$placement_primary)
+//        {
+//
+//            return Helper::apiError("No Placement Found with this id!",null,404);
+//
+//        }
+//
+//
+//        $job_title = $placement_primary['job_title'];
+//
+//        $location = $placement_primary['location'];
+//
+//        $company_name = $placement_primary["company"]['company_name'];
+//
+//        $job_type = Job_Type::where('id',$placement_primary['job_type_id'])->pluck('job_type');
+//
+//        $job_type_name = $job_type[0];
+//
+//        $data = [
+//
+//            'job_title' => $job_title,
+//            'location' => $location,
+//            'company_name' => $company_name,
+//            'job_type_name' => $job_type_name,
+//            'round_no' => $round_no,
+//            'round_name' => $round{'round_name'}
+//            'round_date' => $date,
+//            'round_time' => $time,
+//            'venue' => $venue
+//
+//        ];
+//
+//
+//        foreach ($students_in_application as $enroll_no)
+//        {
+//
+//              Mail::to("$enroll_no@daiict.ac.in")->send(new EmailNotification($data));
+//
+//        }
 
         return $round;
 

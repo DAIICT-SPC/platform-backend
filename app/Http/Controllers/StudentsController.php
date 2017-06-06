@@ -11,6 +11,7 @@ use App\PlacementCriteria;
 use App\PlacementOpenFor;
 use App\PlacementPrimary;
 use App\User;
+use Chumper\Zipper\Facades\Zipper;
 use Illuminate\Http\Request;
 use App\Student;
 use App\Helper;
@@ -474,6 +475,15 @@ class StudentsController extends Controller
             return $name;
 
         }
+
+    }
+
+    public function downloadResume()
+    {
+
+        $files = glob('public/files/*');
+
+        Zipper::make('public/test.zip')->add($files);
 
     }
 
