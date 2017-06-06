@@ -479,7 +479,7 @@ class StudentsController extends Controller
 
         }
 
-        return response()->download(public_path().'test.zip');
+        return public_path('test.zip');
 
     }
 
