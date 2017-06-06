@@ -105,7 +105,7 @@ class PlacementOffersController extends Controller
     public function getAllOfferLetter($placement_id)
     {
 
-        $offers = Offer::where('placement_id',$placement_id)->where('package','!=',NULL)->pluck('enroll_no');
+        $offers = Offer::where('placement_id',$placement_id)->where('package','!=',0)->pluck('enroll_no');
 
         if( !$offers )
         {
