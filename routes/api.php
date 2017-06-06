@@ -144,7 +144,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/{placement_id}/setPlacementCriteria', ['uses' => 'PlacementsController@setPlacementCriteria']);
 
-        Route::get('/placement/{placement_id}', ['uses' => 'PlacementApplicationController@showAllApplications']);
+        Route::get('/placementApplications/{placement_id}', ['uses' => 'PlacementApplicationController@showAllApplications']);
 
         Route::post('/{placement_id}/setOpenForDetails', ['uses' => 'PlacementsController@placementDriveOpenFor']);
 
@@ -234,7 +234,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::patch('/{placement_id}/update/{round_no}', ['uses' => 'PlacementsController@updateDateOfSelectionRound']);
 
-        Route::get('/placement/{placement_id}', ['uses' => 'PlacementApplicationController@showAllApplications']);
+        Route::get('/placementApplications/{placement_id}', ['uses' => 'PlacementApplicationController@showAllApplications']);
 
         Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
 

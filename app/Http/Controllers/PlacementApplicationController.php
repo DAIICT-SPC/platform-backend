@@ -234,11 +234,11 @@ class PlacementApplicationController extends Controller
 
         }
 
-        $applications = Application::with('student', 'student.category', 'student.student_education')->where('placement_id',$placement_id)->get();
+        $applications = Application::with('student', 'student.category')->where('placement_id',$placement_id)->get();
 
-        if(!$applications)
+        if(sizeof($applications)==0)
         {
-            return Helper::apiError("No Applications done by Students!",null,404);
+            return response("No Applications found!",null);
         }
 
         return $applications;
