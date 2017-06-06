@@ -938,41 +938,9 @@ class PlacementsController extends Controller
     public function remainingStudentsForOffer($user_id,$placement_id)
     {
 
-        $students_offered = Offer::where('placement_id',$placement_id)->where('package','!=',0)->pluck('enroll_no');
+        $students_offered = Offer::where('placement_id',$placement_id)->where('package','=',0)->pluck('enroll_no');
 
-        $selection_rounds = SelectionRound::where('placement_id',$placement_id)->pluck('round_no');
-
-        $last_round = 1;
-
-        foreach ($selection_rounds as $selection_round)
-        {
-
-            if($selection_round > $last_round)
-            {
-
-                $last_round = $selection_round;
-
-            }
-
-        }
-
-        $students_in_last_round = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$last_round)->pluck('enroll_no');
-
-        if(sizeof($students_in_last_round)==0)
-        {
-            return response("No Student reached till last round!",200);
-        }
-
-        $remaining_students = array_diff($students_in_last_round->toArray(),$students_offered->toArray());
-
-        if(sizeof($remaining_students)==0)
-        {
-            return response("All Students in last round got offer",200);
-        }
-
-        $remaining_students = array_values($remaining_students);
-
-        $students = Student::with(['user','category'])->whereIn('enroll_no',$remaining_students)->get();
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$students_offered->toArray())->get();
 
         if(sizeof($students)==0)
         {
