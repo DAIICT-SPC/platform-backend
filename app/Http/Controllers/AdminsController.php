@@ -336,25 +336,24 @@ class AdminsController extends Controller
 
     }
 
-    public function roundWisePlacementDetail($user_id, $placement_id)       //only student list
+    public function roundWisePlacementDetail($user_id, $placement_id, $round_no)       //only student list
     {
 
-        $rounds = SelectionRound::where('placement_id',$placement_id)->get();
+        $students_enroll_no = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->pluck('enroll_no');
 
-        $round_detail = [];
-
-        foreach ($rounds as $round)
+        if(!$students_enroll_no)
         {
-
-            $students = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round['round_no'])->pluck('enroll_no');
-
-            $round['students'] = $students;
-
-            $round_detail[$round['round_no']] = $round;
-
+            return Helper::apiError("Can't fetch Student Enroll No.",null,404);
         }
 
-        return $round_detail;
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$students_enroll_no)->get();
+
+        if(sizeof($students)==0)
+        {
+            return Helper::apiError("Can't fetch students!",null,404);
+        }
+
+        return $students;
 
     }
 

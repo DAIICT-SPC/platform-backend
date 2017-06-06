@@ -198,7 +198,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/', ['uses' => 'AdminsController@index']);
 
-        Route::get('/companies', ['uses' => 'CompanysController@index']);
+        Route::get('/
+        ', ['uses' => 'CompanysController@index']);
 
         Route::get('/show', ['uses' => 'AdminsController@show']);
 
@@ -206,7 +207,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::patch('/update', ['uses' => 'AdminsController@update']);
 
-        Route::get('/getAllOfferLetter', ['uses' => 'PlacementOffersController@getAllOfferLetter']);
+        Route::get('/getAllOfferLetter/{placement_id}', ['uses' => 'PlacementOffersController@getAllOfferLetter']);
 
         Route::post('/{placement_id}/reOpenRegistration', ['uses' => 'PlacementsController@reOpenRegistration']);
 
@@ -258,7 +259,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/listOfStudentsRegisteredForPlacement/{placement_id}', ['uses' => 'AdminsController@listOfStudentsRegisteredForPlacement']);
 
-        Route::get('/roundWisePlacementDetail/{placement_id}', ['uses' => 'AdminsController@roundWisePlacementDetail']);
+        Route::get('/roundWisePlacementDetail/{placement_id}/{round_id}', ['uses' => 'AdminsController@roundWisePlacementDetail']);
 
         Route::get('/showPlacementSeasonAvailableToCompany/{company_id}', ['uses' => 'PlacementSeasonController@showPlacementSeasonAvailableToCompany']);
 

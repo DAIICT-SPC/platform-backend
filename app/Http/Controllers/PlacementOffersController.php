@@ -8,6 +8,7 @@ use App\Job_Type;
 use App\Mail\SelectedAndOfferMail;
 use App\Offer;
 use App\PlacementPrimary;
+use App\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -101,10 +102,10 @@ class PlacementOffersController extends Controller
 
     }
 
-    public function getAllOfferLetter()         //for admin
+    public function getAllOfferLetter($placement_id)
     {
 
-        $offers = Offer::where('package','!=',NULL)->get();
+        $offers = Offer::where('placement_id',$placement_id)->where('package','!=',NULL)->pluck('enroll_no');
 
         if( !$offers )
         {
@@ -113,26 +114,14 @@ class PlacementOffersController extends Controller
 
         }
 
-        $all_offers = [];
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$offers)->get();
 
-        $i = 0;
-
-        foreach ( $offers as $offer )
+        if(!$students)
         {
-
-            $placement_id = $offer['placement_id'];
-
-            $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
-
-            $offer['placement_primary'] = $placement_primary;
-
-            $all_offers[$i] = $offer;
-
-            $i++;
-
+            return Helper::apiError("Can't fetch student detail",null,404);
         }
 
-        return $all_offers;
+        return $students;
 
     }
 
