@@ -234,7 +234,7 @@ class PlacementApplicationController extends Controller
 
         }
 
-        $applications = Application::with('student', 'student.category')->where('placement_id',$placement_id)->get();
+        $applications = Application::with('student','student.user', 'student.category')->where('placement_id',$placement_id)->get();
 
         if(sizeof($applications)==0)
         {
