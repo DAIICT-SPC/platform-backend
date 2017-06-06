@@ -940,6 +940,11 @@ class PlacementsController extends Controller
 
         $students_offered = Offer::where('placement_id',$placement_id)->where('package','=',0)->pluck('enroll_no');
 
+        if(sizeof($students_offered)==0)
+        {
+            return response("All Students in offer layer got Offer!",200);
+        }
+
         $students = Student::with(['user','category'])->whereIn('enroll_no',$students_offered)->get();
 
         if(sizeof($students)==0)
