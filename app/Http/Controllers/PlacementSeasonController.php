@@ -17,7 +17,7 @@ class PlacementSeasonController extends Controller
 
     public function index()
     {
-        $placement_season_list = PlacementSeason::where('status','!=','draft')->get();
+        $placement_season_list = PlacementSeason::all();
 
         if(!$placement_season_list)
         {
