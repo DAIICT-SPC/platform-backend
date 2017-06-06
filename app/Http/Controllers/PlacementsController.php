@@ -936,7 +936,7 @@ class PlacementsController extends Controller
     public function remainingStudentsForOffer($user_id,$placement_id)
     {
 
-        $students_offered = Offer::where('placement_id',$placement_id)->where('package','!=',NULL)->pluck('enroll_no');
+        $students_offered = Offer::where('placement_id',$placement_id)->where('package','=',NULL)->pluck('enroll_no');
 
         $selection_rounds = SelectionRound::where('placement_id',$placement_id)->pluck('round_no');
 
