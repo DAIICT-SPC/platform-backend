@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Application;
 use App\Category;
+use App\ExternalAllowed;
 use App\Http\Requests\GetFromToYear;
 use App\Offer;
 use App\PlacementPrimary;
@@ -366,11 +367,35 @@ class AdminsController extends Controller
 
         }
 
+        $user_email = User::where('id',$user_id)->pluck('email');
+
+        if(!$user_email)
+        {
+
+            return Helper::apiError("Can't allow as can't find my email!",null,404);
+
+        }
+
         $new_application = Application::create($input);
 
         if(!$new_application)
         {
             return Helper::apiError("Cant Allow Student!",null,404);
+        }
+
+        $input['email'] = $user_email[0];
+
+        $input['enroll_no'] = $enroll_no;
+
+        $input['placement_id'] = $placement_id;
+
+        $ext_alwd = ExternalAllowed::create($input);
+
+        if(!$ext_alwd)
+        {
+
+            return Helper::apiError("Can't create entry in External Allowed DB",null,404);
+
         }
 
         return $new_application;
