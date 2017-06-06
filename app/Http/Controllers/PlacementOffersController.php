@@ -55,7 +55,7 @@ class PlacementOffersController extends Controller
         ];
 
 
-        $offer_db = Offer::where('placement_id', $input['placement_id'])->where('package','!=',NULL)->where('enroll_no', $enroll_no)->first();
+        $offer_db = Offer::where('placement_id', $input['placement_id'])->where('enroll_no', $enroll_no)->latest()->first();
 
         if (is_null($offer_db)) {
 
@@ -63,7 +63,7 @@ class PlacementOffersController extends Controller
 
             $offer = Offer::create($input);
 
-            Mail::to("$enroll_no@daiict.ac.in")->send(new SelectedAndOfferMail($data));
+//            Mail::to("$enroll_no@daiict.ac.in")->send(new SelectedAndOfferMail($data));
 
             return $offer;
 
@@ -71,7 +71,7 @@ class PlacementOffersController extends Controller
 
             $offer_db->update($input);
 
-            Mail::to("$enroll_no@daiict.ac.in")->send(new SelectedAndOfferMail($data));
+//            Mail::to("$enroll_no@daiict.ac.in")->send(new SelectedAndOfferMail($data));
 
             return $offer_db;
 
