@@ -32,7 +32,7 @@ class StudentsController extends Controller
     public function index()             //to show it to admin as the list of students
     {
 
-        $students = Student::all();
+        $students = Student::with(['user'])->get();
 
         if(!$students){
 

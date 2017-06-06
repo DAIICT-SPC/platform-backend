@@ -13,7 +13,7 @@ class CompanysController extends Controller
 
     public function index()             //for the admin to see all the list of companies
     {
-        $companies = Company::all();
+        $companies = Company::with(['user'])->get();
 
         if(!$companies)
         {

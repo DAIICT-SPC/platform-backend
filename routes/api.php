@@ -196,6 +196,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/students', ['uses' => 'StudentsController@index']);
 
+        Route::get('/', ['uses' => 'AdminsController@index']);
+
         Route::get('/companies', ['uses' => 'CompanysController@index']);
 
         Route::get('/show', ['uses' => 'AdminsController@show']);

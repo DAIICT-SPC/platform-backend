@@ -25,6 +25,15 @@ class AdminsController extends Controller
     public function index()
     {
 
+        $admins = Admin::with(['user'])->get();
+
+        if(!$admins)
+        {
+            return Helper::apiError("Cant fetch admins",null,404);
+        }
+
+        return $admins;
+
     }
 
     public function show($user_id)
