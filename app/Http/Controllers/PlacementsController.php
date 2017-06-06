@@ -831,7 +831,7 @@ class PlacementsController extends Controller
         if($round_no == $size)
         {
 
-            $offers = Offer::where('placement_id',$placement_id)->where('package','!=',NULL)->pluck('enroll_no');
+            $offers = Offer::where('placement_id',$placement_id)->where('package','=',NULL)->pluck('enroll_no');
 
             $selection_round_current_details = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->pluck('enroll_no');
 
