@@ -68,6 +68,11 @@ return [
             'root'   => base_path() . '/public/uploads/Resumes/',
         ],
 
+        'public_path' => [
+            'driver' => 'local',
+            'root'   => base_path() . '/public/',
+        ],
+
     ],
 
 ];

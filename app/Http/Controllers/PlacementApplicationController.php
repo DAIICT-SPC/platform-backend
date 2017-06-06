@@ -47,10 +47,16 @@ class PlacementApplicationController extends Controller
 
         $placement_id = $request->only('placement_id');
 
-
         $application = Application::where('placement_id',$placement_id)->where('enroll_no',$enroll_no)->first();
 
         if( !is_null($application) )
+        {
+
+            return $application;
+
+        }
+
+        if(sizeof($application)!=0)
         {
 
             return $application;

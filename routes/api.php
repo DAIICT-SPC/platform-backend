@@ -33,7 +33,7 @@
 
         Route::get('/activate/{code}' , ['uses' => 'ActivationController@findCode']);
 
-        Route::post('/testing', ['uses' => 'ActivationController@testing']);
+        Route::post('/downloadResume', ['uses' => 'StudentsController@downloadResume']);
 
         //Deletion of code is done when user is created hence refer to UsersController@registerUser - users/registerUser
 
@@ -188,6 +188,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/placementPrimaryAll', ['uses' => 'PlacementsController@placementPrimaryAll']);          //Contains all
 
+        Route::post('/downloadResume', ['uses' => 'StudentsController@downloadResume']);
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
@@ -265,6 +267,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/remainingStudentsRoundwise/{placement_id}/{round_no}', ['uses' => 'PlacementsController@remainingStudentsRoundwise']);
 
         Route::get('/remainingStudentsForOffer/{placement_id}', ['uses' => 'PlacementsController@remainingStudentsForOffer']);
+
+        Route::post('/downloadResume', ['uses' => 'StudentsController@downloadResume']);
 
     });
 

@@ -12,6 +12,7 @@ use App\PlacementOpenFor;
 use App\PlacementPrimary;
 use App\User;
 use Chumper\Zipper\Facades\Zipper;
+use Faker\Provider\File;
 use Illuminate\Http\Request;
 use App\Student;
 use App\Helper;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class StudentsController extends Controller
 {
@@ -414,76 +416,70 @@ class StudentsController extends Controller
 
     }
 
-    public function getResume($user_id = null, $student_id = null)
+    public function getResume($user_id = null)
     {
 
-        if( is_null($student_id))
-        {
 
-            if (is_null($user_id)) {
+        if (is_null($user_id)) {
 
-                $student = request()->user()->student;
+            $student = request()->user()->student;
 
-            } else {
+        } else {
 
-                $student = User::find($user_id)->student;
-
-            }
-
-            if(!$student){
-
-                return Helper::apiError('No Student Found!',null,404);
-
-            }
-
-            $name = $student['resume'];
-
-            return $name;
-
-        }else{
-
-            if( sizeof($student_id)<8 )
-            {
-
-                $student = Student::where('id',$student_id)->first();
-
-                if(!$student)
-                {
-
-                    return Helper::apiError("No student found!",null,404);
-
-                }
-
-                $name = $student['resume'];
-
-                return $name;
-
-            }
-
-
-            $student = Student::where('enroll_no',$student_id)->first();
-
-            if(!$student)
-            {
-
-                return Helper::apiError("No student found!",null,404);
-
-            }
-
-            $name = $student['resume'];
-
-            return $name;
+            $student = User::find($user_id)->student;
 
         }
 
+        if(!$student){
+
+            return Helper::apiError('No Student Found!',null,404);
+
+        }
+
+        $resume = $student['resume'];
+
+        return URL::to('/').'/uploads/Resumes/'.$resume;
+
     }
 
-    public function downloadResume()
+    public function downloadResume(Request $request)
     {
 
-        $files = glob('public/files/*');
+        $file_exist = Storage::disk('public_path')->exists('test.zip');
 
-        Zipper::make('public/test.zip')->add($files);
+        if($file_exist)
+        {
+
+            unlink(public_path('test.zip'));
+
+        }
+
+        $checkbox_input = $request->only('checkbox');
+
+        $checkboxes = $checkbox_input['checkbox'];
+
+        $student_resumes = Student::whereIn('enroll_no',$checkboxes)->pluck('resume');
+
+        $enroll_nos = Student::whereIn('enroll_no',$checkboxes)->pluck('enroll_no');
+
+        $zipper = new \Chumper\Zipper\Zipper();
+
+        $zipper->make('test.zip')->folder('resumes');
+
+        foreach (array_combine($enroll_nos->toArray(),$student_resumes->toArray()) as $enroll_no => $resume)
+        {
+            $file_exist = Storage::disk('resume')->exists("$resume");
+
+            if($file_exist)
+            {
+
+                $zipper->add(public_path() . "/uploads/Resumes/$resume","$enroll_no.pdf");
+
+            }
+
+        }
+
+        return public_path('test.zip');
 
     }
 

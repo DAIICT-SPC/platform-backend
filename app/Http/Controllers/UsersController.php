@@ -54,6 +54,15 @@ class UsersController extends Controller
 
         $role = $activation['role'];
 
+        $user = User::where('email',$email)->where('role',$role)->first();
+
+        if(sizeof($user)!=0)
+        {
+
+            return $user;
+
+        }
+
         $input['email'] = $email;
 
         $input['role'] = $role;
@@ -252,7 +261,7 @@ class UsersController extends Controller
 
             $name = $profile_picture;
 
-            return $name;
+            return URL::to('/').'/uploads/Profile_Pictures/'.$name;
 
         }
 

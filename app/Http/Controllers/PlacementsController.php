@@ -109,35 +109,20 @@ class PlacementsController extends Controller
 
         $checkboxes = $request->input('openFor_checkbox');           //When i fetch " OPENFOR_CHECKBOX value " it should already be in array format and it contains id
 
-        $openfor = null;
+        $input = $checkboxes['openFor_checkbox'];
 
-        $i=0;
+        $placement = PlacementPrimary::where('placement_id',$placement_id)->first();
 
-        foreach ($checkboxes as $checkbox)
+        $placement->categories()->sync($input);
+
+        $openfor = PlacementOpenFor::where('placement_id',$placement_id);
+
+        if(!$openfor)
         {
 
-            $input = [];
+            return Helper::apiError("Can't fetch open for details",null,404);
 
-            $input['category_id'] = $checkbox;
-
-            $input['placement_id'] = $placement_id;
-
-            $already_in_db = PlacementOpenFor::where('placement_id',$placement_id)->where('category_id',$checkbox)->first();
-
-            if( !is_null($already_in_db))
-            {
-
-                $openfor[$i] = PlacementOpenFor::create($input);
-
-                $i++;
-
-            }
-
-            $openfor[$i] = $already_in_db;
-
-            $i++;
-
-         }
+        }
 
         return $openfor;
 
@@ -448,18 +433,31 @@ class PlacementsController extends Controller
 
             $input['round_no'] = 1;
 
-            $selectedStudents[$i] = SelectStudentRoundwise::create($input);
+            $student_in_db = SelectStudentRoundwise::where('placement_id', $input['placement_id'])->where('enroll_no',$input['enroll_no'])->where('round_no',$input['round_no'])->first();
 
-            if(!$selectedStudents[$i])
+            if(sizeof($student_in_db)!=0)
             {
 
-                return Helper::apiError("Wasn't able to Insert!",null,404);
+                $selectedStudents[$i] = $student_in_db;
+
+                $i++;
+
+            }else{
+
+                $selectedStudents[$i] = SelectStudentRoundwise::create($input);
+
+                if(!$selectedStudents[$i])
+                {
+
+                    return Helper::apiError("Wasn't able to Insert!",null,404);
+
+                }
+
+                $data['round_no'] = 1;
+
+                $i++;
 
             }
-
-            $data['round_no'] = 1;
-
-            $i++;
 
             //Mail::to("$student_enroll_no@daiict.ac.in")->send(new SelectedForRound1Email($data));
 
@@ -512,9 +510,22 @@ class PlacementsController extends Controller
 
                 $input['enroll_no'] = $student_enroll_no;
 
-                $selection_round[$i] = Offer::create($input);
+                $student_in_db = Offer::where('placement_id',$input['placement_id'])->where('enroll_no',$input['enroll_no'])->first();
 
-                $i++;
+                if(sizeof($student_in_db)!=0)
+                {
+
+                    $selection_round[$i] = $student_in_db;
+
+                    $i++;
+
+                }else{
+
+                    $selection_round[$i] = Offer::create($input);
+
+                    $i++;
+
+                }
 
             }
 

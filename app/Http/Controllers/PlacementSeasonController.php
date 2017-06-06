@@ -31,6 +31,15 @@ class PlacementSeasonController extends Controller
     {
         $input = $request->only('title');
 
+        $placement_season_db = PlacementSeason::where('title',$input['title'])->first();
+
+        if($placement_season_db)
+        {
+
+            return $placement_season_db;
+
+        }
+
         $placement_season = PlacementSeason::create($input);
 
         if(!$placement_season)
