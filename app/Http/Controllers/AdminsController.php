@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Application;
 use App\Category;
+use App\Company;
 use App\ExternalAllowed;
 use App\Http\Requests\GetFromToYear;
 use App\Offer;
 use App\PlacementPrimary;
+use App\PlacementSeason;
 use App\SelectionRound;
 use App\SelectStudentRoundwise;
 use App\Student;
@@ -268,29 +270,6 @@ class AdminsController extends Controller
         $student['education'] = StudentEducation::where('enroll_no',$enroll_no)->get();
 
         return $student;
-
-    }
-
-    public function placementsCompanyWise($user_id, $company_id)
-    {
-
-        $all_placements = PlacementPrimary::with(['placement_season', 'offers' => function($q){
-            $q->where('id','!=',null);
-        }])->where('company_id',$company_id)->get();
-
-        $placements_done = [];
-
-        foreach ($all_placements as $placement)
-        {
-
-            if(!is_null($placement['offers']) and sizeof($placement['offers'])!=0)
-            {
-                array_push($placements_done,$placement);
-            }
-
-        }
-
-        return $placements_done;
 
     }
 

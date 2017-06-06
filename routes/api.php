@@ -251,8 +251,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/studentDetail/{enroll_no}', ['uses' => 'AdminsController@studentDetail']);
 
-        Route::get('/placementsCompanyWise/{company_id}', ['uses' => 'AdminsController@placementsCompanyWise']);
-
         Route::get('/placementDrivesByCompany/{company_id}', ['uses' => 'AdminsController@placementDrivesByCompany']);
 
         Route::get('/listOfStudentsPlacedInPlacements/{placement_id}', ['uses' => 'AdminsController@listOfStudentsPlacedInPlacements']);
