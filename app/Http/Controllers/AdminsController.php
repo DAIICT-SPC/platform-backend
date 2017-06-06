@@ -318,7 +318,47 @@ class AdminsController extends Controller
     public function roundWisePlacementDetail($user_id, $placement_id, $round_no)       //only student list
     {
 
-        $students_enroll_no = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->pluck('enroll_no');
+        $round_details = SelectionRound::where('placement_id',$placement_id)->pluck('round_no');
+
+        $size = sizeof($round_details);
+
+        if($size == 0)
+        {
+            return response("No Selection Round!",200);
+        }
+
+        $last_round = $round_details[$size-1];
+
+        if($round_no == $last_round)
+        {
+
+            $students_enroll_no = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no',$round_no)->pluck('enroll_no');
+
+        }
+        else
+        {
+
+            $rounds_upto_now = [];
+
+            for($i=1;$i<=$round_no;$i++)
+            {
+
+                array_push($rounds_upto_now,$i);
+
+            }
+
+            $round_after_now = array_values(array_diff($round_details->toArray(),$rounds_upto_now));
+
+            if(!in_array($round_no,$round_after_now))
+            {
+
+                array_push($round_after_now,$round_no);
+
+            }
+
+            $students_enroll_no = SelectStudentRoundwise::where('placement_id',$placement_id)->whereIn('round_no',$round_after_now)->pluck('enroll_no');
+
+        }
 
         if(!$students_enroll_no)
         {

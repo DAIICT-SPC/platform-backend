@@ -298,7 +298,7 @@ class PlacementsController extends Controller
 
         $date = $venue_input['venue'];
 
-        $time_input = $request->only('time');
+        $time_input = $request->only('venue');
 
         $time = $venue_input['venue'];
 
