@@ -257,7 +257,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/listOfStudentsRegisteredForPlacement/{placement_id}', ['uses' => 'AdminsController@listOfStudentsRegisteredForPlacement']);
 
-        Route::get('/roundWisePlacementDetail/{placement_id}/{round_id}', ['uses' => 'AdminsController@roundWisePlacementDetail']);
+        Route::get('/roundWisePlacementDetail/{placement_id}/{round_no}', ['uses' => 'AdminsController@roundWisePlacementDetail']);
 
         Route::get('/showPlacementSeasonAvailableToCompany/{company_id}', ['uses' => 'PlacementSeasonController@showPlacementSeasonAvailableToCompany']);
 
