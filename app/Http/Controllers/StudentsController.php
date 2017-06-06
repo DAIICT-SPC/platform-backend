@@ -479,7 +479,13 @@ class StudentsController extends Controller
 
         }
 
-        return response()->download(public_path('test.zip'));
+        $file = public_path();
+
+        $headers = array(
+            'Content-Type: application/pdf',
+        );
+
+        return response()->download($file, 'test.zip', $headers);
 
     }
 
