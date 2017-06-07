@@ -107,7 +107,7 @@ class PlacementsController extends Controller
     public function placementDriveOpenFor(Request $request, $user_id, $placement_id)
     {
 
-        $checkboxes = $request->input('openFor_checkbox');           //When i fetch " OPENFOR_CHECKBOX value " it should already be in array format and it contains id
+        $checkboxes = $request->only('openFor_checkbox');           //When i fetch " OPENFOR_CHECKBOX value " it should already be in array format and it contains id
 
         $input = $checkboxes['openFor_checkbox'];
 
