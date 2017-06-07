@@ -24,9 +24,6 @@
 //    });
 
 
-
-
-
         Route::post('/generateCodeForNewPassword', ['uses' => 'UsersController@generateCodeForNewPassword']);
 
         Route::get('/findCodeForForgotPassword/{code}', ['uses' => 'UsersController@findCodeForForgotPassword']);
@@ -206,6 +203,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/remainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@remainingOpenFor']);          //Contains all
 
         Route::get('/remainingEducation/{placement_id}/{category_id}', ['uses' => 'PlacementsController@remainingEducation']);          //Contains all
+
+        Route::get('/remainingCategories/{placement_id}/{category_id}', ['uses' => 'PlacementsController@remainingCategories']);          //Contains all
 
     });
 

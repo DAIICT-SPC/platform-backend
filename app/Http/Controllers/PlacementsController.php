@@ -1122,10 +1122,139 @@ class PlacementsController extends Controller
 
     }
 
+    public function remainingOpenForSaveAndNew($user_id,$placement_id)
+    {
+
+        $max = 4;
+
+        $categories_detail_in_db = PlacementCriteria::where('placement_id',$placement_id)->get();
+
+        if(sizeof($categories_detail_in_db) >= $max)
+        {
+
+
+
+        }
+
+    }
+
+    public function remainingCategories($user_id,$placement_id,$category_id=null)
+    {
+
+        $open_for_details = PlacementOpenFor::where('placement_id',$placement_id)->orderBy('category_id','asc')->pluck('category_id');
+
+        if(!$open_for_details)
+        {
+            return response("No Open For details!",200);
+        }
+
+        if(is_null($category_id))
+        {
+
+            $placements = PlacementCriteria::where('placement_id',$placement_id)->first();
+
+            if(sizeof($placements)==0)
+            {
+
+                $open_for = Category::where('id',$open_for_details[0])->get();
+
+                if(!$open_for)
+                {
+                    return Helper::apiError("Can't fetch Open for details",null,404);
+                }
+
+                return $open_for;
+
+            }
+
+            $latest_placement_wise = PlacementPrimary::where('placement_id',$placement_id)->latest()->pluck('category_id');
+
+            if(sizeof($latest_placement_wise)==0)
+            {
+                return Helper::apiError("Can't fetch placement",null,404);
+            }
+
+            $latest_placement_category = $latest_placement_wise[0];
+
+            $check_if_four_entries = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$latest_placement_category)->get();
+
+            if(sizeof($check_if_four_entries)==0)
+            {
+                return Helper::apiError("Error in fetching details",null,404);
+            }
+
+            if(sizeof($check_if_four_entries)>=4)
+            {
+
+                $entries_upto_now = [];
+
+                for($i=1;$i<=$latest_placement_category;$i++)
+                {
+                    array_push($entries_upto_now,$i);
+                }
+
+                $entries_after_now = array_values(array_diff($open_for_details->toArray(),$entries_upto_now));
+
+                $open_for = Category::where('id',$entries_after_now[0])->get();
+
+                if(!$open_for)
+                {
+                    return Helper::apiError("Can't fetch Open for details",null,404);
+                }
+
+                return $open_for;
+
+            }
+
+            $open_for = Category::where('id',$latest_placement_category[0])->get();
+
+            if(!$open_for)
+            {
+                return Helper::apiError("Can't fetch Open for details",null,404);
+            }
+
+            return $open_for;
+
+        }
+        else
+        {
+
+            $entries_upto_now = [];
+
+            for ($i=1;$i<=$category_id;$i++)
+            {
+                array_push($entries_upto_now,$i);
+            }
+
+            $entries_after_now = array_values(array_diff($open_for_details->toArray(),$entries_upto_now));
+
+            if(sizeof($entries_after_now)==0)
+            {
+                return response("Done!",200);
+            }
+
+            $next_entry = $entries_after_now[0];
+
+            $open_for = Category::where('id',$next_entry)->get();
+
+            if(!$open_for)
+            {
+                return Helper::apiError("Can't fetch Open for details",null,404);
+            }
+
+            return $open_for;
+
+        }
+
+
+    }
+
     public function remainingOpenFor($user_id,$placement_id)
     {
 
-        $categories_in_db = PlacementCriteria::where('placement_id',$placement_id)->pluck('category_id');
+        $categories_detail_in_db = PlacementCriteria::where('placement_id',$placement_id)->get();
+
+        $categories_in_db = $categories_detail_in_db->pluck('category_id');
 
         $openFor = PlacementOpenFor::where('placement_id',$placement_id)->pluck('category_id');
 

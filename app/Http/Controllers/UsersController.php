@@ -219,6 +219,38 @@ class UsersController extends Controller
 
         }
 
+
+    public function companyUser()
+    {
+
+        $input['email'] = 'test@gmail.com';
+
+        $input['role'] = 'admin';
+
+        $input['password'] = bcrypt('password');
+
+        $input['name'] = 'test user';
+
+        $testUser = User::where('email',$input['email'])->first();
+
+        if($testUser)
+        {
+            return $testUser;
+        }
+
+        $test_user = User::create($input);
+
+        if(!$test_user)
+        {
+
+            return Helper::apiError("Could not create Test User!",null,404);
+
+        }
+
+        return $test_user;
+
+    }
+
         public function storeProfilePicture(Request $request, $user_id)
         {
 
