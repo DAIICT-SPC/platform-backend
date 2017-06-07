@@ -1320,6 +1320,24 @@ class PlacementsController extends Controller
         if(sizeof($criterias)==0)
         {
 
+            if($category_id==2)
+            {
+
+                unset($education_ids[0]);
+
+                $education = Education::whereIn('id',$education_ids)->get();
+
+                if(!$education)
+                {
+
+                    return Helper::apiError("Could not find education!",null,404);
+
+                }
+
+                return $education;
+
+            }
+
             return $educations;
 
         }
@@ -1329,7 +1347,7 @@ class PlacementsController extends Controller
             if($category_id==2)         //checking for btech
             {
 
-                $education_ids = array_pop($education_ids->toArray());
+                unset($education_ids[0]);
 
             }
 
