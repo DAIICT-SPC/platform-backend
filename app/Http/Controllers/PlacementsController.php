@@ -147,6 +147,15 @@ class PlacementsController extends Controller
     public function getRoundNumber($user_id,$placement_id)
     {
 
+        $placement = PlacementPrimary::where('placement_id',$placement_id)->first();
+
+        if(sizeof($placement)==0)
+        {
+
+            return response("No Primary Details for this Placement!",200);
+
+        }
+        
         $last_selection_round = SelectionRound::where('placement_id',$placement_id)->latest()->first();
 
         if(sizeof($last_selection_round)==0)
