@@ -113,9 +113,25 @@ class PlacementsController extends Controller
 
         $placement = PlacementPrimary::where('placement_id',$placement_id)->first();
 
+        if(sizeof($placement)==0)
+        {
+
+            return response("No Primary Details for this Placement!",200);
+
+        }
+
+        $open_for_db = PlacementOpenFor::where('placement_id',$placement_id)->get();
+
+        if(sizeof($open_for_db)!=0)
+        {
+
+            return response('Already DB has entry!',200);
+
+        }
+
         $placement->categories()->sync($input);
 
-        $openfor = PlacementOpenFor::where('placement_id',$placement_id);
+        $openfor = PlacementOpenFor::where('placement_id',$placement_id)->get();
 
         if(!$openfor)
         {
@@ -134,6 +150,15 @@ class PlacementsController extends Controller
         $input = $request->only('round_no','round_name','round_description','date_of_round');
 
         $input['placement_id'] = $placement_id;
+
+        $placement = PlacementPrimary::where('placement_id',$placement_id)->first();
+
+        if(sizeof($placement)==0)
+        {
+
+            return response("No Primary Details for this Placement!",200);
+
+        }
 
         $already_in_db = SelectionRound::where('placement_id',$placement_id)->where('round_no',$input['round_no'])->first();
 
@@ -155,6 +180,16 @@ class PlacementsController extends Controller
 
     public function setPlacementCriteria(CreatePlacementCriteria $request, $user_id, $placement_id)       //have a - set button and new button - on the first try show daiict (masters)
     {
+
+        $placement = PlacementPrimary::where('placement_id',$placement_id)->first();
+
+        if(sizeof($placement)==0)
+        {
+
+            return response("No Primary Details for this Placement!",200);
+
+        }
+
         $input = $request->only('education_id', 'category_id', 'cpi_required');
 
         $input['placement_id'] = $placement_id;
