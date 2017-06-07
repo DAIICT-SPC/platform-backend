@@ -1138,7 +1138,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function remainingCategories($user_id,$placement_id,$category_id=null)
+    public function remainingCategories($user_id,$placement_id,$category_id=0)
     {
 
         $open_for_details = PlacementOpenFor::where('placement_id',$placement_id)->orderBy('category_id','asc')->pluck('category_id');
@@ -1148,7 +1148,7 @@ class PlacementsController extends Controller
             return response("No Open For details!",200);
         }
 
-        if(is_null($category_id))
+        if($category_id==0)
         {
 
             $placements = PlacementCriteria::where('placement_id',$placement_id)->first();
@@ -1167,7 +1167,9 @@ class PlacementsController extends Controller
 
             }
 
-            $latest_placement_wise = PlacementPrimary::where('placement_id',$placement_id)->latest()->pluck('category_id');
+            $latest_placement_wise = PlacementCriteria::where('placement_id',$placement_id)->pluck('category_id');
+
+            $latest_placement_wise = array_reverse($latest_placement_wise->toArray());
 
             if(sizeof($latest_placement_wise)==0)
             {
@@ -1206,7 +1208,7 @@ class PlacementsController extends Controller
 
             }
 
-            $open_for = Category::where('id',$latest_placement_category[0])->get();
+            $open_for = Category::where('id',$latest_placement_category)->get();
 
             if(!$open_for)
             {
