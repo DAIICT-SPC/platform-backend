@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ForgotPassword;
+use App\Mail\ForgotPasswordRecoveryEmail;
 use Faker\Provider\File;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,7 @@ use App\Company;
 
 use App\Activation;
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Image;
 
@@ -277,6 +279,43 @@ class UsersController extends Controller
 
         }
 
+        public function generateCodeForNewPassword(Request $request)
+        {
+
+            $input = $request->only('email');
+
+            $code = time().str_random(5);
+
+            $user = User::where('email',$input['email'])->first();
+
+            if(!$user)
+            {
+                return response("No such Email exist!",200);
+            }
+
+            $input['code'] = $code;
+
+            $forgot_entry = ForgotPassword::create($input);
+
+            if(!$forgot_entry)
+            {
+
+                return Helper::apiError("Cannot create Entry!",null,404);
+
+            }
+
+            $data = [
+
+                'code' => $code,
+                'url' => ""
+
+            ];
+
+            Mail::to($input['email'])->send(new ForgotPasswordRecoveryEmail($data));
+
+            return $forgot_entry;
+
+        }
 
         public function findCodeForForgotPassword($code)
         {
@@ -291,10 +330,50 @@ class UsersController extends Controller
 
         }
 
-        public function changePassword(Request $request,$user_id)
+        public function changePassword(Request $request)
         {
 
+            $input_password = $request->only('password');
 
+            $input_code = $request->only('code');
+
+            $forgot_password_entry = ForgotPassword::where('code',$input_code['code'])->first();
+
+            if(sizeof($forgot_password_entry)==0)
+            {
+
+                return response("Wrong Code!",200);
+
+            }
+
+           $email = $forgot_password_entry['email'];
+
+           $forgot_password_entry->delete();
+
+            $user = User::where('email',$email)->first();
+
+            if(!$user)
+            {
+
+                return Helper::apiError("User not Found!",null,404);
+
+            }
+
+            $password = bcrypt($input_password['password']);
+
+            $input_temp = [];
+
+            $input_temp['password'] = $password;
+
+            $input_temp = array_filter($input_temp, function($value){
+
+                return $value != null;
+
+            });
+
+            $user->update($input_temp);
+
+            return $user;
 
         }
 

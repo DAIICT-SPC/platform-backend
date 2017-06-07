@@ -25,6 +25,15 @@
 
 
 
+
+
+        Route::post('/generateCodeForNewPassword', ['uses' => 'UsersController@generateCodeForNewPassword']);
+
+        Route::get('/findCodeForForgotPassword/{code}', ['uses' => 'UsersController@findCodeForForgotPassword']);
+
+        Route::post('/changePassword', ['uses' => 'UsersController@changePassword']);
+
+
     Route::group(["prefix"=>'activation'], function() {
 
         Route::post('/single', ['uses' => 'ActivationController@createSingleEntry'])->middleware(['jwt','role:admin']);;
