@@ -1022,7 +1022,7 @@ class PlacementsController extends Controller
 
         $company_id = $company['id'];
 
-        $placements = PlacementPrimary::with(['company','placement_season','jobType'])->where('status','!=','draft')->where('company_id',$company_id)->latest();
+        $placements = PlacementPrimary::with(['company','placement_season','jobType'])->where('status','!=','draft')->where('company_id',$company_id)->latest()->get();
 
         if(!$placements)
         {
@@ -1046,7 +1046,7 @@ class PlacementsController extends Controller
 
         $company_id = $company['id'];
 
-        $placements = PlacementPrimary::with(['company','placement_season','jobType'])->where('status','=','draft')->where('company_id',$company_id)->latest();
+        $placements = PlacementPrimary::with(['company','placement_season','jobType'])->where('status','=','draft')->where('company_id',$company_id)->latest()->get();
 
         if(!$placements)
         {

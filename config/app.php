@@ -192,6 +192,7 @@ return [
 
         //Zipper class
         Chumper\Zipper\ZipperServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
     ],
 
     /*
