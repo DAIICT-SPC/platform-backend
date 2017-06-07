@@ -1326,6 +1326,13 @@ class PlacementsController extends Controller
         else
         {
 
+            if($category_id==2)         //checking for btech
+            {
+
+                $education_ids = array_pop($education_ids->toArray());
+
+            }
+
            $remaining_educations = array_values(array_diff($education_ids->toArray(),$criterias->toArray()));
 
            if(sizeof($remaining_educations)==0)
