@@ -267,7 +267,7 @@ class PlacementSeasonController extends Controller
 
         if(!$placement_seasons or sizeof($placement_seasons) == 0)
         {
-            return Helper::apiError("No Placement Season Found!",null,404);
+            return response('No Placement Season Found!',200);
         }
 
         $placement_season_list = [];
