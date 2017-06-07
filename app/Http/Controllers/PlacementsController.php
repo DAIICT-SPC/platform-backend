@@ -1022,7 +1022,31 @@ class PlacementsController extends Controller
 
         $company_id = $company['id'];
 
-        $placements = PlacementPrimary::with(['company','placement_season','jobType'])->where('company_id',$company_id)->latest();
+        $placements = PlacementPrimary::with(['company','placement_season','jobType'])->where('status','!=','draft')->where('company_id',$company_id)->latest();
+
+        if(!$placements)
+        {
+            return Helper::apiError("No placements!",null,404);
+        }
+
+        return $placements;
+
+    }
+
+
+    public function placementPrimaryAllWithStatusDraft($user_id)
+    {
+
+        $company = Company::where('user_id',$user_id)->first();
+
+        if(!$company)
+        {
+            return Helper::apiError("Can't fetch Company!",null,404);
+        }
+
+        $company_id = $company['id'];
+
+        $placements = PlacementPrimary::with(['company','placement_season','jobType'])->where('status','=','draft')->where('company_id',$company_id)->latest();
 
         if(!$placements)
         {

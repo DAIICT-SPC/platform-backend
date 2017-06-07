@@ -188,6 +188,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/placementPrimaryAll', ['uses' => 'PlacementsController@placementPrimaryAll']);          //Contains all
 
+        Route::get('/placementPrimaryAllWithStatusDraft', ['uses' => 'PlacementsController@placementPrimaryAllWithStatusDraft']);          //Contains all
+
         Route::post('/downloadResume', ['uses' => 'StudentsController@downloadResume']);
 
     });
