@@ -15,7 +15,7 @@ class CreatePlacementsPrimaryDetails extends Request
     public function rules()
     {
         return [
-            'job_title' => 'bail|required|max:1',
+            'job_title' => 'bail|required',
             'job_description' => 'bail|required',
             'last_date_for_registration' => 'required',
             'location' => 'bail|required|max:191',
