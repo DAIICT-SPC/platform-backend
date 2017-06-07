@@ -219,7 +219,7 @@ class AdminsController extends Controller
 
         }
 
-        $offered = Offer::whereIn('placement_id',$placement_detail)->distinct()->pluck('enroll_no');
+        $offered = Offer::whereIn('placement_id',$placement_detail)->where('package','!=',0)->distinct()->pluck('enroll_no');
 
         if(!$offered)
         {
