@@ -144,6 +144,26 @@ class PlacementsController extends Controller
 
     }
 
+    public function getRoundNumber($user_id,$placement_id)
+    {
+
+        $last_selection_round = SelectionRound::where('placement_id',$placement_id)->latest()->first();
+
+        if(sizeof($last_selection_round)==0)
+        {
+
+            return 1;
+
+        }
+        else
+        {
+
+            return $last_selection_round['round_no']+1;
+
+        }
+
+    }
+
     public function selectionRound(Request $request, $user_id, $placement_id)
     {
 

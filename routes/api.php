@@ -136,6 +136,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/showPlacementSeasonAvailable/', ['uses' => 'PlacementSeasonController@showPlacementSeasonAvailable']);
 
+        Route::get('/getRoundNumber/{placement_id}', ['uses' => 'PlacementsController@getRoundNumber']);
+
         Route::post('/{placement_id}/setSelectionRound', ['uses' => 'PlacementsController@selectionRound']);
 
         Route::get('/{placement_id}/showOpenFor', ['uses' => 'PlacementsController@showOpenForCategories']);    //for entries combo box in placement criteria page

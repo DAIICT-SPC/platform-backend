@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ForgotPassword;
 use Faker\Provider\File;
 use Illuminate\Http\Request;
 
@@ -273,6 +274,27 @@ class UsersController extends Controller
             $user->update(array('profile_picture'=>'default.jpg'));
 
             return $user;
+
+        }
+
+
+        public function findCodeForForgotPassword($code)
+        {
+
+            $entry = ForgotPassword::where('code',$code)->first();
+
+            if(!$entry){
+                response("No such code exist!");
+            }
+
+            return $entry;
+
+        }
+
+        public function changePassword(Request $request,$user_id)
+        {
+
+
 
         }
 
