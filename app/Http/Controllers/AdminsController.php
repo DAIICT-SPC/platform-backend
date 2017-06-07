@@ -350,14 +350,28 @@ class AdminsController extends Controller
 
         }
 
-        $external_allowed = ExternalAllowed::with('students','users','placements')->whereIn('placement_id',$placements)->get();
+        $final_arr = [];
 
-        if(sizeof($external_allowed)==0)
+        foreach ($placements as $placement)
+        {
+
+            $external_allowed = ExternalAllowed::with('students','users','placements')->where('placement_id',$placement)->get();
+
+            if(sizeof($external_allowed)!=0)
+            {
+
+                array_push($final_arr,$external_allowed);
+
+            }
+
+        }
+
+        if(sizeof($final_arr)==0)
         {
             return response("No Student externally allowed!",200);
         }
 
-        return $external_allowed;
+        return $final_arr;
 
     }
 

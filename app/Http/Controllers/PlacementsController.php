@@ -187,16 +187,18 @@ class PlacementsController extends Controller
             Helper::apiError('No Details for such Placement ID', null, 404);
         }
 
-        PlacementPrimary::where('placement_id', $placement_id)->update(array('status' => 'application'));
+        $placement_open_for = PlacementOpenFor::where('placement_id',$placement_id)->get();
 
-//        send mail to all students belonging to open for category
-//
-//        $open_for_list = PlacementOpenFor::where('placement_id',$placement_id)->pluck('category_id');
-//
-//        foreach ($open_for_list as $open_for)
-//        {
-//
-//        }
+        $placement_selection_round = SelectionRound::where('placement_id',$placement_id)->get();
+
+        if(sizeof($placement_open_for) < 1 && sizeof($placement_selection_round) < 1)
+        {
+
+            return response("You haven't set open for and selection round, Can't start!",200);
+
+        }
+
+        PlacementPrimary::where('placement_id', $placement_id)->update(array('status' => 'application'));
 
         $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
 
