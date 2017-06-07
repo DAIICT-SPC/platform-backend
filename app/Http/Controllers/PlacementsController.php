@@ -130,6 +130,8 @@ class PlacementsController extends Controller
 
         }
 
+        sort($input);
+
         $placement->categories()->sync($input);
 
         $openfor = PlacementOpenFor::where('placement_id',$placement_id)->get();
@@ -1122,21 +1124,6 @@ class PlacementsController extends Controller
 
     }
 
-    public function remainingOpenForSaveAndNew($user_id,$placement_id)
-    {
-
-        $max = 4;
-
-        $categories_detail_in_db = PlacementCriteria::where('placement_id',$placement_id)->get();
-
-        if(sizeof($categories_detail_in_db) >= $max)
-        {
-
-
-
-        }
-
-    }
 
     public function remainingCategories($user_id,$placement_id,$category_id=0)
     {
@@ -1197,6 +1184,11 @@ class PlacementsController extends Controller
 
                 $entries_after_now = array_values(array_diff($open_for_details->toArray(),$entries_upto_now));
 
+                if(sizeof($entries_after_now)==0)
+                {
+                    return response("Done!",200);
+                }
+
                 $open_for = Category::where('id',$entries_after_now[0])->get();
 
                 if(!$open_for)
@@ -1220,6 +1212,22 @@ class PlacementsController extends Controller
         }
         else
         {
+
+            $open_for_last_entries = PlacementOpenFor::where('placement_id',$placement_id)->pluck('category_id');
+
+            if(sizeof($open_for_last_entries)==0)
+            {
+                return Helper::apiError("can't fetch!",null,404);
+            }
+
+            $temp = array_reverse($open_for_last_entries->toArray());
+
+            $last_entry = $temp[0];
+
+            if($category_id==$last_entry)
+            {
+                return response("Done!",200);
+            }
 
             $entries_upto_now = [];
 
