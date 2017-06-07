@@ -271,6 +271,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/downloadResume', ['uses' => 'StudentsController@downloadResume']);
 
+        Route::get('/externallyAllowed/{placement_season_id}', ['uses' => 'AdminsController@externallyAllowed']);
+
     });
 
 });

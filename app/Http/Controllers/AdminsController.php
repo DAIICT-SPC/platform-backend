@@ -322,6 +322,45 @@ class AdminsController extends Controller
 
     }
 
+    public function externallyAllowed($user_id,$placement_season_id)
+    {
+
+        $placement_detail_list = PlacementPrimary::with(['placement_season' => function($q) use($placement_season_id){
+            $q->where('id',$placement_season_id);
+        }])->where('status','!=','draft')->get();
+
+        $placements = [];
+
+        foreach ( $placement_detail_list as $placement )
+        {
+
+            if(sizeof($placement["placement_season"])!=0)
+            {
+
+                array_push($placements, $placement['placement_id']);
+
+            }
+
+        }
+
+        if(sizeof($placements)==0)
+        {
+
+            return response("No Placements for this season!",200);
+
+        }
+
+        $external_allowed = ExternalAllowed::with('students','users','placements')->whereIn('placement_id',$placements)->get();
+
+        if(sizeof($external_allowed)==0)
+        {
+            return response("No Student externally allowed!",200);
+        }
+
+        return $external_allowed;
+
+    }
+
     public function studentDetail($user_id, $enroll_no)
     {
 
