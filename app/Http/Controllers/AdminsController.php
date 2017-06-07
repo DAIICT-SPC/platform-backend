@@ -8,6 +8,7 @@ use App\Company;
 use App\ExternalAllowed;
 use App\Http\Requests\GetFromToYear;
 use App\Offer;
+use App\PlacementOpenFor;
 use App\PlacementPrimary;
 use App\PlacementSeason;
 use App\SelectionRound;
@@ -106,11 +107,23 @@ class AdminsController extends Controller
     public function listOfStudentsPlaced($placement_season_id)
     {
 
-        $placement_detail = PlacementPrimary::with(['company','jobType','placement_season' => function($q) use($placement_season_id){
+        $placement_detail_list = PlacementPrimary::with(['placement_season' => function($q) use($placement_season_id){
             $q->where('id',$placement_season_id);
         }])->where('status','!=','draft')->get();
 
-        $placements = $placement_detail->pluck('placement_id');
+        $placements = [];
+
+        foreach ( $placement_detail_list as $placement )
+        {
+
+            if(sizeof($placement["placement_season"])!=0)
+            {
+
+                array_push($placements, $placement['placement_id']);
+
+            }
+
+        }
 
         if(sizeof($placements)==0)
         {
@@ -119,7 +132,7 @@ class AdminsController extends Controller
 
         }
 
-        $student_placed_detail = Offer::with(['student','student.user','student.category','placement','placement.company'])->whereIn('placement_id',$placements)->distinct()->get();
+        $student_placed_detail = Offer::with(['student','student.user','student.category','placement','placement.company'])->whereIn('placement_id',$placements)->where('package','!=',0)->distinct()->get();
 
         if(sizeof($student_placed_detail)==0)
         {
@@ -133,11 +146,23 @@ class AdminsController extends Controller
     public function listOfStudentsPlacedCategoryWise($user_id, $placement_season_id, $category_id)
     {
 
-        $placement_detail = PlacementPrimary::with(['company','jobType','placement_season' => function($q) use($placement_season_id){
+        $placement_detail_list = PlacementPrimary::with(['placement_season' => function($q) use($placement_season_id){
             $q->where('id',$placement_season_id);
         }])->where('status','!=','draft')->get();
 
-        $placements = $placement_detail->pluck('placement_id');
+        $placements = [];
+
+        foreach ( $placement_detail_list as $placement )
+        {
+
+            if(sizeof($placement["placement_season"])!=0)
+            {
+
+                array_push($placements, $placement['placement_id']);
+
+            }
+
+        }
 
         if(sizeof($placements)==0)
         {
@@ -146,46 +171,30 @@ class AdminsController extends Controller
 
         }
 
-        $student_placed_detail = Offer::with(['student' => function($q) use($category_id) {
-            $q->where('category_id','=',$category_id);
-        },'student.user','placement','placement.company'])->whereIn('placement_id',$placements)->distinct()->get();
+        $open_for = PlacementOpenFor::whereIn('placement_id',$placements)->where('category_id',$category_id)->pluck('placement_id');
+
+        if(sizeof($open_for)==0)
+        {
+
+            return response("Not open for this category",200);
+
+        }
+
+        $student_placed_detail = Offer::with(['student','student.user','student.category','placement','placement.company'])->whereIn('placement_id',$open_for)->where('package','!=',0)->distinct()->get();
 
         if(sizeof($student_placed_detail)==0)
         {
             return response("No Student got Offer!",200);
         }
 
-        $student_placed = [];
-
-        foreach ($student_placed_detail as $student)
-        {
-
-            if(!is_null($student['student']))
-            {
-
-                array_push($student_placed,$student);
-
-            }
-
-        }
-
-        if(sizeof($student_placed)==0)
-        {
-
-            return response("No Student in this category got Placed!",200);
-
-        }
-
-        return $student_placed;
+        return $student_placed_detail;
 
     }
 
     public function studentsUnplaced($placement_season_id)
     {
 
-        $placement_detail = PlacementPrimary::with(['company','jobType','placement_season' => function($q) use($placement_season_id){
-            $q->where('id',$placement_season_id);
-        }])->where('status','!=','draft')->pluck('placement_id');
+        $placement_detail = PlacementPrimary::with(['company','jobType'])->where('placement_season_id',$placement_season_id)->where('status','!=','draft')->pluck('placement_id');
 
         if(sizeof($placement_detail)==0)
         {
@@ -231,7 +240,7 @@ class AdminsController extends Controller
         if(sizeof($unplaced_enroll)==0)
         {
 
-            return response("All Registeredd Student got placement!",200);
+            return response("All Registered Student got placement!",200);
 
         }
 
@@ -248,10 +257,68 @@ class AdminsController extends Controller
 
     }
 
-    public function studentsUnplacedCategoryWise($placement_season_id, $category_id)
+    public function studentsUnplacedCategoryWise($user_id,$placement_season_id, $category_id)
     {
 
 
+        $placement_listing = PlacementPrimary::where('placement_season_id',$placement_season_id)->where('status','!=','draft')->pluck('placement_id');
+
+        if(!$placement_listing)
+        {
+            return Helper::apiError("Can't fetch Placement Details!",null,404);
+        }
+
+        $placement_list = PlacementOpenFor::whereIn('placement_id',$placement_listing)->where('category_id',$category_id)->distinct()->pluck('placement_id');
+
+        if(sizeof($placement_list)==0)
+        {
+            return response("No Placement Id found!",200);
+        }
+
+        $registered_students = Application::whereIn('placement_id',$placement_list)->distinct()->pluck('enroll_no');
+
+        if(!$registered_students)
+        {
+            return Helper::apiError("No Students Registered!",null,404);
+        }
+
+        $offered_list = Offer::whereIn('placement_id',$placement_list)->where('package','!=',0)->distinct()->pluck('enroll_no');
+
+        if(sizeof($offered_list)==0)
+        {
+
+            $students = Student::with(['user','category'])->whereIn('enroll_no',$registered_students)->get();
+
+            if(!$students)
+            {
+
+                return Helper::apiError("Could not fetch student detail!",null,404);
+
+            }
+
+            return $students;
+
+        }
+
+        $student_list = array_values(array_diff($registered_students->toArray(),$offered_list->toArray()));
+
+        if(sizeof($student_list)==0)
+        {
+
+            return response("All Students Placed!",200);
+
+        }
+
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$student_list)->get();
+
+        if(!$students)
+        {
+
+            return Helper::apiError("Could not fetch student detail!",null,404);
+
+        }
+
+        return $students;
 
     }
 
@@ -284,20 +351,6 @@ class AdminsController extends Controller
         }
 
         return $all_placements;
-
-    }
-
-    public function listOfStudentsPlacedInPlacements($user_id, $placement_id)
-    {
-
-        $placed_students = Offer::with(['student', 'student.student_education'])->where('placement_id',$placement_id)->get();
-
-        if(!$placed_students)
-        {
-            Helper::apiError("No Students Placed!",null,404);
-        }
-
-        return $placed_students;
 
     }
 

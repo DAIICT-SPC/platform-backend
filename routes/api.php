@@ -247,13 +247,13 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/studentsUnplaced/{placement_season_id}', ['uses' => 'AdminsController@studentsUnplaced']);
 
-        Route::get('/studentsUnplacedCategoryWise', ['uses' => 'AdminsController@studentsUnplacedCategoryWise']);
+        Route::get('/studentsUnplacedCategoryWise/{placement_season_id}/{category_id}', ['uses' => 'AdminsController@studentsUnplacedCategoryWise']);
 
         Route::get('/studentDetail/{enroll_no}', ['uses' => 'AdminsController@studentDetail']);
 
         Route::get('/placementDrivesByCompany/{company_id}', ['uses' => 'AdminsController@placementDrivesByCompany']);
 
-        Route::get('/listOfStudentsPlacedInPlacements/{placement_id}', ['uses' => 'AdminsController@listOfStudentsPlacedInPlacements']);
+        Route::get('/listOfStudentsPlaced/{placement_id}', ['uses' => 'AdminsController@listOfStudentsPlaced']);
 
         Route::get('/listOfStudentsRegisteredForPlacement/{placement_id}', ['uses' => 'AdminsController@listOfStudentsRegisteredForPlacement']);
 

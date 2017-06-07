@@ -106,7 +106,7 @@ class PlacementOffersController extends Controller
     {
 
         $offers = Offer::where('placement_id',$placement_id)->where('package','!=',0)->pluck('enroll_no');
- 
+
         if( !$offers )
         {
 
