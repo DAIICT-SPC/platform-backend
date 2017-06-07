@@ -47,8 +47,20 @@ class AuthController extends Controller
 
     }
 
-    public function loginAs()
+    public function loginAs(Request $request)
     {
+
+        $input = $request->only('email');
+
+        $user = User::where('email',$input['email'])->first();
+
+        if (!$token=\JWTAuth::fromUser($user)) {
+
+            return response()->json(['error' => 'invalid_credentials'], 401);
+
+        }
+
+        return response()->json(compact('token'));
 
     }
 

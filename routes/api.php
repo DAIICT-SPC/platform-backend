@@ -5,7 +5,11 @@
 
     Route::post('/testUser',['uses' => 'UsersController@testUser']);
 
+    Route::post('/loginAs',['uses' => 'AuthController@loginAs']);
+
     Route::get('/', ['uses' => 'AuthController@checkAuthentication'])->middleware('jwt');
+
+
 
 //
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
