@@ -194,6 +194,10 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/downloadResume', ['uses' => 'StudentsController@downloadResume']);
 
+        Route::get('/remainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@remainingOpenFor']);          //Contains all
+
+        Route::get('/remainingEducation/{placement_id}/{category_id}', ['uses' => 'PlacementsController@remainingEducation']);          //Contains all
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){

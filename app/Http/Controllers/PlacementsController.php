@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Application;
 use App\Category;
+use App\Education;
 use App\Events\EmailNotification;
 use App\Helper;
 use App\Http\Requests\CreatePlacementCriteria;
@@ -155,7 +156,7 @@ class PlacementsController extends Controller
             return response("No Primary Details for this Placement!",200);
 
         }
-        
+
         $last_selection_round = SelectionRound::where('placement_id',$placement_id)->latest()->first();
 
         if(sizeof($last_selection_round)==0)
@@ -1118,6 +1119,107 @@ class PlacementsController extends Controller
         }
 
         return $placements;
+
+    }
+
+    public function remainingOpenFor($user_id,$placement_id)
+    {
+
+        $categories_in_db = PlacementCriteria::where('placement_id',$placement_id)->pluck('category_id');
+
+        $openFor = PlacementOpenFor::where('placement_id',$placement_id)->pluck('category_id');
+
+        if(!$openFor)
+        {
+            return response("No Open For Details mentioned yet!",200);
+        }
+
+        if(sizeof($categories_in_db)==0)
+        {
+
+            $open_for = Category::whereIn('id',$openFor)->get();
+
+            if(!$open_for)
+            {
+                return Helper::apiError("Could not find Category Detail!",null,404);
+            }
+
+            return $open_for;
+
+        }
+        else
+        {
+
+            $remaining_categories = array_values(array_diff($openFor->toArray(),$categories_in_db->toArray()));
+
+            if(sizeof($remaining_categories)==0)
+            {
+
+                return response("Done with All Categories!",200);
+
+            }
+
+            $open_for = Category::whereIn('id',$remaining_categories)->get();
+
+            if(!$open_for)
+            {
+                return Helper::apiError("Could not find Category Detail!",null,404);
+            }
+
+            return $open_for;
+
+        }
+
+    }
+
+    public function remainingEducation($user_id,$placement_id,$category_id)
+    {
+
+        $educations = Education::all();
+
+        if(!$educations)
+        {
+            return Helper::apiError("Could not find Education Id!",null,404);
+        }
+
+        $education_ids = $educations->pluck('id');
+
+        $criterias = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$category_id)->pluck('education_id');
+
+        if(sizeof($criterias)==0)
+        {
+
+            return $educations;
+
+        }
+        else
+        {
+
+           $remaining_educations = array_values(array_diff($education_ids->toArray(),$criterias->toArray()));
+
+           if(sizeof($remaining_educations)==0)
+           {
+
+               return response("Done with Educations!",200);
+
+           }
+           else
+           {
+
+               $education = Education::whereIn('id',$remaining_educations)->get();
+
+               if(!$education)
+               {
+
+                   return Helper::apiError("Could not find education!",null,404);
+
+               }
+
+               return $education;
+
+           }
+
+        }
 
     }
 
