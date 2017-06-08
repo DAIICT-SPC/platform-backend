@@ -131,6 +131,9 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
             Route::get('/fetchEducationAccordingToCategoryForStudent', ['uses' => 'CategoryController@fetchEducationAccordingToCategoryForStudent']);    //for entries combo box in placement criteria page
 
+            Route::get('/getDraftPlacements', ['uses' => 'PlacementsController@getDraftPlacements']);
+
+
     });
 
 
@@ -211,6 +214,10 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/remainingEducation/{placement_id}/{category_id}', ['uses' => 'PlacementsController@remainingEducation']);          //Contains all
 
         Route::get('/remainingCategories/{placement_id}/{category_id}', ['uses' => 'PlacementsController@remainingCategories']);          //Contains all
+
+        Route::get('/getRemainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@getRemainingOpenFor']);          //Contains all
+
+        Route::get('/getDraftPlacements', ['uses' => 'PlacementsController@getDraftPlacements']);
 
     });
 
@@ -294,6 +301,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::post('/downloadResume', ['uses' => 'StudentsController@downloadResume']);
 
         Route::get('/externallyAllowed/{placement_season_id}', ['uses' => 'AdminsController@externallyAllowed']);
+
+        Route::get('/getRemainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@getRemainingOpenFor']);          //Contains all
 
     });
 
