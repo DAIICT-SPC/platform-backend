@@ -1449,7 +1449,7 @@ class PlacementsController extends Controller
             return Helper::apiError("Could not find Company!",null,404);
         }
 
-        $placements = PlacementPrimary::with(['placementSelection','jobType'])->where('company_id',$company[0])->where('status','draft')->get();
+        $placements = PlacementPrimary::with(['placement_season','jobType'])->where('company_id',$company[0])->where('status','draft')->get();
 
         if(sizeof($placements)==0)
         {
