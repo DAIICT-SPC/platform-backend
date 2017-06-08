@@ -1442,7 +1442,14 @@ class PlacementsController extends Controller
     public function getDraftPlacements($user_id)
     {
 
-        $placements = PlacementPrimary::with(['placementSelection','jobType'])->where('status','draft')->get();
+        $company = Company::where('user_id',$user_id)->pluck('id');
+
+        if(!$company)
+        {
+            return Helper::apiError("Could not find Company!",null,404);
+        }
+
+        $placements = PlacementPrimary::with(['placementSelection','jobType'])->where('company_id',$company[0])->where('status','draft')->get();
 
         if(sizeof($placements)==0)
         {
