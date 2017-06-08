@@ -221,6 +221,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
 
+        Route::delete('/deleteOpenFor/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteOpenFor']);          //Contains all
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
@@ -307,6 +309,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/getRemainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@getRemainingOpenFor']);          //Contains all
 
         Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
+
+        Route::delete('/deleteOpenFor/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteOpenFor']);          //Contains all
 
     });
 

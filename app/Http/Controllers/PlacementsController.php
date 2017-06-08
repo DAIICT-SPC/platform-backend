@@ -724,14 +724,14 @@ class PlacementsController extends Controller
 
     }
 
-    public function deleteEducationCriteria(Request $request, $placement_id, $category_id)
+    public function deleteEducationCriteria(Request $request, $user_id, $placement_id, $category_id)
     {
 
         $input = $request->only('education_id');
 
         $education_id = $input['education_id'];
 
-        $education_criteria = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$category_id)->where('education_id',$education_id)->get();
+        $education_criteria = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$category_id)->where('education_id',$education_id)->first();
 
         if(sizeof($education_criteria)==0)
         {
@@ -739,6 +739,47 @@ class PlacementsController extends Controller
         }
 
         $education_criteria->delete();
+
+        return response("",204);
+
+    }
+
+    public function deleteOpenFor($user_id,$placement_id,$category_id)
+    {
+
+        $open_for = PlacementOpenFor::where('placement_id',$placement_id)->where('category_id',$category_id)->first();
+
+        if(sizeof($open_for)==0)
+        {
+            return response("Cant Fetch Open For!",200);
+        }
+
+        $placement_criteria_ids = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$category_id)->pluck('education_id');
+
+        if(sizeof($placement_criteria_ids)==0)
+        {
+
+            $open_for->delete();
+
+            return response("",204);
+
+        }
+
+        $placement_criteria_details = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$category_id)->whereIn('education_id',$placement_criteria_ids)->get();
+
+        if(!$placement_criteria_details)
+        {
+            return Helper::apiError("Cannot fetch criteria details",null,404);
+        }
+
+        foreach ($placement_criteria_details as $placement_criteria_detail)
+        {
+
+            $placement_criteria_detail->delete();
+
+        }
+
+        $open_for->delete();
 
         return response("",204);
 
