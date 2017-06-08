@@ -709,6 +709,8 @@ class PlacementsController extends Controller
 
         $input = $input_array['update_open_for'];
 
+        sort($input);
+
         if(sizeof($input)==0)
         {
             return response("No Category Id inserted",200);
@@ -719,6 +721,26 @@ class PlacementsController extends Controller
         $placement_open_for = PlacementOpenFor::where('placement_id',$placement_id)->get();
 
         return $placement_open_for;
+
+    }
+
+    public function deleteEducationCriteria(Request $request, $placement_id, $category_id)
+    {
+
+        $input = $request->only('education_id');
+
+        $education_id = $input['education_id'];
+
+        $education_criteria = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$category_id)->where('education_id',$education_id)->get();
+
+        if(sizeof($education_criteria)==0)
+        {
+            return response("Cant Fetch Education Criteria!",200);
+        }
+
+        $education_criteria->delete();
+
+        return response("",204);
 
     }
 

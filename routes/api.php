@@ -219,6 +219,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/getDraftPlacements', ['uses' => 'PlacementsController@getDraftPlacements']);
 
+        Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
@@ -303,6 +305,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/externallyAllowed/{placement_season_id}', ['uses' => 'AdminsController@externallyAllowed']);
 
         Route::get('/getRemainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@getRemainingOpenFor']);          //Contains all
+
+        Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
 
     });
 
