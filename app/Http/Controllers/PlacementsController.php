@@ -482,7 +482,7 @@ class PlacementsController extends Controller
 
         $job_type_name = $job_type[0];
 
-        $selection_rounds = SelectionRound::where('placement_id',$placement_id)->firt();
+        $selection_rounds = SelectionRound::where('placement_id',$placement_id)->first();
 
         if(!$selection_rounds)
         {
