@@ -972,7 +972,9 @@ class PlacementsController extends Controller
 
         $size = sizeof($round_details);
 
-        if($round_no == $size)
+        $last_round_detail = array_reverse($round_details->toArray());
+
+        if($round_no == $last_round_detail[0])
         {
 
             $offers = Offer::where('placement_id',$placement_id)->pluck('enroll_no');
