@@ -225,6 +225,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::delete('/deleteSelectionRound/{placement_id}/{round_no}', ['uses' => 'PlacementsController@deleteSelectionRound']);          //Contains all
 
+        Route::patch('/updateSelectionRoundDetails/{placement_id}/{round_no}', ['uses' => 'PlacementsController@updateSelectionRoundDetails']);
+
 
     });
 
@@ -309,13 +311,15 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/externallyAllowed/{placement_season_id}', ['uses' => 'AdminsController@externallyAllowed']);
 
-        Route::get('/getRemainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@getRemainingOpenFor']);          //Contains all
+        Route::get('/getRemainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@getRemainingOpenFor']);
 
         Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}/{education_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
 
-        Route::delete('/deleteOpenFor/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteOpenFor']);          //Contains all
+        Route::delete('/deleteOpenFor/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteOpenFor']);
 
-        Route::delete('/deleteSelectionRound/{placement_id}/{round_no}', ['uses' => 'PlacementsController@deleteSelectionRound']);          //Contains all
+        Route::delete('/deleteSelectionRound/{placement_id}/{round_no}', ['uses' => 'PlacementsController@deleteSelectionRound']);
+
+        Route::patch('/updateSelectionRoundDetails/{placement_id}/{round_no}', ['uses' => 'PlacementsController@updateSelectionRoundDetails']);
 
     });
 

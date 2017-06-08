@@ -797,6 +797,30 @@ class PlacementsController extends Controller
 
     }
 
+    public function updateSelectionRoundDetails(Request $request,$placement_id,$round_no)
+    {
+
+        $input = $request->only('round_name','round_description');
+
+        $input = array_filter($input, function($value){
+
+            return $value != null;
+
+        });
+
+        $selection_round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
+
+        if(!$selection_round)
+        {
+            return Helper::apiError("Selection Round not found",null,404);
+        }
+
+        $selection_round->update($input);
+
+        return $selection_round;
+
+    }
+
     public function updateCriteria(Request $request, $user_id, $placement_id)
     {
 
