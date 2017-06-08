@@ -695,41 +695,26 @@ class PlacementsController extends Controller
 
     }
 
-    public function updateOpenFor(Request $request,$user_id, $placement_id)
+    public function updateOpenFor(Request $request,$user_id, $placement_id) //adds entry in db just like post
     {
 
-        $identity = User::where('id',$user_id)->first();
-
-        $role =  $identity["role"];
-
-        if( $role == 'company')
-        {
-            $placements = PlacementPrimary::find($placement_id);
-
-            $company = Company::where('user_id',$user_id)->first();
-
-            if( $company->id != $placements['company_id']){
-
-                return Helper::apiError("Unauthorized access",null,401);
-
-            }
-
-        }
-
         $placements = PlacementPrimary::find($placement_id);
+
+        if(!$placements)
+        {
+            return response("Could not find placement id",null,404);
+        }
 
         $input_array = $request->only('update_open_for');
 
         $input = $input_array['update_open_for'];
 
-        $placements->categories()->attach($input);
-
-        foreach ($input as $single)
+        if(sizeof($input)==0)
         {
-
-            PlacementCriteria::where('placement_id',$placement_id)->where('category_id','!=',$single)->delete();
-
+            return response("No Category Id inserted",200);
         }
+
+        $placements->categories()->attach($input);
 
         $placement_open_for = PlacementOpenFor::where('placement_id',$placement_id)->get();
 
