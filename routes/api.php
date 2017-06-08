@@ -219,7 +219,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/getDraftPlacements', ['uses' => 'PlacementsController@getDraftPlacements']);
 
-        Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
+        Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}/{education_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
 
         Route::delete('/deleteOpenFor/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteOpenFor']);          //Contains all
 
@@ -308,7 +308,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/getRemainingOpenFor/{placement_id}', ['uses' => 'PlacementsController@getRemainingOpenFor']);          //Contains all
 
-        Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
+        Route::delete('/deleteEducationCriteria/{placement_id}/{category_id}/{education_id}', ['uses' => 'PlacementsController@deleteEducationCriteria']);          //Contains all
 
         Route::delete('/deleteOpenFor/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteOpenFor']);          //Contains all
 

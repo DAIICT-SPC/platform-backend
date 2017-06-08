@@ -724,12 +724,8 @@ class PlacementsController extends Controller
 
     }
 
-    public function deleteEducationCriteria(Request $request, $user_id, $placement_id, $category_id)
+    public function deleteEducationCriteria(Request $request, $user_id, $placement_id, $category_id, $education_id)
     {
-
-        $input = $request->only('education_id');
-
-        $education_id = $input['education_id'];
 
         $education_criteria = PlacementCriteria::where('placement_id',$placement_id)->where('category_id',$category_id)->where('education_id',$education_id)->first();
 
