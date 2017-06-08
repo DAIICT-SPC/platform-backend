@@ -797,7 +797,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function updateSelectionRoundDetails(Request $request,$placement_id,$round_no)
+    public function updateSelectionRoundDetails(Request $request,$user_id,$placement_id,$round_no)
     {
 
         $input = $request->only('round_name','round_description');
