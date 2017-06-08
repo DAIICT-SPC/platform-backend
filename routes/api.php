@@ -226,7 +226,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::delete('/deleteSelectionRound/{placement_id}/{round_no}', ['uses' => 'PlacementsController@deleteSelectionRound']);          //Contains all
 
         Route::patch('/updateSelectionRoundDetails/{placement_id}/{round_no}', ['uses' => 'PlacementsController@updateSelectionRoundDetails']);
-
+        
 
     });
 
