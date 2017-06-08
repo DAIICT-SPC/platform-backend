@@ -14,7 +14,7 @@ class ActivationEmail extends Mailable
     public $code;
     public $url;
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
         $this->code = $data['code'];
         $this->url = $data['url'];
@@ -24,7 +24,7 @@ class ActivationEmail extends Mailable
     {
 
         return $this->markdown('mail.activation')
-                    ->from('spc@daiict.ac.in')
+                    ->from('spc@daiict.ac.in', "DAIICT SPC")
                     ->subject('SPC Activation')
                     ->with([
                         'code' => $this->code,

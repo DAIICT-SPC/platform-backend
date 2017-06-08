@@ -101,13 +101,13 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         //    Route::patch('/update/previousEducation/{id}', ['uses' => 'StudentsController@updateEducation']);
 
-            Route::post('/project', ['uses' => 'StudentsController@storeProjects']);
+       //     Route::post('/project', ['uses' => 'StudentsController@storeProjects']);
 
-            Route::get('/project', ['uses' => 'StudentsController@fetchProjects']);
-
-            Route::post('/internship', ['uses' => 'StudentsController@storeInternship']);
-
-            Route::get('/internship', ['uses' => 'StudentsController@fetchInternships']);
+       //     Route::get('/project', ['uses' => 'StudentsController@fetchProjects']);
+//
+//            Route::post('/internship', ['uses' => 'StudentsController@storeInternship']);
+//
+//            Route::get('/internship', ['uses' => 'StudentsController@fetchInternships']);
 
             Route::post('/placementRegistration', ['uses' => 'PlacementApplicationController@studentRegistration']);
 

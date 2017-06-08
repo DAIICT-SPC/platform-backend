@@ -722,7 +722,7 @@ class PlacementsController extends Controller
 
         $input = $input_array['update_open_for'];
 
-        $placements->categories()->sync($input);
+        $placements->categories()->attach($input);
 
         foreach ($input as $single)
         {
@@ -1397,8 +1397,6 @@ class PlacementsController extends Controller
             return Helper::apiError("Cannot find Open For Detail!",null,404);
         }
 
-        $all_open_for_category_id = $all_open_for->pluck('id');
-
         $current_open_for = PlacementOpenFor::where('placement_id',$placement_id)->pluck('category_id');
 
         if(sizeof($current_open_for)==0)
@@ -1408,32 +1406,12 @@ class PlacementsController extends Controller
 
         }
 
-        $already_open_for = Category::whereIn('id',$current_open_for)->get();
+        $already_open_for = Category::whereNotIn('id',$current_open_for)->get();
 
-        if(!$already_open_for)
+        if(sizeof($already_open_for)==0)
         {
-            return Helper::apiError("Cannot find Categories for open for Detail",null,404);
+            return response("No Category Left!",200);
         }
-
-        $already_open_for[0]['status'] = 'checked';
-
-        $remaining_open_for = array_values(array_diff($all_open_for_category_id->toArray(),$current_open_for->toArray()));
-
-        if(sizeof($remaining_open_for)==0)
-        {
-            return response("All are Checked!",200);
-        }
-
-        $remaining_open_for_details = Category::whereIn('id',$remaining_open_for)->get();
-
-        if(!$remaining_open_for)
-        {
-            return Helper::apiError("Can't find remaining open for details",null,404);
-        }
-
-        $remaining_open_for_details[0]['status'] = 'unchecked';
-
-        $already_open_for['unchecked'] = $remaining_open_for_details;
 
         return $already_open_for;
         

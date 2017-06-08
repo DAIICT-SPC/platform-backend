@@ -3,9 +3,9 @@
 
 Hello,
 <br>
-Please activate your Account by visiting the link 'http://localhost:8080/signup/<b>{{$code}}</b>'.
+Please activate your Account by visiting the link http://localhost:8080/signup/{{$code}}.
 <br>
-Your Recovery Code is : <b>{{$code}}</b>
+Your Activation Code is : **{{$code}}**
 <br>
 You can also Click Below to Activate!
 

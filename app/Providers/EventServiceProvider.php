@@ -16,9 +16,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Event' => [
             'App\Listeners\EventListener',
         ],
-        'App\Events\EmailNotification' => [
+        'App\Events\ActivationCreated' => [
             'App\Listeners\ActivationEmailNotification'
         ],
+
     ];
 
     /**

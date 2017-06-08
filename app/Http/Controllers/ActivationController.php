@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\User;
-
+use App\Events\ActivationCreated;
 class ActivationController extends Controller
 {
 
@@ -56,6 +56,8 @@ class ActivationController extends Controller
             return Helper::apiError("Activation cannot be Created!");
 
         }
+
+      //  event(new ActivationCreated($activation));
 
         return $this->activationEmail($activation);
 
