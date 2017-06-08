@@ -1442,7 +1442,7 @@ class PlacementsController extends Controller
     public function getDraftPlacements($user_id)
     {
 
-        $placements = PlacementPrimary::where('status','draft')->get();
+        $placements = PlacementPrimary::with(['placementSelection','jobType'])->where('status','draft')->get();
 
         if(sizeof($placements)==0)
         {
