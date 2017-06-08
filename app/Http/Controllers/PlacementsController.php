@@ -545,125 +545,92 @@ class PlacementsController extends Controller
 
     }
 
-    public function selectStudentsRoundwise(Request $request, $user_id, $placement_id)            //select_students_roundwise - must be coming in form of checkbox
+    public function selectStudentsRoundwise(Request $request, $user_id, $placement_id, $round_no)            //select_students_roundwise - must be coming in form of checkbox
     {
 
         $students_roundwise = $request->only('student_roundwise');                  //receiving enroll no
 
         $student_enroll_no_list = $students_roundwise['student_roundwise'];
 
-        $round_details = SelectionRound::where('placement_id',$placement_id)->get();
+        $all_round_info = SelectionRound::where('placement_id',$placement_id)->pluck('round_no');
 
-        $no_of_rounds = sizeof($round_details);
+        if(!$all_round_info)
+        {
+            return Helper::apiError("Can't find round info",null,404);
+        }
 
-        if( is_null($student_enroll_no_list[0]) )
+        $round_uptil_now = [];
+
+        for($i=1;$i<=$round_no;$i++)
         {
 
-            return Helper::apiError("No enroll no at first index",null,404);
+            array_push($round_uptil_now,$i);
 
         }
 
-        $selection_round_currently = SelectStudentRoundwise::where('placement_id',$placement_id)->where('enroll_no',$student_enroll_no_list[0])->first();
+        $next_all_round_details = array_values(array_diff($all_round_info->toArray(),$round_uptil_now));
 
-        $current_round = $selection_round_currently['round_no'];
-
-        if( $current_round == $no_of_rounds)
+        if(sizeof($next_all_round_details)==0)
         {
-
-            if( is_null($student_enroll_no_list[0]) )
-            {
-
-                return Helper::apiError("No enroll no at first index",null,404);
-
-            }
-
-            $selection_round = [];
-
-            $i = 0;
-
-            $input['placement_id'] = $placement_id;
-
-            foreach ( $student_enroll_no_list as $student_enroll_no )
-            {
-
-                $input['enroll_no'] = $student_enroll_no;
-
-                $input['package'] = 0;
-
-                $student_in_db = Offer::where('placement_id',$input['placement_id'])->where('enroll_no',$input['enroll_no'])->where('package',$input['package'])->first();
-
-                if(sizeof($student_in_db)!=0)
-                {
-
-                    $selection_round[$i] = $student_in_db;
-
-                    $i++;
-
-                }else{
-
-                    $selection_round[$i] = Offer::create($input);
-
-                    $i++;
-
-                }
-
-            }
-
-            return $selection_round;
-
+            return response("Done with all rounds",200);
         }
 
-        $next_round_details = SelectionRound::where('placement_id',$placement_id)->where('round_no',$current_round+1)->first();
+        $next_round = $next_all_round_details[0];
 
-        $placement_primary = PlacementPrimary::with(['company'])->where('placement_id',$placement_id)->first();
+        $next_round_details = SelectionRound::where('placement_id',$placement_id)->where('round_no',$next_round)->get();
 
-        if(!$placement_primary)
+        if(!$next_round_details)
         {
-
-            return Helper::apiError("No Placement Found with this id!",null,404);
-
+            return Helper::apiError("Could not find Round Details!",null,404);
         }
 
 
-        $job_title = $placement_primary['job_title'];
+//        $placement_primary = PlacementPrimary::with(['company'])->where('placement_id',$placement_id)->first();
+//
+//        if(!$placement_primary)
+//        {
+//
+//            return Helper::apiError("No Placement Found with this id!",null,404);
+//
+//        }
+//
+//
+//        $job_title = $placement_primary['job_title'];
+//
+//        $location = $placement_primary['location'];
+//
+//        $company_name = $placement_primary["company"]['company_name'];
+//
+//        $job_type = Job_Type::where('id',$placement_primary['job_type_id'])->pluck('job_type');
+//
+//        $job_type_name = $job_type[0];
+//
+//        $data = [
+//
+//            'job_title' => $job_title,
+//            'location' => $location,
+//            'company_name' => $company_name,
+//            'job_type_name' => $job_type_name,
+//            'round_no' => $next_round_details['round_no'],
+//            'round_name' => $next_round_details['round_name'],
+//
+//        ];
 
-        $location = $placement_primary['location'];
 
-        $company_name = $placement_primary["company"]['company_name'];
+        $selected_students = [];
 
-        $job_type = Job_Type::where('id',$placement_primary['job_type_id'])->pluck('job_type');
-
-        $job_type_name = $job_type[0];
-
-        $data = [
-
-            'job_title' => $job_title,
-            'location' => $location,
-            'company_name' => $company_name,
-            'job_type_name' => $job_type_name,
-            'round_no' => $next_round_details['round_no'],
-            'round_name' => $next_round_details['round_name'],
-
-        ];
-
-        $selection_round = [];
-
-        $i = 0;
-
-        foreach ( $student_enroll_no_list as $student_enroll_no )
+        foreach ($student_enroll_no_list as $enroll_no)
         {
 
-            $selection_round[$i] = SelectStudentRoundwise::where('enroll_no',$student_enroll_no)->where('placement_id',$placement_id)->first();
+            $selection_round = SelectStudentRoundwise::where('placement_id',$placement_id)->where('enroll_no',$enroll_no)->first();
 
-            $selection_round[$i]->update(array('round_no' => ($current_round + 1)));
+            $selection_round->update(array('round_no'=>$next_round));
 
-            $i++;
-
-            //Mail::to("$student_enroll_no@daiict.ac.in")->send(new SelectedForRound1Email($data));
+            array_push($selected_students,$selection_round);
 
         }
 
-        return $selection_round;
+        return $selected_students;
 
     }
 

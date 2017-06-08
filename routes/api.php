@@ -183,7 +183,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/{placement_id}/showStudentsInRound/{round_no}', ['uses' => 'PlacementsController@showStudentsInRound']);
 
-        Route::post('/{placement_id}/selectStudentsRoundwise', ['uses' => 'PlacementsController@selectStudentsRoundwise']);
+        Route::post('/{placement_id}/selectStudentsRoundwise/{round_no}', ['uses' => 'PlacementsController@selectStudentsRoundwise']);
 
         Route::post('/{placement_id}/selectStudentsFromLastRound', ['uses' => 'PlacementsController@selectStudentsFromLastRound']);
 
@@ -261,7 +261,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/{placement_id}/selectStudentsFromApplication', ['uses' => 'PlacementsController@selectStudentsFromApplication']);
 
-        Route::post('/{placement_id}/selectStudentsRoundwise', ['uses' => 'PlacementsController@selectStudentsRoundwise']);
+        Route::post('/{placement_id}/selectStudentsRoundwise/{round_no}', ['uses' => 'PlacementsController@selectStudentsRoundwise']);
 
         Route::post('/{placement_id}/selectStudentsFromLastRound', ['uses' => 'PlacementsController@selectStudentsFromLastRound']);
 
