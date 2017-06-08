@@ -482,7 +482,16 @@ class PlacementsController extends Controller
 
         $job_type_name = $job_type[0];
 
-        $selection_round_detail = SelectionRound::where('placement_id',$placement_id)->where('round_no',1)->first();
+        $selection_rounds = SelectionRound::where('placement_id',$placement_id)->firt();
+
+        if(!$selection_rounds)
+        {
+            return response("No Selection Round!",200);
+        }
+
+        $round_no = $selection_rounds['round_no'];
+
+        $selection_round_detail = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
 
         $data = [
 
@@ -500,7 +509,7 @@ class PlacementsController extends Controller
 
             $input['enroll_no'] = $student_enroll_no;
 
-            $input['round_no'] = 1;
+            $input['round_no'] = $round_no;
 
             $student_in_db = SelectStudentRoundwise::where('placement_id', $input['placement_id'])->where('enroll_no',$input['enroll_no'])->where('round_no',$input['round_no'])->first();
 
