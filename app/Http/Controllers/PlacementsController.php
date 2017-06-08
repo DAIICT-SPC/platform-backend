@@ -572,7 +572,20 @@ class PlacementsController extends Controller
 
         if(sizeof($next_all_round_details)==0)
         {
-            return response("Done with all rounds",200);
+
+            $selected_students = [];
+
+            foreach ($student_enroll_no_list as $enroll_no)
+            {
+
+                $selection_round = Offer::create(array('enroll_no'=>$enroll_no,'placement_id'=>$placement_id, 'package'=>0))->first();
+
+                array_push($selected_students,$selection_round);
+
+            }
+
+            return $selected_students;
+
         }
 
         $next_round = $next_all_round_details[0];
