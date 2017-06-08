@@ -781,10 +781,10 @@ class PlacementsController extends Controller
 
     }
 
-    public function deleteSelectionRound($user_id,$placement_id,$category_id)
+    public function deleteSelectionRound($user_id,$placement_id,$round_no)
     {
 
-        $selection_round = SelectionRound::where('placement_id',$placement_id)->where('category_id',$category_id)->first();
+        $selection_round = SelectionRound::where('placement_id',$placement_id)->where('round_no',$round_no)->first();
 
         if(sizeof($selection_round)==0)
         {
@@ -793,7 +793,7 @@ class PlacementsController extends Controller
 
         $selection_round->delete();
 
-        return response("",200);
+        return response("",204);
 
     }
 

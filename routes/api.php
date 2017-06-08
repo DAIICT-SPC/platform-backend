@@ -315,6 +315,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::delete('/deleteOpenFor/{placement_id}/{category_id}', ['uses' => 'PlacementsController@deleteOpenFor']);          //Contains all
 
+        Route::delete('/deleteSelectionRound/{placement_id}/{round_no}', ['uses' => 'PlacementsController@deleteSelectionRound']);          //Contains all
+
     });
 
 });
