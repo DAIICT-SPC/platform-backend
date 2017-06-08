@@ -781,6 +781,22 @@ class PlacementsController extends Controller
 
     }
 
+    public function deleteSelectionRound($user_id,$placement_id,$category_id)
+    {
+
+        $selection_round = SelectionRound::where('placement_id',$placement_id)->where('category_id',$category_id)->first();
+
+        if(sizeof($selection_round)==0)
+        {
+            return response("No Selection Round like such",200);
+        }
+
+        $selection_round->delete();
+
+        return response("",200);
+
+    }
+
     public function updateCriteria(Request $request, $user_id, $placement_id)
     {
 
