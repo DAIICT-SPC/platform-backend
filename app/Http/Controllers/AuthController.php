@@ -47,12 +47,10 @@ class AuthController extends Controller
 
     }
 
-    public function loginAs(Request $request)
+    public function loginAs(Request $request,$user_id)
     {
 
-        $input = $request->only('email');
-
-        $user = User::where('email',$input['email'])->first();
+        $user = User::where('id',$user_id)->first();
 
         if (!$token=\JWTAuth::fromUser($user)) {
 

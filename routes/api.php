@@ -5,7 +5,7 @@
 
     Route::post('/testUser',['uses' => 'UsersController@testUser']);
 
-    Route::post('/loginAs',['uses' => 'AuthController@loginAs']);
+    Route::post('/loginAs/{user_id}',['uses' => 'AuthController@loginAs'])->middleware(['jwt','role:admin']);
 
     Route::get('/', ['uses' => 'AuthController@checkAuthentication'])->middleware('jwt');
 
