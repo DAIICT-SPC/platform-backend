@@ -236,6 +236,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/roundWisePlacementDetail/{placement_id}/{round_no}', ['uses' => 'AdminsController@roundWisePlacementDetail']);
 
+        Route::get('/getAllOfferLetter/{placement_id}', ['uses' => 'PlacementOffersController@getAllOfferLetter']);
+
 
     });
 
