@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
 use App\Feedback;
 use App\Helper;
 use App\Http\Requests\CreateFeedback;
+use App\Mail\FeedbackEmail;
+use App\PlacementPrimary;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class FeedbackController extends Controller
 {
@@ -54,6 +59,35 @@ class FeedbackController extends Controller
             return Helper::apiError("Could not create feedback!",null,404);
 
         }
+//
+//        $user = User::where('id',$user_id)->first();
+//
+//        $company = Company::where('user_id',$user_id)->first();
+//
+//        $placement_primary = PlacementPrimary::where('placement_id',$placement_id)->first();
+//
+//        if(!$user && !$placement_primary && !$company)
+//        {
+//
+//            return Helper::apiError("Details not found!",null,404);
+//
+//        }
+//
+//        $email = $user['email'];
+//
+//        $name = $company['company_name'];
+//
+//        $data = [
+//
+//            'email' => $email,
+//            'description' => $input['description'],
+//            'rating' => $input['rating'],
+//            'placement' => $placement_primary,
+//            'name' => $name,
+//
+//        ];
+//
+//        Mail::to('spc@daiict.ac.in')->send(new FeedbackEmail($data));
 
         return $feedback;
 
