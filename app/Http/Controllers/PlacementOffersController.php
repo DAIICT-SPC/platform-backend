@@ -80,7 +80,7 @@ class PlacementOffersController extends Controller
 
     }
 
-    public function cancelOfferLetter(Request $request, $placement_id)
+    public function cancelOfferLetter(Request $request, $user_id, $placement_id)
     {
 
         $input = $request->only('enroll_no');
@@ -102,7 +102,7 @@ class PlacementOffersController extends Controller
 
     }
 
-    public function getAllOfferLetter($placement_id)
+    public function getAllOfferLetter($user_id, $placement_id)
     {
 
         $offers = Offer::where('placement_id',$placement_id)->where('package','!=',0)->pluck('enroll_no');
@@ -125,7 +125,7 @@ class PlacementOffersController extends Controller
 
     }
 
-    public function getOfferLetter($enroll_no_or_placement_id)
+    public function getOfferLetter($user_id, $enroll_no_or_placement_id)
     {
 
         $offer = Offer::where('enroll_no',$enroll_no_or_placement_id)->orWhere('placement_id',$enroll_no_or_placement_id)->where('package','!=',NULL)->first();
