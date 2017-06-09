@@ -32,4 +32,9 @@ class User extends Authenticatable
         return $this->hasOne(Admin::class, 'user_id');
     }
 
+    public function externally_allowed()
+    {
+        return $this->belongsToMany(Student::class,'external_allowed','user_id','enroll_no');
+    }
+
 }

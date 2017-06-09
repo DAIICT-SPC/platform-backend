@@ -42,4 +42,14 @@ class Student extends Model
         return $this->hasMany(StudentEducation::class,'enroll_no');
     }
 
+    public function externally_allowed_in()
+    {
+        return $this->belongsToMany(PlacementPrimary::class,'external_allowed','enroll_no','placement_id');
+    }
+
+    public function externally_allowed_by()
+    {
+        return $this->belongsToMany(User::class,'external_allowed','enroll_no','user_id');
+    }
+
 }

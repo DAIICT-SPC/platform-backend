@@ -34,6 +34,11 @@ class PlacementPrimary extends Model
         return $this->belongsToMany(Category::class, 'placements_open_for', 'placement_id', 'category_id');
     }
 
+    public function externally_allowed()
+    {
+        return $this->belongsToMany(Student::class, 'external_allowed', 'placement_id', 'enroll_no');
+    }
+
     public function criterias()
     {
         return $this->hasMany(PlacementCriteria::class, 'placement_id');
