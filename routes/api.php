@@ -133,6 +133,9 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
             Route::get('/getDraftPlacements', ['uses' => 'PlacementsController@getDraftPlacements']);
 
+            Route::get('/isFeedbackGiven/{placement_id}', ['uses' => 'FeedbackController@isFeedbackGiven']);
+
+            Route::post('/giveFeedback/{placement_id}', ['uses' => 'FeedbackController@giveFeedback']);
 
     });
 
@@ -226,6 +229,10 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::delete('/deleteSelectionRound/{placement_id}/{round_no}', ['uses' => 'PlacementsController@deleteSelectionRound']);          //Contains all
 
         Route::patch('/updateSelectionRoundDetails/{placement_id}/{round_no}', ['uses' => 'PlacementsController@updateSelectionRoundDetails']);
+
+        Route::get('/isFeedbackGiven/{placement_id}', ['uses' => 'FeedbackController@isFeedbackGiven']);
+
+        Route::post('/giveFeedback/{placement_id}', ['uses' => 'FeedbackController@giveFeedback']);
 
 
     });
