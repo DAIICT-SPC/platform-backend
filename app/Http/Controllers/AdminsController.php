@@ -279,7 +279,7 @@ class AdminsController extends Controller
 
         if(!$registered_students)
         {
-            return Helper::apiError("No Students Registered!",null,404);
+            return response("No student registered",200);
         }
 
         $offered_list = Offer::whereIn('placement_id',$placement_list)->where('package','!=',0)->distinct()->pluck('enroll_no');
@@ -287,12 +287,12 @@ class AdminsController extends Controller
         if(sizeof($offered_list)==0)
         {
 
-            $students = Student::with(['user','category'])->whereIn('enroll_no',$registered_students)->get();
+            $students = Student::with(['user','category'])->whereIn('enroll_no',$registered_students)->where('category_id',$category_id)->get();
 
-            if(!$students)
+            if(sizeof($students)==0)
             {
 
-                return Helper::apiError("Could not fetch student detail!",null,404);
+                return response("No student of this category registered!",200);
 
             }
 
@@ -309,7 +309,7 @@ class AdminsController extends Controller
 
         }
 
-        $students = Student::with(['user','category'])->whereIn('enroll_no',$student_list)->get();
+        $students = Student::with(['user','category'])->whereIn('enroll_no',$student_list)->where('category_id',$category_id)->get();
 
         if(!$students)
         {
@@ -511,6 +511,42 @@ class AdminsController extends Controller
         }
 
         return $new_application;
+
+    }
+
+    public function reportStudentWise($user_id,$placement_season_id,$enroll_no)
+    {
+
+        $placement_detail_list = PlacementPrimary::with([ 'placement_season' => function($q) use($placement_season_id){
+            $q->where('id',$placement_season_id);
+        }])->where('status','!=','draft')->get();
+
+        $placements = [];
+
+        foreach ( $placement_detail_list as $placement )
+        {
+
+            if(sizeof($placement["placement_season"])!=0)
+            {
+
+                array_push($placements, $placement['placement_id']);
+
+            }
+
+        }
+
+        $registered_by_student = Application::whereIn('placement_id',$placements)->where('enroll_no',$enroll_no)->pluck('placement_id');
+
+        if(sizeof($registered_by_student)==0)
+        {
+            return response("Not registered for any placement!",200);
+        }
+
+        foreach ($registered_by_student as $single)
+        {
+
+
+        }
 
     }
 

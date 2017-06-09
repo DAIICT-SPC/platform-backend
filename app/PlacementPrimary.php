@@ -44,6 +44,11 @@ class PlacementPrimary extends Model
         return $this->hasMany(PlacementCriteria::class, 'placement_id');
     }
 
+    public function applications()
+    {
+        return $this->hasMany(Application::class,'placement_id');
+    }
+
     public function placementSelection()
     {
         return $this->hasMany(SelectionRound::class,'placement_id');
