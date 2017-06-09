@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 class PlacementOffersController extends Controller
 {
 
-    public function giveOfferLetter(CreateOffer $request, $placement_id)        //insert in OFFER Block.. check if student completed last round PlacementController@checkIfRoundsCompleted
+    public function giveOfferLetter(CreateOffer $request,$user_id, $placement_id)        //insert in OFFER Block.. check if student completed last round PlacementController@checkIfRoundsCompleted
     {
 
         $enroll_nos = $request->only('enroll_no');
