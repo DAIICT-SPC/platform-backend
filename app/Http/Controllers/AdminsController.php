@@ -180,14 +180,30 @@ class AdminsController extends Controller
 
         }
 
-        $student_placed_detail = Offer::with(['student','student.user','student.category','placement','placement.company'])->whereIn('placement_id',$open_for)->where('package','!=',0)->distinct()->get();
+        $student_placed_detail = Offer::with(['student' => function($q) use($category_id){
+            $q->where('category_id',$category_id);
+        },'student.user','student.category','placement','placement.company'])->whereIn('placement_id',$open_for)->where('package','!=',0)->distinct()->get();
 
-        if(sizeof($student_placed_detail)==0)
+        $student_placed = [];
+
+        foreach ($student_placed_detail as $student_detail)
+        {
+
+            if(sizeof($student_detail['student'])!=0)
+            {
+
+                array_push($student_placed,$student_detail);
+
+            }
+
+        }
+
+        if(sizeof($student_placed)==0)
         {
             return response("No Student got Offer!",200);
         }
 
-        return $student_placed_detail;
+        return $student_placed;
 
     }
 
