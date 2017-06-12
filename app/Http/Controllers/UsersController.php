@@ -157,7 +157,11 @@ class UsersController extends Controller
                 return Helper::apiError('User not Found!',null,404);
             }
 
-            $input = $request->only('role','email','password', 'name');
+            $input = $request->only('password');
+
+            $password = $input['password'];
+
+            $input['password'] = bcrypt($password);
 
             $input = array_filter($input, function($value){
 

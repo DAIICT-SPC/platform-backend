@@ -83,6 +83,14 @@ class StudentsController extends Controller
     public function update(Request $request, $user_id)
     {
 
+        $user = User::where('id',$user_id)->first();
+
+        if(sizeof($user)==0)
+        {
+            return response("No User Found!",200);
+        }
+
+
         if (is_null($user_id)) {
 
             $student = request()->user()->student;
@@ -101,13 +109,22 @@ class StudentsController extends Controller
 
         $input = $request->only('enroll_no','category_id','temp_address','perm_address','contact_no','dob','gender','category','enrollment_date', 'cpi','resume_link');
 
+        $input_user = $request->only('name','alternate_email');
+
+        $input_user = array_filter($input_user, function($value){
+            return $value != null;
+        });
+
         $input = array_filter($input, function($value){
             return $value != null;
         });
 
+        $user->update($input_user);
+
         $student->update($input);
 
         return $student;
+
     }
 
     public function storeProjects(CreateProjects $request, $user_id)        // ** change - check if already entry exist in array - just like done in education

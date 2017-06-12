@@ -89,9 +89,11 @@ class CompanysController extends Controller
 
         });
 
+
+
         $company->update($input);
 
-        $company_contact_name = $request->only('name');     //contact person name
+        $company_contact_name = $request->only('name','alternate_email');     //contact person name
 
         $company_contact_name = array_filter($company_contact_name, function($value){
 

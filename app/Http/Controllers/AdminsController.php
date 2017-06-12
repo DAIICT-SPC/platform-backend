@@ -80,7 +80,7 @@ class AdminsController extends Controller
 
         $input = $request->only('contact_no', 'position');
 
-        $input_user = $request->only('name');
+        $input_user = $request->only('name','alternate_email');
 
         $userr = User::where('id',$user_id)->first();
 
