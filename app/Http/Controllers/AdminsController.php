@@ -16,6 +16,7 @@ use App\SelectStudentRoundwise;
 use App\Student;
 use App\StudentEducation;
 use App\User;
+use function foo\func;
 use Illuminate\Http\Request;
 
 use App\Admin;
@@ -533,34 +534,50 @@ class AdminsController extends Controller
     public function reportStudentWise($user_id,$placement_season_id,$enroll_no)
     {
 
-        $placement_detail_list = PlacementPrimary::with([ 'placement_season' => function($q) use($placement_season_id){
+        $placement_detail_list = PlacementPrimary::with([ 'applications' =>function($q) use($enroll_no){
+            $q->where('enroll_no',$enroll_no);
+        },'placement_season' => function($q) use($placement_season_id){
             $q->where('id',$placement_season_id);
         }])->where('status','!=','draft')->get();
 
-        $placements = [];
+        $student_staged = [];
+
+        $placement_ids = [];
 
         foreach ( $placement_detail_list as $placement )
         {
 
-            if(sizeof($placement["placement_season"])!=0)
+            if(sizeof($placement["placement_season"])!=0 && sizeof($placement['applications'])!=0)
             {
 
-                array_push($placements, $placement['placement_id']);
+                $student_reached_till = SelectStudentRoundwise::where('placement_id',$placement['placement_id'])->where('enroll_no',$enroll_no)->first();
+
+                $selection_round_detail = SelectionRound::where('placement_id',$placement['placement_id'])->where('round_no',$student_reached_till['round_no'])->first();
+
+                $student_reached_till['round_details'] = $selection_round_detail;
+
+                $placement['student_reached_till_round'] = $student_reached_till;
+
+                array_push($student_staged, $placement);
+
+                array_push($placement_ids,$placement['placement_id']);
 
             }
 
         }
 
-        $registered_by_student = Application::whereIn('placement_id',$placements)->where('enroll_no',$enroll_no)->pluck('placement_id');
+        $offer_received = Offer::with(['placement'])->whereIn('placement_id',$placement_ids)->where('enroll_no',$enroll_no)->where('package','!=',0)->first();
 
-        if(sizeof($registered_by_student)==0)
+        if(sizeof($offer_received)!=0)
         {
-            return response("Not registered for any placement!",200);
+
+            return $offer_received;
+
         }
-
-        foreach ($registered_by_student as $single)
+        else
         {
 
+            return $student_staged;
 
         }
 
