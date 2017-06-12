@@ -534,7 +534,7 @@ class AdminsController extends Controller
     public function reportStudentWise($user_id,$placement_season_id,$enroll_no)
     {
 
-        $placement_detail_list = PlacementPrimary::with([ 'applications' =>function($q) use($enroll_no){
+        $placement_detail_list = PlacementPrimary::with([ 'placementSelection','company','applications' =>function($q) use($enroll_no){
             $q->where('enroll_no',$enroll_no);
         },'placement_season' => function($q) use($placement_season_id){
             $q->where('id',$placement_season_id);
@@ -566,7 +566,7 @@ class AdminsController extends Controller
 
         }
 
-        $offer_received = Offer::with(['placement'])->whereIn('placement_id',$placement_ids)->where('enroll_no',$enroll_no)->where('package','!=',0)->first();
+        $offer_received = Offer::with(['placement','placement.company'])->whereIn('placement_id',$placement_ids)->where('enroll_no',$enroll_no)->where('package','!=',0)->first();
 
         if(sizeof($offer_received)!=0)
         {

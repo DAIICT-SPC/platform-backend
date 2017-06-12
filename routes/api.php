@@ -332,7 +332,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::patch('/updateSelectionRoundDetails/{placement_id}/{round_no}', ['uses' => 'PlacementsController@updateSelectionRoundDetails']);
 
-        Route::post('/reportStudentWise/{placement_season_id}/{enroll_no}', ['uses' => 'AdminsController@reportStudentWise']);
+        Route::get('/reportStudentWise/{placement_season_id}/{enroll_no}', ['uses' => 'AdminsController@reportStudentWise']);
 
     });
 
