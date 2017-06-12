@@ -49,7 +49,7 @@ class UsersController extends Controller
             return Helper::apiError('No such activation code exist. Please try again.',null,404);
         }
 
-        $input = $request->only('password', 'name');                 //creates array
+        $input = $request->only('password', 'name', 'alternate_email');                 //creates array
 
         $input['password'] = bcrypt($input['password']);
 
@@ -157,11 +157,9 @@ class UsersController extends Controller
                 return Helper::apiError('User not Found!',null,404);
             }
 
-            $input = $request->only('password');
+            $input = $request->only('password', 'alternate_email');
 
-            $password = $input['password'];
-
-            $input['password'] = bcrypt($password);
+            $input['password'] = bcrypt($input['password']);
 
             $input = array_filter($input, function($value){
 
@@ -200,6 +198,8 @@ class UsersController extends Controller
             $input['role'] = 'admin';
 
             $input['password'] = bcrypt('password');
+
+            $input['alternate_email'] = 'jiandanigaurav@gmail.com';
 
             $input['name'] = 'test user';
 
