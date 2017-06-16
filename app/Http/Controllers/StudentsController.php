@@ -501,7 +501,7 @@ class StudentsController extends Controller
     }
 
 
-    public function eligibility(CreateStudentRegistration $request, $user_id = null)          //student registering - Application giving layer - have to validate each student if its eligible or not
+    public function eligibility(CreateStudentRegistration $request, $user_id = null, $placement_id)          //student registering - Application giving layer - have to validate each student if its eligible or not
     {
 
         if (is_null($user_id)) {
@@ -524,12 +524,9 @@ class StudentsController extends Controller
 
         $enroll_no = $student['enroll_no'];
 
-        $input = $request->only('placement_id');
+        $input['placement_id'] = $placement_id;
 
         $input['enroll_no'] = $enroll_no;
-
-        $placement_id = $request->only('placement_id');
-
 
         $application = Application::where('placement_id',$placement_id)->where('enroll_no',$enroll_no)->first();
 
@@ -600,13 +597,13 @@ class StudentsController extends Controller
 
         }else{
 
-            return Helper::apiError("ineligible",null,402);
+            return response(['status' => "ineligible"], 402);
 
         }
 
     }
 
-    public function remainingEducationsToInsert($user_id)
+    public function checkIfSameCategory($user_id = null, $placement_id)
     {
 
         if (is_null($user_id)) {
@@ -619,13 +616,29 @@ class StudentsController extends Controller
 
         }
 
-        if(!$student){
+        if (!$student) {
 
-            return Helper::apiError('No Student Found!',null,404);
+            return Helper::apiError('No Student Found!', null, 404);
 
         }
 
-        return $student;
+        $category_id = $student['category_id'];
+
+        $placement_open_for = PlacementOpenFor::where('placement_id', $placement_id)->pluck('category_id');
+
+        if (sizeof($placement_open_for) == 0) {
+            return response("No Open For Details for this placement", 200);
+        }
+
+        if (in_array($category_id, $placement_open_for->toArray())) {
+
+            return response("category exists", 200);
+
+        } else {
+
+            return response("category don't exists", 200);
+
+        }
 
     }
 

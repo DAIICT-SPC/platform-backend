@@ -59,7 +59,7 @@ class ActivationController extends Controller
 
       //  event(new ActivationCreated($activation));
 
-        return $this->activationEmail($activation);
+//        return $this->activationEmail($activation);
 
     }
 

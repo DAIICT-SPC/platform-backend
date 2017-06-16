@@ -123,7 +123,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
             Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
 
-            Route::post('/eligibility', ['uses' => 'StudentsController@eligibility']);
+            Route::get('/eligibility/{placement_id}', ['uses' => 'StudentsController@eligibility']);
 
             Route::get('/{placement_id}/showPlacementDetails/', ['uses' => 'PlacementsController@showPlacementDetails']);
 
@@ -136,6 +136,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
             Route::get('/isFeedbackGiven/{placement_id}', ['uses' => 'FeedbackController@isFeedbackGiven']);
 
             Route::post('/giveFeedback/{placement_id}', ['uses' => 'FeedbackController@giveFeedback']);
+
+            Route::get('/checkIfSameCategory/{placement_id}', ['uses' => 'StudentsController@checkIfSameCategory']);
 
     });
 
