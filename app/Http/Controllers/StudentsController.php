@@ -322,17 +322,6 @@ class StudentsController extends Controller
 
     }
 
-
-    public function updateProject()
-    {
-
-    }
-
-    public function updateInternship()
-    {
-
-    }
-
     public function dashboard($user_id)
     {
 
@@ -375,8 +364,6 @@ class StudentsController extends Controller
         return $dashboard;
 
     }
-
-
 
     public function uploadResume(Request $request, $user_id = null)
     {
@@ -626,11 +613,13 @@ class StudentsController extends Controller
 
         $placement_open_for = PlacementOpenFor::where('placement_id', $placement_id)->pluck('category_id');
 
-        if (sizeof($placement_open_for) == 0) {
+        if (sizeof($placement_open_for) == 0)
+        {
             return response("No Open For Details for this placement", 200);
         }
 
-        if (in_array($category_id, $placement_open_for->toArray())) {
+        if (in_array($category_id, $placement_open_for->toArray()))
+        {
 
             return response("category exists", 200);
 

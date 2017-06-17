@@ -75,4 +75,9 @@ class PlacementPrimary extends Model
         return $this->belongsTo(PlacementSeason::class,'placement_season_id');
     }
 
+    public function studentDataAllowance()
+    {
+        return $this->hasOne(StudentDataAllowance::class,'placement_id');
+    }
+
 }

@@ -20,6 +20,7 @@ use App\PlacementCriteria;
 use App\PlacementSeason;
 use App\PlacementSeason_Company;
 use App\SelectStudentRoundwise;
+use App\StudentDataAllowance;
 use App\StudentEducation;
 use App\User;
 use Illuminate\Http\Request;
@@ -98,6 +99,19 @@ class PlacementsController extends Controller
         if(!$placement_primary){
 
             Helper::apiError("Can't create new Placement Drive",null,404);
+
+        }
+
+        $input_data['placement_id'] = $placement_primary['placement_id'];
+
+        $input_data['status'] = 0;
+
+        $entry_in_student_data_allowance = StudentDataAllowance::create($input_data);
+
+        if(!$entry_in_student_data_allowance)
+        {
+
+            Helper::apiError("Can't create Placement Allowance",null,404);
 
         }
 
@@ -1510,6 +1524,51 @@ class PlacementsController extends Controller
         }
 
         return $placements;
+
+    }
+
+    public function isStudentDataAllowed($user_id = null, $placement_id)
+    {
+
+        $entry_in_db = StudentDataAllowance::where('placement_id',$placement_id)->first();
+
+        if($entry_in_db['status'] == 0)
+        {
+
+            $applications = Application::where('placement_id',$placement_id)->get();
+
+            if(sizeof($applications)==0)
+            {
+
+                return array('applications' => 0, "status" => "false");
+
+            }
+
+            return array('applications' => sizeof($applications), "status" => "false");
+
+        }
+        else
+        {
+
+            return array('status' => "true");
+
+        }
+
+    }
+
+    public function allowStudentData($user_id,$placement_id)
+    {
+
+        $entry_in_db = StudentDataAllowance::where('placement_id',$placement_id)->first();
+
+        if(sizeof($entry_in_db)==0)
+        {
+            return response("No Placement with such placement id",200);
+        }
+
+        $entry_in_db->update(array('status' => 1));
+
+        return $entry_in_db;
 
     }
 
