@@ -453,7 +453,10 @@ class PlacementsController extends Controller
 //            'round_date' => $date,
 //            'round_time' => $time,
 //            'venue' => $venue,
-//            'description' => $description
+//              if(!is_null($description))
+//              {
+//                  'description' => $description
+//              }
 //        ];
 //
 //

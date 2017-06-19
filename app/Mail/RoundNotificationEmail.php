@@ -57,6 +57,7 @@ class RoundNotificationEmail extends Mailable
                 'description' => $this->description,
 
             ]);
+
     }
 
 }

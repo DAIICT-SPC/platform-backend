@@ -7,7 +7,7 @@
         The Date set for Selection Round Details mentioned above is <u>{{$date}}</u> and time decided is <u>{{$time}}</u> at venue <u>{{$venue}} created by </u><u>{{$company_name}}</u> for the Placement Drive with Job Title <u>{{$job_title}}</u> as <u>{{$job_type_name}}</u> at location <u>{{$location}}</u> .
     </h4>
     <h4>
-        The Description set by company is : {{$description}}.
+        Description by Company: {{$description}}.
     </h4>
     <br>
     All The Best.<br>
