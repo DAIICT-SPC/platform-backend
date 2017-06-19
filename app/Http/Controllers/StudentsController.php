@@ -488,7 +488,7 @@ class StudentsController extends Controller
     }
 
 
-    public function eligibility(CreateStudentRegistration $request, $user_id = null, $placement_id)          //student registering - Application giving layer - have to validate each student if its eligible or not
+    public function eligibility($user_id = null, $placement_id)          //student registering - Application giving layer - have to validate each student if its eligible or not
     {
 
         if (is_null($user_id)) {
