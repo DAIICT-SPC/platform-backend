@@ -51,7 +51,7 @@ class PlacementsController extends Controller
     public function createPlacementDrive(CreatePlacementsPrimaryDetails $request, $user_id = null)
     {
 
-        $input = $request->only('job_title','job_description','last_date_for_registration','location','no_of_students','package','job_type_id','placement_season_id');
+        $input = $request->only('job_title','job_description','last_date_for_registration','location','no_of_students','package','job_type_id','start_date','end_date','placement_season_id');
 
         if (is_null($user_id)) {
 
@@ -682,7 +682,7 @@ class PlacementsController extends Controller
 
         }
 
-        $input = $request->only('job_title','job_description','location','no_of_students','package','job_type_id', 'last_date_of_registration','placement_season_id');
+        $input = $request->only('job_title','job_description','location','no_of_students','package','job_type_id', 'last_date_of_registration','placement_season_id','start_date','end_date');
 
         $input = array_filter($input, function($value){
 
@@ -1188,8 +1188,7 @@ class PlacementsController extends Controller
         return $placements;
 
     }
-
-
+    
     public function placementPrimaryAllWithStatusDraft($user_id)
     {
 

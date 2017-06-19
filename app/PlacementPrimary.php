@@ -19,6 +19,8 @@ class PlacementPrimary extends Model
         'no_of_students',
         'package',
         'job_type_id',
+        'start_date',
+        'end_date',
         'company_id',
         'status',
         'placement_season_id',
