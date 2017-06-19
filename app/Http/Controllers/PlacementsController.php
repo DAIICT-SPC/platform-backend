@@ -1575,17 +1575,17 @@ class PlacementsController extends Controller
             if(sizeof($applications)==0)
             {
 
-                return response(false,200);
+                return response(array('status' => false),200);
 
             }
 
-            return response(false,200);
+            return response(array('status' => false),200);
 
         }
         else
         {
 
-            return response(true,200);
+            return response(array('status' => true),200);
 
         }
 
