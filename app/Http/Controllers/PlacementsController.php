@@ -1562,6 +1562,36 @@ class PlacementsController extends Controller
 
     }
 
+    public function isStudentDataAllowedForAdmin($user_id = null, $placement_id)
+    {
+
+        $entry_in_db = StudentDataAllowance::where('placement_id',$placement_id)->first();
+
+        if($entry_in_db['status'] == 0)
+        {
+
+            $applications = Application::where('placement_id',$placement_id)->get();
+
+            if(sizeof($applications)==0)
+            {
+
+                return response(false,200);
+
+            }
+
+            return response(false,200);
+
+        }
+        else
+        {
+
+            return response(true,200);
+
+        }
+
+    }
+
+
     public function allowStudentData($user_id,$placement_id)
     {
 

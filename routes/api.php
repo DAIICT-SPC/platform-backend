@@ -340,7 +340,7 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/allowStudentData/{placement_id}', ['uses' => 'PlacementsController@allowStudentData']);
 
-        Route::get('/isStudentDataAllowed/{placement_id}', ['uses' => 'PlacementsController@isStudentDataAllowed']);
+        Route::get('/isStudentDataAllowed/{placement_id}', ['uses' => 'PlacementsController@isStudentDataAllowedForAdmin']);
 
     });
 
