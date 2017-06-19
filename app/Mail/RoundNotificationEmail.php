@@ -20,6 +20,7 @@ class RoundNotificationEmail extends Mailable
     public $round_date;
     public $round_time;
     public $venue;
+    public $description;
 
     public function __construct($data)
     {
@@ -33,6 +34,7 @@ class RoundNotificationEmail extends Mailable
         $this->round_date = $data['round_date'];
         $this->round_time = $data['round_time'];
         $this->venue = $data['venue'];
+        $this->description = $data['description'];
 
     }
 
@@ -52,6 +54,7 @@ class RoundNotificationEmail extends Mailable
                 'round_date' => $this->round_date,
                 'round_time' => $this->round_time,
                 'venue' => $this->venue,
+                'description' => $this->description,
 
             ]);
     }

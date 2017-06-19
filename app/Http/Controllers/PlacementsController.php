@@ -375,6 +375,10 @@ class PlacementsController extends Controller
 
         $venue_input = $request->only('venue');
 
+        $description_input = $request->only('description');
+
+        $description = $description_input['description'];       // a description box if company has to write like "plz bring laptop and stuff"
+
         $venue = $venue_input['venue'];
 
         $date_input = $request->only('date');
@@ -448,15 +452,15 @@ class PlacementsController extends Controller
 //            'round_name' => $round{'round_name'}
 //            'round_date' => $date,
 //            'round_time' => $time,
-//            'venue' => $venue
-//
+//            'venue' => $venue,
+//            'description' => $description
 //        ];
 //
 //
 //        foreach ($students_in_application as $enroll_no)
 //        {
 //
-//              Mail::to("$enroll_no@daiict.ac.in")->send(new EmailNotification($data));
+//              Mail::to("$enroll_no@daiict.ac.in")->send(new RoundNotificationEmail($data));
 //
 //        }
 
@@ -1188,7 +1192,7 @@ class PlacementsController extends Controller
         return $placements;
 
     }
-    
+
     public function placementPrimaryAllWithStatusDraft($user_id)
     {
 
