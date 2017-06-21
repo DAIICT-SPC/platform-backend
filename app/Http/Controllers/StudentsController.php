@@ -556,7 +556,7 @@ class StudentsController extends Controller
         if( sizeof($offer) > 1 )
         {
 
-            return response(['status' => "ineligible"], 402);
+            return response(['status' => "ineligible"], 200);
 
         }else{
 
@@ -571,7 +571,7 @@ class StudentsController extends Controller
             if( $salary * 1.5 > $package_to_be_given )
             {
 
-                return response(['status' => "ineligible"], 402);
+                return response(['status' => "ineligible"], 200);
 
             }
 
@@ -584,7 +584,7 @@ class StudentsController extends Controller
 
         }else{
 
-            return response(['status' => "ineligible"], 402);
+            return response(['status' => "ineligible"], 200);
 
         }
 
