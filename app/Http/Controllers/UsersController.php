@@ -83,7 +83,7 @@ class UsersController extends Controller
         if($user->role == 'student')
         {
 
-            $input_student = $request->only('enroll_no','category_id','temp_address','perm_address','gender','dob');
+            $input_student = $request->only('enroll_no','category_id','temp_address','perm_address','gender','dob', 'contact_no');
 
             $input_student['user_id'] = $user->id;
 
@@ -347,7 +347,7 @@ class UsersController extends Controller
 
             ];
 
-            Mail::to($input['email'])->send(new ForgotPasswordRecoveryEmail($data));
+    //        Mail::to($input['email'])->send(new ForgotPasswordRecoveryEmail($data));
 
             return $forgot_entry;
 
@@ -359,7 +359,7 @@ class UsersController extends Controller
             $entry = ForgotPassword::where('code',$code)->first();
 
             if(!$entry){
-                response("No such code exist!");
+                response("No such code exist!",404);
             }
 
             return $entry;
