@@ -111,33 +111,33 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
             Route::post('/placementRegistration', ['uses' => 'PlacementApplicationController@studentRegistration']);
 
-            Route::post('/cancelRegistration', ['uses' => 'PlacementApplicationController@cancelRegistration']);
+        Route::post('/cancelRegistration', ['uses' => 'PlacementApplicationController@cancelRegistration']);
 
-            Route::post('/education', ['uses' => 'StudentsController@storeStudentEducation']);
+        Route::post('/education', ['uses' => 'StudentsController@storeStudentEducation']);
 
-            Route::get('/education', ['uses' => 'StudentsController@fetchEducation']);
+        Route::get('/education', ['uses' => 'StudentsController@fetchEducation']);
 
-            Route::patch('/education/{education_id}', ['uses' => 'StudentsController@updateEducation']);
+        Route::patch('/education/{education_id}', ['uses' => 'StudentsController@updateEducation']);
 
-            Route::post('/uploadResume', ['uses' => 'StudentsController@uploadResume']);
+        Route::post('/uploadResume', ['uses' => 'StudentsController@uploadResume']);
 
-            Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
+        Route::get('/getResume', ['uses' => 'StudentsController@getResume']);
 
-            Route::get('/eligibility/{placement_id}', ['uses' => 'StudentsController@eligibility']);
+        Route::get('/eligibility/{placement_id}', ['uses' => 'StudentsController@eligibility']);
 
-            Route::get('/{placement_id}/showPlacementDetails/', ['uses' => 'PlacementsController@showPlacementDetails']);
+        Route::get('/{placement_id}/showPlacementDetails/', ['uses' => 'PlacementsController@showPlacementDetails']);
 
-            Route::get('/applyToAppliedButton/{placement_id}', ['uses' => 'PlacementApplicationController@applyToAppliedButton']);
+        Route::get('/applyToAppliedButton/{placement_id}', ['uses' => 'PlacementApplicationController@applyToAppliedButton']);
 
-            Route::get('/fetchEducationAccordingToCategoryForStudent', ['uses' => 'CategoryController@fetchEducationAccordingToCategoryForStudent']);    //for entries combo box in placement criteria page
+        Route::get('/fetchEducationAccordingToCategoryForStudent', ['uses' => 'CategoryController@fetchEducationAccordingToCategoryForStudent']);    //for entries combo box in placement criteria page
 
-            Route::get('/getDraftPlacements', ['uses' => 'PlacementsController@getDraftPlacements']);
+        Route::get('/getDraftPlacements', ['uses' => 'PlacementsController@getDraftPlacements']);
 
-            Route::get('/isFeedbackGiven/{placement_id}', ['uses' => 'FeedbackController@isFeedbackGiven']);
+        Route::get('/checkIfSameCategory/{placement_id}', ['uses' => 'StudentsController@checkIfSameCategory']);
 
-            Route::post('/giveFeedback/{placement_id}', ['uses' => 'FeedbackController@giveFeedback']);
+        Route::get('/isFeedbackGiven/{placement_id}', ['uses' => 'FeedbackController@isFeedbackGivenByStudent']);
 
-            Route::get('/checkIfSameCategory/{placement_id}', ['uses' => 'StudentsController@checkIfSameCategory']);
+        Route::post('/giveFeedback/{placement_id}', ['uses' => 'FeedbackController@giveFeedbackByStudent']);
 
     });
 
