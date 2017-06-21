@@ -342,6 +342,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/isStudentDataAllowed/{placement_id}', ['uses' => 'PlacementsController@isStudentDataAllowedForAdmin']);
 
+        Route::get('/getFeedbackList/{placement_id}', ['uses' => 'FeedbackController@getFeedbackList']);
+
     });
 
 });
