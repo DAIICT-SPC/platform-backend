@@ -7,6 +7,7 @@ use App\Category;
 use App\Company;
 use App\ExternalAllowed;
 use App\Http\Requests\GetFromToYear;
+use App\LoginRecord;
 use App\Offer;
 use App\PlacementOpenFor;
 use App\PlacementPrimary;
@@ -580,6 +581,38 @@ class AdminsController extends Controller
             return $student_staged;
 
         }
+
+    }
+
+    public function loginRecordsForAdmin($user_id)
+    {
+
+        $records = LoginRecord::with(['fromUsers','toUsers'])->whereRaw('from_id = to_id')->get();
+
+        if(sizeof($records)==0)
+        {
+
+            return response("No Records!",200);
+
+        }
+
+        return $records;
+
+    }
+
+    public function loginRecordsForCompany($user_id)
+    {
+
+        $records = LoginRecord::with(['fromUsers','toUsers'])->whereRaw('from_id != to_id')->get();
+
+        if(sizeof($records)==0)
+        {
+
+            return response("No Records!",200);
+
+        }
+
+        return $records;
 
     }
 

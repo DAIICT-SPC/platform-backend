@@ -3,9 +3,9 @@
 
     Route::post('/login', ['uses' => 'AuthController@authenticate']);
 
-    Route::post('/testUser',['uses' => 'UsersController@testUser']);
+    Route::post('/checkIfAdmin', ['uses' => 'AuthController@checkIfAdmin']);
 
-    Route::post('/loginAs/{user_id}',['uses' => 'AuthController@loginAs'])->middleware(['jwt','role:admin']);
+    Route::post('/testUser',['uses' => 'UsersController@testUser']);
 
     Route::get('/', ['uses' => 'AuthController@checkAuthentication'])->middleware('jwt');
 
@@ -242,7 +242,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/isStudentDataAllowed/{placement_id}', ['uses' => 'PlacementsController@isStudentDataAllowed']);
 
-
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
@@ -343,6 +342,12 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/isStudentDataAllowed/{placement_id}', ['uses' => 'PlacementsController@isStudentDataAllowedForAdmin']);
 
         Route::get('/getFeedbackList/{placement_id}', ['uses' => 'FeedbackController@getFeedbackList']);
+
+        Route::get('/loginRecordsForAdmin', ['uses' => 'AdminsController@loginRecordsForAdmin']);
+
+        Route::get('/loginRecordsForCompany', ['uses' => 'AdminsController@loginRecordsForCompany']);
+
+        Route::post('/loginAs/{to_user_id}',['uses' => 'AuthController@loginAs']);
 
     });
 
