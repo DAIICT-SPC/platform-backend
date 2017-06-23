@@ -9,6 +9,7 @@
 
     Route::get('/', ['uses' => 'AuthController@checkAuthentication'])->middleware('jwt');
 
+    Route::post('/sendSms',['uses' => 'AdminsController@sendSms']);
 
 
 //

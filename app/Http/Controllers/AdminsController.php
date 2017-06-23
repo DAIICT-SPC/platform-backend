@@ -23,6 +23,8 @@ use Illuminate\Http\Request;
 use App\Admin;
 
 use App\Helper;
+use Lakshmaji\Plivo\Facade\Plivo;
+use Plivo\RestAPI;
 
 class AdminsController extends Controller
 {
@@ -613,6 +615,30 @@ class AdminsController extends Controller
         }
 
         return $records;
+
+    }
+
+    public function sendSms()
+    {
+
+        $auth_id = env('PLIVO_AUTH_ID');
+
+        $auth_token = env('PLIVO_AUTH_TOKEN');
+
+        $p = new RestAPI($auth_id, $auth_token);
+
+            $params = array(
+                'src' => '919712934085',
+                'dst' => "919825234089",
+                'text' => 'Hello world! I am Gaurav'
+            );
+
+
+        //only below code needs to be kept in a new job.. above code will be kept at same place
+
+        $response = $p->send_message($params);
+
+        return $response;
 
     }
 

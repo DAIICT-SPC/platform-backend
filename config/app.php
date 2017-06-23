@@ -193,6 +193,10 @@ return [
         //Zipper class
         Chumper\Zipper\ZipperServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+
+        //plivo class
+        Lakshmaji\Plivo\PlivoServiceProvider::class,
+
     ],
 
     /*
@@ -249,6 +253,8 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Zipper' => Chumper\Zipper\Zipper::class,
+
+        'Plivo' => Lakshmaji\Plivo\Facade\Plivo::class,
     ],
 
 ];
