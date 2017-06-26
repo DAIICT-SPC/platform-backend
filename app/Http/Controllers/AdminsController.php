@@ -388,6 +388,17 @@ class AdminsController extends Controller
 
         $student['education'] = StudentEducation::where('enroll_no',$enroll_no)->get();
 
+        $user = User::where('id',$student['user_id'])->first();
+
+        if(!$user)
+        {
+
+            return Helper::apiError("No Name found",null,404);
+
+        }
+
+        $student['user'] = $user;
+
         return $student;
 
     }
