@@ -243,6 +243,8 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::get('/isStudentDataAllowed/{placement_id}', ['uses' => 'PlacementsController@isStudentDataAllowed']);
 
+        Route::post('/createExcelFile/{placement_id}', ['uses' => 'PlacementsController@createExcelFile']);
+
     });
 
     Route::group(['prefix'=>'/{user_id}/admin', 'middleware' => 'role:admin'],function(){
@@ -349,6 +351,9 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
         Route::get('/loginRecordsForCompany', ['uses' => 'AdminsController@loginRecordsForCompany']);
 
         Route::post('/loginAs/{to_user_id}',['uses' => 'AuthController@loginAs']);
+
+        Route::post('/createExcelFile/{placement_id}', ['uses' => 'PlacementsController@createExcelFile']);
+
 
     });
 

@@ -359,7 +359,7 @@ class UsersController extends Controller
             $entry = ForgotPassword::where('code',$code)->first();
 
             if(!$entry){
-                response("No such code exist!",404);
+                return response("No such code exist!",404);
             }
 
             return $entry;

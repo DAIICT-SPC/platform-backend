@@ -32,6 +32,7 @@ use App\Company;
 use App\Student;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PlacementsController extends Controller
 {
@@ -1605,6 +1606,46 @@ class PlacementsController extends Controller
         $entry_in_db->update(array('status' => 1));
 
         return $entry_in_db;
+
+    }
+
+    public function createExcelFile($placement_id)
+    {
+
+        Excel::create('Placement Detail', function($excel) use($placement_id) {
+
+            $excel->sheet('Application', function($sheet) use($placement_id) {
+
+                $applications = Application::where('placement_id',$placement_id)->select('placement_id','enroll_no')->get();
+
+                $sheet->fromArray($applications);
+
+            });
+
+            $round_details = SelectionRound::where('placement_id',$placement_id)->get();
+
+            foreach ($round_details as $round)
+            {
+
+                $excel->sheet($round['round_name'], function($sheet) use($placement_id, $round) {
+
+                    $selectedStudents = SelectStudentRoundwise::where('placement_id',$placement_id)->where('round_no','>=',$round['round_no'])->select('enroll_no')->get();
+
+                    $sheet->fromArray($selectedStudents);
+
+                });
+
+            }
+
+            $excel->sheet('Offer', function($sheet) use($placement_id) {
+
+                $offer = Offer::where('placement_id',$placement_id)->select('enroll_no','package')->get();
+
+                $sheet->fromArray($offer);
+
+            });
+
+        })->download('xls');
 
     }
 
