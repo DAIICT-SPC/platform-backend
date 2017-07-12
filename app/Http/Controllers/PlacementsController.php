@@ -1609,7 +1609,7 @@ class PlacementsController extends Controller
 
     }
 
-    public function createExcelFile($placement_id)
+    public function createExcelFile($user_id, $placement_id)
     {
 
         Excel::create('Placement Detail', function($excel) use($placement_id) {
@@ -1645,7 +1645,7 @@ class PlacementsController extends Controller
 
             });
 
-        })->download('xls');
+        })->store('xls');
 
     }
 

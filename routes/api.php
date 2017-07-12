@@ -354,7 +354,6 @@ Route::group(["prefix"=>'users', 'middleware' => ['jwt']], function() {
 
         Route::post('/createExcelFile/{placement_id}', ['uses' => 'PlacementsController@createExcelFile']);
 
-
     });
 
 });
