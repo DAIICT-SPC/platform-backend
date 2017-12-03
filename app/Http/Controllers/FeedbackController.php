@@ -223,7 +223,7 @@ class FeedbackController extends Controller
 
         }
 
-        $feedback_given_by_user = FeedbackByStudent::where('placement_id',$placement_id)->latest();
+        $feedback_given_by_user = FeedbackByStudent::where('placement_id',$placement_id)->latest()->get();
 
         if(sizeof($feedback_given_by_user)!=0)
         {
