@@ -55,6 +55,8 @@ class CompanysController extends Controller
 
         $company['email'] = $user['email'];
 
+        $company['alternate_email'] = $user['alternate_email'];
+
         $company['profile_picture'] = $user['profile_picture'];
 
         return $company;
