@@ -591,7 +591,7 @@ class AdminsController extends Controller
     public function loginRecordsForAdmin($user_id)
     {
 
-        $records = LoginRecord::with(['fromUsers','toUsers'])->whereRaw('from_id = to_id')->get();
+        $records = LoginRecord::with(['fromUsers','toUsers'])->whereRaw('from_id = to_id')->latest();
 
         if(sizeof($records)==0)
         {
@@ -607,7 +607,7 @@ class AdminsController extends Controller
     public function loginRecordsForCompany($user_id)
     {
 
-        $records = LoginRecord::with(['fromUsers','toUsers'])->whereRaw('from_id != to_id')->get();
+        $records = LoginRecord::with(['fromUsers','toUsers'])->whereRaw('from_id != to_id')->latest();
 
         if(sizeof($records)==0)
         {
